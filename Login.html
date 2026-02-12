@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="style_login.css">
+</head>
+<body>
+    
+    <a href="./menu.html">Página Principal</a>
+    <div class="formulario">
+        <h1>Inicio de sesión</h1>
+        <form action="validar.php" method="post">
+            <div class="username">
+                <input type="text" name="usuario" required> 
+                <label>Nombre de usuario</label>
+            </div>
+            <div class="username">
+                <input type="password" name="password" required> 
+                <label>Contraseña</label>
+            </div>
+            <div class="recordar">¿Olvido su contraseña?</div>
+            <input type="submit" value="Iniciar">
+            <div class="registrarse">
+                Quiero hacer el <a href="#">registro</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
