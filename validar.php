@@ -15,12 +15,14 @@ $resultado = mysqli_query($conexion, $consulta);
 
 // 4. Verificar el resultado
 if (mysqli_num_rows($resultado) > 0) {
-    // Guardar datos del usuario en la sesión
-    $datos = mysqli_fetch_array($resultado);
+    // ESTA LÍNEA ES VITAL: Extrae los datos de la fila encontrada
+    $datos = mysqli_fetch_array($resultado); 
+    
+    // Ahora sí, guardamos en la sesión usando los nombres exactos de tus columnas en SQL
+    $_SESSION['usuario_id'] = $datos['id']; // Asegúrate que en tu tabla se llame 'id'
     $_SESSION['usuario'] = $datos['usuario'];
     $_SESSION['rol'] = $datos['rol'];
 
-    // Si es correcto, lo mandamos al menú
     header("location:menu.html");
 } else {
     // Si es incorrecto, mostrar error y regresar al login

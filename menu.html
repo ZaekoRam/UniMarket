@@ -254,36 +254,23 @@
             return post;
         }
 
-        //const guardarCambios = () => localStorage.setItem("contenidoDinamico", resultado.innerHTML);
 
-        form.addEventListener("submit", (e) => {
-            /*const nuevoPost = crearPost(textarea.value, imagenesBase64, linkVal);
-            resultado.prepend(nuevoPost);
-            form.reset();
-            previewContainer.innerHTML = "";
-            imagenesBase64 = [];
-            guardarCambios();*/
-        });
-
-        // Función para traer las publicaciones de la base de datos
-        window.onload = () => {
+    window.onload = () => {
     fetch('obtener_posts.php')
         .then(response => response.json())
         .then(data => {
             const resultado = document.getElementById("resultado");
-            resultado.innerHTML = ""; 
+            resultado.innerHTML = ""; // Limpiamos cualquier rastro de Local Storage
             data.forEach(post => {
-                // Convertimos el texto de la DB en el formato que espera crearPost
+                // Si la DB tiene imagen, creamos la ruta a la carpeta uploads
                 const imgArray = post.imagen ? ['uploads/' + post.imagen] : [];
                 
-                // IMPORTANTE: Asegúrate que post.texto no sea null
-                const textoPost = post.texto || "";
-                
-                const nuevoPost = crearPost(textoPost, imgArray, ""); 
+                // Usamos la función crearPost para el diseño, pero con datos de SQL
+                const nuevoPost = crearPost(post.texto || "", imgArray, ""); 
                 resultado.appendChild(nuevoPost);
             });
         })
-        .catch(err => console.error("Error cargando posts:", err));
+        .catch(err => console.error("Error:", err));
 };
     </script>
 </body>
