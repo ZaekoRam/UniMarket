@@ -20,7 +20,7 @@ if (mysqli_num_rows($resultado) > 0) {
     $_SESSION['usuario'] = $datos['usuario'];
     $_SESSION['rol'] = $datos['rol'];
 
-    // Si es correcto, lo mandamos al menú (ahora debe ser .php)
+    // Si es correcto, lo mandamos al menú
     header("location:menu.html");
 } else {
     // Si es incorrecto, mostrar error y regresar al login
