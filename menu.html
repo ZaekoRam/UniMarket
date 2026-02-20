@@ -254,10 +254,9 @@
             return post;
         }
 
-        const guardarCambios = () => localStorage.setItem("contenidoDinamico", resultado.innerHTML);
+        //const guardarCambios = () => localStorage.setItem("contenidoDinamico", resultado.innerHTML);
 
         form.addEventListener("submit", (e) => {
-            const linkVal = document.getElementById("urlEnlace").value;
             /*const nuevoPost = crearPost(textarea.value, imagenesBase64, linkVal);
             resultado.prepend(nuevoPost);
             form.reset();
@@ -272,16 +271,19 @@
         .then(response => response.json())
         .then(data => {
             const resultado = document.getElementById("resultado");
-            resultado.innerHTML = ""; // Limpiar
+            resultado.innerHTML = ""; 
             data.forEach(post => {
-                // Usamos post.imagen porque así se llama tu columna
-                const rutaImagen = post.imagen ? ['uploads/' + post.imagen] : [];
+                // Convertimos el texto de la DB en el formato que espera crearPost
+                const imgArray = post.imagen ? ['uploads/' + post.imagen] : [];
                 
-                // Llamamos a crearPost enviando un texto vacío "" en el lugar del link
-                const nuevoPost = crearPost(post.texto, rutaImagen, ""); 
+                // IMPORTANTE: Asegúrate que post.texto no sea null
+                const textoPost = post.texto || "";
+                
+                const nuevoPost = crearPost(textoPost, imgArray, ""); 
                 resultado.appendChild(nuevoPost);
             });
-        });
+        })
+        .catch(err => console.error("Error cargando posts:", err));
 };
     </script>
 </body>
