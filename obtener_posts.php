@@ -7,5 +7,5 @@ while($row = mysqli_fetch_assoc($res)) {
     $posts[] = $row;
 }
 
-echo json_encode($posts); // Le manda la lista al HTML en formato que entiende JS
+echo json_encode($posts); 
 ?>

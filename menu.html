@@ -57,9 +57,8 @@
     
                 <div id="previewContainer" class="post-images-grid"></div>
     
-                <input type="file" id="archivoImagen" name="imagen" accept="image/*">
-    
-                <input type="url" id="urlEnlace" name="link" placeholder="Enlace externo (https://...)">
+                <input type="file" id="archivoImagen" name="imagen" accept="image/*, video/*">
+
     
                 <button type="submit" class="btn-publicar">Publicar</button>
             </form>
@@ -224,53 +223,63 @@
         }
 
         function crearPost(texto, imgs, link) {
-            const post = document.createElement("div");
-            post.className = "post-card";
-            const dominio = link ? new URL(link).hostname : "";
+    const post = document.createElement("div");
+    post.className = "post-card";
 
-            post.innerHTML = `
-                <div class="post-options-container" style="position:relative;">
-                    <button class="options-btn" onclick="toggleMenu(this)">⋮</button>
-                    <div class="options-menu"><button onclick="editarPost(this)">Editar</button></div>
-                </div>
-                <button class="delete-btn" onclick="this.parentElement.remove(); guardarCambios();">✕</button>
-                <div class="post-content">
-                    ${texto ? `<p class="post-text">${texto}</p>` : ""}
-                    <div class="post-images-grid">${imgs.map(src => `<img src="${src}">`).join('')}</div>
-                </div>
-                ${link ? `<a href="${link}" target="_blank" class="link-preview-card"><div class="link-info">${dominio}</div></a>` : ""}
-                <div class="post-actions" style="margin-top:10px; display:flex; gap:10px;">
-                    <button class="action-btn like-btn" onclick="manejarReaccion(this, 'like')">👍 Like <span class="count-number">0</span></button>
-                    <button class="action-btn dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 Dislike <span class="count-number">0</span></button>
-                </div>
-                <div class="comments-section" style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
-                    <div class="comments-list"></div>
-                    <div style="display:flex; gap:5px; margin-top:10px;">
-                        <input type="text" placeholder="Comentar..." onkeypress="agregarComentario(event, this)">
-                        <input type="file" accept="image/*" style="width:80px; font-size:10px;">
-                    </div>
-                </div>
-            `;
-            return post;
+    const textoConEnlaces = texto.replace(
+        /((https?:\/\/|www\.)[^\s]+)/g, 
+        '<a href="$1" target="_blank" style="color: #007bff; text-decoration: underline;">$1</a>'
+    );
+    const dominio = link ? new URL(link).hostname : "";
+
+    // --- NUEVA LÓGICA MULTIMEDIA ---
+    let mediaHTML = "";
+    imgs.forEach(src => {
+        const srcLower = src.toLowerCase();
+        // Verificamos si es un formato de video común
+        if (srcLower.endsWith(".mp4") || srcLower.endsWith(".webm") || srcLower.endsWith(".mov")) {
+            mediaHTML += `
+                <video src="${src}" controls style="width:100%; border-radius:8px; background: #000; margin-top: 10px;">
+                    Tu navegador no soporta videos.
+                </video>`;
+        } else {
+            // Si no es video, lo mostramos como imagen
+            mediaHTML += `<img src="${src}" style="width:100%; border-radius:8px; margin-top: 10px;">`;
         }
+    });
 
-
+    post.innerHTML = `
+        <div class="post-options-container" style="position:relative;">
+            <button class="options-btn" onclick="toggleMenu(this)">⋮</button>
+            <div class="options-menu"><button onclick="editarPost(this)">Editar</button></div>
+        </div>
+        <button class="delete-btn" onclick="this.parentElement.remove();">✕</button>
+        <div class="post-content">
+            ${texto ? `<p class="post-text">${textoConEnlaces}</p>` : ""}
+            <div class="post-images-grid">${mediaHTML}</div>
+        </div>
+        ${link ? `<a href="${link}" target="_blank" class="link-preview-card"><div class="link-info">${dominio}</div></a>` : ""}
+        <div class="post-actions" style="margin-top:10px; display:flex; gap:10px;">
+            <button class="action-btn like-btn" onclick="manejarReaccion(this, 'like')">👍 Like <span class="count-number">0</span></button>
+            <button class="action-btn dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 Dislike <span class="count-number">0</span></button>
+        </div>
+    `;
+    return post;
+}
     window.onload = () => {
     fetch('obtener_posts.php')
         .then(response => response.json())
         .then(data => {
             const resultado = document.getElementById("resultado");
-            resultado.innerHTML = ""; // Limpiamos cualquier rastro de Local Storage
+            resultado.innerHTML = ""; 
             data.forEach(post => {
-                // Si la DB tiene imagen, creamos la ruta a la carpeta uploads
-                const imgArray = post.imagen ? ['uploads/' + post.imagen] : [];
-                
-                // Usamos la función crearPost para el diseño, pero con datos de SQL
-                const nuevoPost = crearPost(post.texto || "", imgArray, ""); 
+                // Aquí 'post.imagen' traerá tanto nombres de fotos como de videos
+                const mediaArray = post.imagen ? ['uploads/' + post.imagen] : [];
+                const nuevoPost = crearPost(post.texto || "", mediaArray, ""); 
                 resultado.appendChild(nuevoPost);
             });
         })
-        .catch(err => console.error("Error:", err));
+        .catch(err => console.error("Error cargando contenido:", err));
 };
     </script>
 </body>
