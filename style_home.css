@@ -5,8 +5,8 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
-    background: #bff1d6;
-    color: #1c1e21;
+    background: #bfeef1;
+    color: #456F9D;
     min-height: 100vh;
 }
 
@@ -15,9 +15,9 @@ h1 {
     margin-top: 30px;
     letter-spacing: -1px;
     text-align: center;
+    font-family: Gill Sans MT;
 }
 
-/* Música - Posicionamiento discreto */
 .music { 
     position: fixed; 
     bottom: 20px; 
@@ -28,7 +28,6 @@ h1 {
 }
 .music:hover { opacity: 1; }
 
-/* Menú Desplegable Moderno */
 input#abrir-cerrar { display: none; }
 
 .toggle-button {
@@ -76,7 +75,6 @@ input#abrir-cerrar { display: none; }
 
 #abrir-cerrar:checked ~ .menu-desplegable { display: block; animation: fadeIn 0.3s; }
 
-/* Feed y Publicaciones */
 .feed-container { max-width: 550px; margin: 0 auto; padding: 20px; }
 
 .publish-box, .post-card {
@@ -121,10 +119,23 @@ input#abrir-cerrar { display: none; }
 }
 .btn-publicar:hover { filter: brightness(0.9); }
 
-/* Tarjetas de Post */
 .post-card { position: relative; animation: slideUp 0.4s ease-out; }
 .post-card p { font-size: 16px; line-height: 1.5; color: #050505; }
-.post-card img { width: 100%; border-radius: 12px; margin-top: 10px; }
+
+.post-images-grid {
+    display: flex; 
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    width: 100%;
+}
+.post-images-grid img {
+    width: 100%;
+    height: auto; 
+    max-height: 800px; 
+    object-fit: contain; 
+    border-radius: 12px;
+}
 
 .link-preview-card {
     display: flex;
@@ -139,8 +150,6 @@ input#abrir-cerrar { display: none; }
 }
 
 .link-info { padding: 12px; }
-.link-url { font-size: 13px; color: #65676b; }
-.link-title { font-weight: 600; font-size: 16px; margin-top: 4px; }
 
 .delete-btn {
     position: absolute;
@@ -154,11 +163,9 @@ input#abrir-cerrar { display: none; }
     height: 30px;
     cursor: pointer;
     font-weight: bold;
-    transition: background 0.2s;
+    z-index: 5;
 }
-.delete-btn:hover { background: #e4e6eb; color: #f02849; }
 
-/* --- Nuevas Interacciones --- */
 .post-actions {
     display: flex;
     border-top: 1px solid #e4e6eb;
@@ -176,7 +183,9 @@ input#abrir-cerrar { display: none; }
     padding: 8px;
     cursor: pointer;
     border-radius: 4px;
-    transition: background 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .action-btn:hover { background: #f2f2f2; }
@@ -190,29 +199,24 @@ input#abrir-cerrar { display: none; }
     border-bottom-right-radius: 15px;
 }
 
-.comment-input {
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 8px 15px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-    outline: none;
+.comment-item {
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-size: 14px;
 }
 
-.comment {
-    background: white;
-    padding: 8px 12px;
-    border-radius: 18px;
-    margin-bottom: 5px;
-    font-size: 14px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+.reply-list {
+    margin-left: 30px;
+    border-left: 2px solid #ddd;
+    padding-left: 10px;
 }
-/* --- Menú de Opciones del Post (Tres puntitos) --- */
+
 .post-options-container {
     position: absolute;
     top: 15px;
-    left: 15px; /* Esquina superior izquierda como pediste */
+    left: 15px;
 }
 
 .options-btn {
@@ -221,8 +225,6 @@ input#abrir-cerrar { display: none; }
     font-size: 20px;
     cursor: pointer;
     color: #65676b;
-    padding: 0 5px;
-    line-height: 1;
 }
 
 .options-menu {
@@ -237,32 +239,7 @@ input#abrir-cerrar { display: none; }
     min-width: 100px;
 }
 
-.options-menu button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background: none;
-    text-align: left;
-    cursor: pointer;
-    font-size: 14px;
-}
+.options-menu.show { display: block; }
 
-.options-menu button:hover {
-    background: #f2f2f2;
-}
-
-/* Mostrar menú al hacer clic (controlado por JS) */
-.options-menu.show {
-    display: block;
-}
-
-/* Estilo para cuando el post está en modo edición */
-.editing {
-    outline: 2px solid #1877f2;
-    padding: 10px;
-}
-
-/* Animaciones */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

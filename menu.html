@@ -9,20 +9,22 @@
         /* Estilos rápidos para las nuevas funciones */
         .post-images-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
         
-        /* CAMBIO: Imagen completa sin cortes */
         .post-images-grid img { 
             width: 100%; 
             height: auto; 
-            max-height: 600px; /* Evita que fotos extremadamente largas rompan el feed */
+            max-height: 600px; 
             object-fit: contain; 
             border-radius: 8px; 
-            background: #f9f9f9; /* Fondo ligero por si la imagen tiene transparencias */
+            background: #f9f9f9; 
         }
 
+        .action-btn { display: flex; align-items: center; gap: 5px; }
+        .action-btn img { width: 35px; height: 35px; object-fit: contain; }
         .action-btn.active { background: #e7f3ff; color: #1877f2; }
         .comment-item { background: #f0f2f5; padding: 10px; border-radius: 12px; margin-top: 8px; font-size: 14px; }
         .reply-list { margin-left: 20px; border-left: 2px solid #ddd; padding-left: 10px; }
         .comment-actions { font-size: 12px; margin-top: 5px; cursor: pointer; color: #65676b; display: flex; gap: 10px; align-items: center; }
+        .comment-actions img { width: 14px; height: 14px; vertical-align: middle; }
         .comment-img { max-width: 100px; display: block; margin-top: 5px; border-radius: 5px; }
         .options-menu { display: none; position: absolute; background: white; border: 1px solid #ddd; border-radius: 8px; z-index: 10; left: 0; top: 30px; }
         .options-menu.show { display: block; }
@@ -53,13 +55,9 @@
     <div class="feed-container">
         <div class="publish-box">
             <form id="contenidoForm" action="menu.php" method="POST" enctype="multipart/form-data">
-                <textarea id="texto" name="texto" placeholder="¿Qué estás pensando?" rows="2"></textarea>
-    
+                <textarea id="texto" name="texto" placeholder="¿Qué emprenderas hoy?" rows="2"></textarea>
                 <div id="previewContainer" class="post-images-grid"></div>
-    
                 <input type="file" id="archivoImagen" name="imagen" accept="image/*, video/*">
-
-    
                 <button type="submit" class="btn-publicar">Publicar</button>
             </form>
         </div>
@@ -83,7 +81,7 @@
                     imagenesBase64.push(ev.target.result);
                     const img = document.createElement("img");
                     img.src = ev.target.result;
-                    img.style.maxHeight = "150px"; // Preview pequeña
+                    img.style.maxHeight = "150px"; 
                     img.style.width = "auto";
                     previewContainer.appendChild(img);
                 };
@@ -92,91 +90,64 @@
         });
 
         function manejarReaccion(btn, tipo) {
-            const container = btn.parentElement;
-            const likeBtn = container.querySelector('.like-btn');
-            const dislikeBtn = container.querySelector('.dislike-btn');
+    const postCard = btn.closest(".post-card");
+    const postId = postCard.dataset.id; // Aquí leemos el ID que pusimos arriba
 
-            const updateDisplay = (el, delta) => {
-                let span = el.querySelector('.count-number');
-                if (!span) {
-                    span = document.createElement('span');
-                    span.className = 'count-number';
-                    span.innerText = '0';
-                    el.appendChild(span);
-                }
-                let val = parseInt(span.innerText) + delta;
-                span.innerText = val < 0 ? 0 : val;
-            };
+    const datos = new FormData();
+    datos.append('post_id', postId);
+    datos.append('tipo', tipo);
 
-            if (tipo === 'like') {
-                if (likeBtn.classList.contains('active')) {
-                    updateDisplay(likeBtn, -1);
-                    likeBtn.classList.remove('active');
-                } else {
-                    if (dislikeBtn.classList.contains('active')) {
-                        updateDisplay(dislikeBtn, -1);
-                        dislikeBtn.classList.remove('active');
-                    }
-                    updateDisplay(likeBtn, 1);
-                    likeBtn.classList.add('active');
-                }
-            } else {
-                if (dislikeBtn.classList.contains('active')) {
-                    updateDisplay(dislikeBtn, -1);
-                    dislikeBtn.classList.remove('active');
-                } else {
-                    if (likeBtn.classList.contains('active')) {
-                        updateDisplay(likeBtn, -1);
-                        likeBtn.classList.remove('active');
-                    }
-                    updateDisplay(dislikeBtn, 1);
-                    dislikeBtn.classList.add('active');
-                }
-            }
-            guardarCambios();
-        }
+    fetch('reaccionar.php', {
+        method: 'POST',
+        body: datos
+    })
+    .then(res => res.text())
+    .then(nuevoTotal => {
+        btn.querySelector(".count-number").innerText = nuevoTotal;
+        btn.classList.toggle("active");
+    });
+}
 
-        function agregarComentario(e, input, parentList = null) {
-            if (e.key === 'Enter' && input.value.trim() !== '') {
-                const text = input.value;
-                const fileInput = input.parentElement.querySelector('input[type="file"]');
-                const file = fileInput ? fileInput.files[0] : null;
+        function agregarComentario(event, input) {
+    if (event.key === "Enter" && input.value.trim() !== "") {
+        const postCard = input.closest(".post-card");
+        const postId = postCard.dataset.id;
+        const texto = input.value;
 
-                const procesar = (imgData = null) => {
-                    const list = parentList || input.closest('.comments-section').querySelector('.comments-list');
-                    const item = document.createElement('div');
-                    item.className = 'comment-item';
-                    item.innerHTML = `
-                        <div>${text}</div>
-                        ${imgData ? `<img src="${imgData}" class="comment-img">` : ""}
-                        <div class="comment-actions">
-                            <span class="like-btn" onclick="manejarReaccion(this, 'like')">👍 <span class="count-number">0</span></span>
-                            <span class="dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 <span class="count-number">0</span></span>
-                            <span onclick="mostrarInputRespuesta(this)">Responder</span>
-                        </div>
-                        <div class="reply-list"></div>
-                    `;
-                    list.appendChild(item);
-                    input.value = "";
-                    if(fileInput) fileInput.value = "";
-                    guardarCambios();
-                };
+        const datos = new FormData();
+        datos.append('post_id', postId);
+        datos.append('comentario', texto);
 
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => procesar(ev.target.result);
-                    reader.readAsDataURL(file);
-                } else { procesar(); }
-            }
-        }
+        fetch('comentar.php', {
+            method: 'POST',
+            body: datos
+        })
+        .then(() => {
+            // Aquí puedes recargar los comentarios o agregarlo a la lista visualmente
+            const list = postCard.querySelector(".comments-list");
+            const nuevo = document.createElement("div");
+            nuevo.className = "comment-item";
+            nuevo.innerText = texto;
+            list.appendChild(nuevo);
+            input.value = "";
+        });
+    }
+}
 
         function mostrarInputRespuesta(span) {
             const target = span.parentElement.nextElementSibling;
             if (target.querySelector('.reply-input')) return;
             const div = document.createElement('div');
             div.style.marginTop = "10px";
-            div.innerHTML = `<input type="text" class="reply-input" placeholder="Responder..." onkeypress="agregarComentario(event, this, this.parentElement.parentElement)">
-                             <input type="file" accept="image/*" style="font-size:10px; width:80px;">`;
+            div.style.display = "flex";
+            div.style.flexDirection = "column";
+            div.style.gap = "5px";
+            div.innerHTML = `
+                <input type="text" class="reply-input" placeholder="Responder..." 
+                    onkeypress="agregarComentario(event, this, this.parentElement.parentElement)"
+                    style="width:100%; padding:5px; border-radius:15px; border:1px solid #ddd;">
+                <input type="file" accept="image/*" style="font-size:10px; width:150px;">
+            `;
             target.appendChild(div);
         }
 
@@ -206,7 +177,6 @@
             const guardar = (imgs = []) => {
                 const nuevo = crearPost(texto, imgs, url);
                 post.replaceWith(nuevo);
-                guardarCambios();
             };
 
             if (files.length > 0) {
@@ -223,64 +193,73 @@
         }
 
         function crearPost(texto, imgs, link) {
-    const post = document.createElement("div");
-    post.className = "post-card";
+            const post = document.createElement("div");
+            post.className = "post-card";
 
-    const textoConEnlaces = texto.replace(
-        /((https?:\/\/|www\.)[^\s]+)/g, 
-        '<a href="$1" target="_blank" style="color: #007bff; text-decoration: underline;">$1</a>'
-    );
-    const dominio = link ? new URL(link).hostname : "";
-
-    // --- NUEVA LÓGICA MULTIMEDIA ---
-    let mediaHTML = "";
-    imgs.forEach(src => {
-        const srcLower = src.toLowerCase();
-        // Verificamos si es un formato de video común
-        if (srcLower.endsWith(".mp4") || srcLower.endsWith(".webm") || srcLower.endsWith(".mov")) {
-            mediaHTML += `
-                <video src="${src}" controls style="width:100%; border-radius:8px; background: #000; margin-top: 10px;">
-                    Tu navegador no soporta videos.
-                </video>`;
-        } else {
-            // Si no es video, lo mostramos como imagen
-            mediaHTML += `<img src="${src}" style="width:100%; border-radius:8px; margin-top: 10px;">`;
-        }
-    });
-
-    post.innerHTML = `
-        <div class="post-options-container" style="position:relative;">
-            <button class="options-btn" onclick="toggleMenu(this)">⋮</button>
-            <div class="options-menu"><button onclick="editarPost(this)">Editar</button></div>
-        </div>
-        <button class="delete-btn" onclick="this.parentElement.remove();">✕</button>
-        <div class="post-content">
-            ${texto ? `<p class="post-text">${textoConEnlaces}</p>` : ""}
-            <div class="post-images-grid">${mediaHTML}</div>
-        </div>
-        ${link ? `<a href="${link}" target="_blank" class="link-preview-card"><div class="link-info">${dominio}</div></a>` : ""}
-        <div class="post-actions" style="margin-top:10px; display:flex; gap:10px;">
-            <button class="action-btn like-btn" onclick="manejarReaccion(this, 'like')">👍 Like <span class="count-number">0</span></button>
-            <button class="action-btn dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 Dislike <span class="count-number">0</span></button>
-        </div>
-    `;
-    return post;
-}
-    window.onload = () => {
-    fetch('obtener_posts.php')
-        .then(response => response.json())
-        .then(data => {
-            const resultado = document.getElementById("resultado");
-            resultado.innerHTML = ""; 
-            data.forEach(post => {
-                // Aquí 'post.imagen' traerá tanto nombres de fotos como de videos
-                const mediaArray = post.imagen ? ['uploads/' + post.imagen] : [];
-                const nuevoPost = crearPost(post.texto || "", mediaArray, ""); 
-                resultado.appendChild(nuevoPost);
+            const textoConEnlaces = texto.replace(
+                /((https?:\/\/|www\.)[^\s]+)/g, 
+                '<a href="$1" target="_blank" style="color: #007bff; text-decoration: underline;">$1</a>'
+            );
+            
+            let mediaHTML = "";
+            imgs.forEach(src => {
+                const srcLower = src.toLowerCase();
+                if (srcLower.endsWith(".mp4") || srcLower.endsWith(".webm") || srcLower.endsWith(".mov")) {
+                    mediaHTML += `
+                        <video src="${src}" controls style="width:100%; border-radius:8px; background: #000; margin-top: 10px;">
+                            Tu navegador no soporta videos.
+                        </video>`;
+                } else {
+                    mediaHTML += `<img src="${src}" style="width:100%; border-radius:8px; margin-top: 10px;">`;
+                }
             });
-        })
-        .catch(err => console.error("Error cargando contenido:", err));
-};
+
+            post.innerHTML = `
+                <div class="post-options-container" style="position:relative;">
+                    <button class="options-btn" onclick="toggleMenu(this)">⋮</button>
+                    <div class="options-menu"><button onclick="editarPost(this)">Editar</button></div>
+                </div>
+                <button class="delete-btn" onclick="this.parentElement.remove();">✕</button>
+                <div class="post-content">
+                    ${texto ? `<p class="post-text">${textoConEnlaces}</p>` : ""}
+                    <div class="post-images-grid">${mediaHTML}</div>
+                </div>
+                <div class="post-actions" style="margin-top:10px; display:flex; gap:10px;">
+                    <button class="action-btn like-btn" onclick="manejarReaccion(this, 'like')">
+                        <img src="assets/like.jpg"> Me interesa <span class="count-number">0</span>
+                    </button>
+                    <button class="action-btn dislike-btn" onclick="manejarReaccion(this, 'dislike')">
+                        <img src="assets/dislike.jpg"> No me interesa <span class="count-number">0</span>
+                    </button>
+                </div>
+                <div class="comments-section">
+                    <div class="comments-list"></div>
+                    <div style="margin-top:10px; display:flex; flex-direction:column; gap:5px;">
+                        <input type="text" placeholder="Escribe un comentario..." 
+                            onkeypress="agregarComentario(event, this)" 
+                            style="width:100%; padding:8px; border-radius:20px; border:1px solid #ddd; outline:none; box-sizing:border-box;">
+                        <input type="file" accept="image/*" style="font-size:11px;">
+                    </div>
+                </div>
+            `;
+            return post;
+        }
+
+        window.onload = () => {
+            fetch('obtener_posts.php')
+                .then(response => response.json())
+                .then(data => {
+                    const resultado = document.getElementById("resultado");
+                    resultado.innerHTML = ""; 
+                    data.forEach(post => {
+                        const mediaArray = post.imagen ? ['uploads/' + post.imagen] : [];
+                        const nuevoPost = crearPost(post.texto || "", mediaArray, ""); 
+                        nuevoPost.dataset.id = post.id;
+                        resultado.appendChild(nuevoPost);
+                    });
+                })
+                .catch(err => console.error("Error cargando contenido:", err));
+        };
     </script>
 </body>
 </html>

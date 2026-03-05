@@ -2,8 +2,9 @@
 session_start();
 $conexion = mysqli_connect("localhost", "root", "", "sistema_login");
 
+// Verificación robusta
 if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol'])) {
-    die("Error: Sesión no iniciada.");
+    die("Error: Sesión no iniciada. Por favor ve a Login.html e inicia sesión.");
 }
 
 if (!in_array($_SESSION['rol'], ['admin', 'creador'])) {
@@ -22,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_carpeta . $nombre_imagen);
     }
 
+    // Insertamos solo en las columnas que existen (usuario_id, texto, imagen, fecha)
     $sql = "INSERT INTO publicaciones (usuario_id, texto, imagen, fecha) 
             VALUES ('$usuario_id', '$texto', '$nombre_imagen', NOW())";
 
