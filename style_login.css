@@ -1,0 +1,350 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+*{ box-sizing:border-box; }
+
+:root{
+  --bg:#1f1f1f;
+  --card1:#86f2c8;
+  --card2:#79e9bd;
+  --btn1:#45b989;
+  --btn2:#3aa97d;
+  --shadow:0 18px 40px rgba(0,0,0,.35);
+  --radius:18px;
+
+  /* alturas (mockup) */
+  --login-full: 420px;
+  --login-mini: 170px;
+  --reg-full:   520px;
+  --reg-mini:   170px;
+
+  /* anim */
+  --t: 380ms;
+  --ease: cubic-bezier(.2,.9,.2,1);
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Montserrat', sans-serif;
+  background:var(--bg);
+  overflow:hidden;
+
+  position:relative;
+  isolation:isolate;
+}
+
+/* Link regreso */
+.back-link{
+  position:absolute;
+  top:20px;
+  left:20px;
+  color:#caffea;
+  text-decoration:none;
+  font-weight:800;
+}
+.back-link:hover{ text-decoration:underline; }
+
+/* ================== LAYOUT ================== */
+.container{
+  width:min(1180px,94vw);
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:70px;
+  align-items:center;
+  padding-top:0;
+}
+
+/* ================== BRAND ================== */
+.brand{
+  text-align:left;
+  padding-left: 0px;
+  margin-top:8px;
+}
+
+.logo{
+  font-size:92px;
+  color:#1f8a60;
+  margin:0;
+  letter-spacing:-1px;
+}
+
+.logo-line{
+  margin:14px 0 0;
+  height:10px;
+  width:620px;
+  max-width:95%;
+  background:linear-gradient(90deg,#7CF0C2,#2fe3a0);
+  border-radius:999px;
+}
+.logo-line.thin{
+  height:6px;
+  margin-top:12px;
+  opacity:.95;
+}
+
+/* ================== MENÚ RADIAL ================== */
+.semi-menu{
+  position:relative;
+  width:260px;
+  height:160px;
+  margin:370px 0 0;
+  margin-left:140px;
+}
+
+.semi-toggle{
+  position:absolute;
+  left:50%;
+  bottom:0;
+  transform:translate(-50%,0);
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.85);
+  background:linear-gradient(180deg,#7CF0C2,#2fe3a0);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  transition:transform var(--t) var(--ease);
+}
+
+.hamburger{
+  font-size:26px;
+  font-weight:900;
+  color:#184235;
+  line-height:1;
+}
+
+.semi-item{
+  position:absolute;
+  left:50%;
+  bottom:0;
+  transform:translate(-50%,0) scale(.85);
+  opacity:0;
+  pointer-events:none;
+
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  background:rgba(134,242,200,.95);
+  border:2px solid rgba(255,255,255,.85);
+  box-shadow:0 18px 35px rgba(0,0,0,.25);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  transition:transform var(--t) var(--ease), opacity var(--t) var(--ease);
+}
+
+.semi-item img{
+  width:34px;
+  height:34px;
+  object-fit:contain;
+  display:block;
+}
+
+.semi-menu.open .semi-toggle{ transform:translate(-50%,0) rotate(180deg); }
+.semi-menu.open .semi-item{ opacity:1; pointer-events:auto; }
+.semi-menu.open .i1{ transform:translate(-50%,0) translate(-108px,-62px) scale(1); }
+.semi-menu.open .i2{ transform:translate(-50%,0) translate(0,-112px) scale(1); }
+.semi-menu.open .i3{ transform:translate(-50%,0) translate(108px,-62px) scale(1); }
+
+/* ================== PANEL ================== */
+.panel{
+  display:flex;
+  flex-direction:column;
+  gap:26px;
+  align-items:stretch;
+  padding-top:0;
+}
+
+/* cards */
+.form-container{
+  background:linear-gradient(180deg,var(--card1),var(--card2));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  position:relative;
+  transition:height var(--t) var(--ease), transform var(--t) var(--ease);
+  transform-origin: top center;
+}
+
+/* ALTURAS CON ANIM */
+.container.login-active .sign-in-container{ height: var(--login-full); }
+.container.login-active .sign-up-container{ height: var(--reg-mini); }
+
+.container.register-active .sign-in-container{ height: var(--login-mini); }
+.container.register-active .sign-up-container{ height: var(--reg-full); }
+
+/* ================== CONTENIDO (ANIM FADE/SLIDE) ================== */
+/* Todos los bloques internos se apilan y animan */
+.full-login, .mini-login, .full-register, .mini-register{
+  position:absolute;
+  inset:0;
+  padding:40px 32px;
+  display:flex;
+  flex-direction:column;
+  gap:17px;
+  align-items:stretch;
+  
+  opacity:0;
+  transform:translateY(10px);
+  pointer-events:none;
+  visibility:hidden;
+
+  transition:opacity var(--t) var(--ease), transform var(--t) var(--ease);
+}
+
+
+/* visibles según estado */
+.container.login-active .full-login{
+  opacity:1; transform:translateY(0);
+  pointer-events:auto; visibility:visible;
+}
+.container.register-active .mini-login{
+  opacity:1; transform:translateY(0);
+  pointer-events:auto; visibility:visible;
+}
+
+.container.register-active .full-register{
+  opacity:1; transform:translateY(0);
+  pointer-events:auto; visibility:visible;
+}
+.container.login-active .mini-register{
+  opacity:1; transform:translateY(0);
+  pointer-events:auto; visibility:visible;
+}
+
+/* ================== TIPOGRAFÍA / INPUTS ================== */
+.full-login h1, .mini-login h1,
+.full-register h1, .mini-register h1{
+  margin:-5px 0 0 0;
+  font-size:40px;
+  font-weight:900;
+  text-align:center;
+}
+
+.full-login p, .full-register p{
+  margin:-10px 0 8px; /* separa un poco del título */
+  font-size:18px;
+  opacity:.85;
+  text-align:center;
+}
+
+.username input{
+  width:100%;
+  height:54px;
+  padding:0 16px;
+  border-radius:14px;
+  border:2px solid rgba(0,0,0,.12);
+  background:rgba(255,255,255,.70);
+  outline:none;
+  font-weight:700;
+  font-size:15px;
+}
+
+/* separa inputs un poquito más */
+.full-login .username{ margin-bottom:-4px; }
+.full-register .username{ margin-bottom:-4px; }
+
+.recordar{
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+  text-align:center;
+  margin-top:6px;
+  margin-bottom:8px;
+}
+.recordar:hover{ text-decoration:underline; }
+
+button{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  font-weight:900;
+  cursor:pointer;
+  font-size:16px;
+}
+
+button[type="submit"]{
+  background:linear-gradient(180deg,var(--btn1),var(--btn2));
+  color:#fff;
+}
+
+button.ghost{
+  background:transparent;
+  border:2px solid rgba(0,0,0,.25);
+}
+
+/* centrar botones mini */
+.mini-login button,
+.mini-register button{
+  margin-top:-15px;
+}
+
+/* ================== RESPONSIVE ================== */
+@media (max-width:980px){
+  body{ overflow:auto; }
+  .container{
+    grid-template-columns:1fr;
+    gap:22px;
+    padding:20px 0;
+  }
+  .brand{ padding-left:20px; }
+  .logo{ font-size:68px; }
+  .semi-menu{ margin:40px 0 0; margin-left:0; }
+}
+/* ===== SPOTLIGHT DETRÁS DE UNIMARKET ===== */
+
+body{
+  position:relative;
+  background:#0b0d0c;
+  isolation:isolate;
+}
+
+/* luz central */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      circle at 30% 50%,   /* posición del spotlight */
+      rgba(134,242,200,0.65) 0%,
+      rgba(47,227,160,0.35) 15%,
+      rgba(24,66,53,0.15) 28%,
+      rgba(0,0,0,0.9) 55%
+    );
+
+  filter: blur(70px);
+  animation: spotlightBreath 5s ease-in-out infinite;
+}
+
+/* respiración de la luz */
+@keyframes spotlightBreath{
+
+  0%{
+    transform:scale(0.95);
+    filter:blur(70px) brightness(0.9);
+  }
+
+  50%{
+    transform:scale(1.05);
+    filter:blur(80px) brightness(1.2);
+  }
+
+  100%{
+    transform:scale(0.95);
+    filter:blur(70px) brightness(0.9);
+  }
+
+}
