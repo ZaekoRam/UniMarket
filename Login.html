@@ -7,106 +7,199 @@
 </head>
 
 <body>
-  <a href="./menu.html" class="back-link">Página Principal</a>
 
-  <div class="container login-active" id="container">
+<div class="top-controls">
 
-    <!-- ================= LADO IZQUIERDO ================= -->
-    <div class="brand">
-      <h1 class="logo">UniMarket</h1>
-      <div class="logo-line"></div>
-      <div class="logo-line thin"></div>
+  <button class="lang-switch" id="langBtn">
+    <span class="lang-slider">
+      <img id="langFlag" src="img/es.png">
+    </span>
+    <span class="lang-label" id="langText">Español</span>
+  </button>
 
-      <!-- MENÚ RADIAL -->
-      <div class="semi-menu" id="semiMenu">
-        <button class="semi-toggle" id="semiToggle" type="button" aria-label="Abrir menú">
-          <span class="hamburger">≡</span>
-        </button>
+  <button class="chip" id="themeBtn">
+    <span class="emoji">🌙</span>
+  </button>
 
-        <a class="semi-item i1" href="https://www.ucol.mx/" target="_blank" rel="noopener">
-          <img src="img/udc.png" alt="UDC">
-        </a>
+</div>
 
-        <a class="semi-item i2" href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank" rel="noopener">
-          <img src="img/facebook.png" alt="Facebook">
-        </a>
+<a href="./menu.html" class="back-link" data-i18n="back">Página Principal</a>
 
-        <a class="semi-item i3" href="https://github.com/ZaekoRam/UniMarket" target="_blank" rel="noopener">
-          <img src="img/github.png" alt="GitHub">
-        </a>
-      </div>
-    </div>
+<div class="container login-active" id="container">
 
-    <!-- ================= LADO DERECHO ================= -->
-    <div class="panel">
+<!-- ================= LADO IZQUIERDO ================= -->
+<div class="brand">
+  <h1 class="logo">UniMarket</h1>
+  <div class="logo-line"></div>
+  <div class="logo-line thin"></div>
 
-      <!-- LOGIN CARD -->
-      <div class="form-container sign-in-container">
+  <div class="semi-menu" id="semiMenu">
+    <button class="semi-toggle" id="semiToggle" type="button">
+      <span class="menu-icon"></span>
+    </button>
 
-        <!-- LOGIN COMPLETO -->
-        <form class="full-login" action="validar.php" method="post">
-          <h1>Inicio de sesión</h1>
-          <p>Entra con tus datos</p>
+    <a class="semi-item i1" href="https://www.ucol.mx/" target="_blank">
+      <img src="img/udc.png" alt="UDC">
+    </a>
 
-          <div class="username">
-            <input type="text" name="usuario" required placeholder="Nombre de usuario">
-          </div>
+    <a class="semi-item i2" href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank">
+      <img src="img/facebook.png" alt="Facebook">
+    </a>
 
-          <div class="username">
-            <input type="password" name="password" required placeholder="Contraseña">
-          </div>
+    <a class="semi-item i3" href="https://github.com/ZaekoRam/UniMarket" target="_blank">
+      <img src="img/github.png" alt="GitHub">
+    </a>
 
-          <div class="recordar">¿Olvidó su contraseña?</div>
-
-          <button type="submit">Iniciar</button>
-        </form>
-
-        <!-- LOGIN MINI (solo cuando estás en REGISTRO) -->
-        <div class="mini-login">
-          <h1>Inicio de sesión</h1>
-          <button type="button" class="ghost" id="signInMini">Inicia sesión</button>
-        </div>
-
-      </div>
-
-      <!-- REGISTRO CARD -->
-      <div class="form-container sign-up-container">
-
-        <!-- REGISTRO MINI (solo cuando estás en LOGIN) -->
-        <div class="mini-register">
-          <h1>Registro</h1>
-          <button type="button" class="ghost" id="signUpMini">Quiero registrarme</button>
-        </div>
-
-        <!-- REGISTRO COMPLETO -->
-        <form class="full-register" action="validar.php" method="post">
-          <h1>Registro</h1>
-          <p>Crea tu cuenta</p>
-
-          <div class="username">
-            <input type="text" name="usuario" required placeholder="Nombre completo">
-          </div>
-
-          <div class="username">
-            <input type="text" name="num" required placeholder="Número de cuenta">
-          </div>
-
-          <div class="username">
-            <input type="email" name="cuenta" required placeholder="Correo institucional">
-          </div>
-
-          <div class="username">
-            <input type="password" name="password" required placeholder="Contraseña">
-          </div>
-
-          <button type="submit">Registrarse</button>
-        </form>
-
-      </div>
-
-    </div>
   </div>
+</div>
 
-  <script src="app.js"></script>
+<!-- ================= LADO DERECHO ================= -->
+<div class="panel">
+
+<!-- LOGIN CARD -->
+<div class="form-container sign-in-container">
+
+<form class="full-login" action="validar.php" method="post">
+
+<h1 data-i18n="loginTitle">Inicio de sesión</h1>
+<p data-i18n="loginSubtitle">Entra con tus datos</p>
+
+<div class="username">
+<input type="text"
+name="usuario"
+required
+placeholder="Nombre de usuario"
+data-i18n-placeholder="username">
+</div>
+
+<div class="username password-box">
+
+<input 
+type="password"
+id="passwordLogin"
+name="password"
+required
+placeholder="Contraseña"
+data-i18n-placeholder="password">
+
+<img 
+src="img/contrasena-de-ojo.png"
+class="toggle-pass"
+data-target="passwordLogin">
+
+</div>
+
+<div class="recordar" data-i18n="forgot">
+¿Olvidó su contraseña?
+</div>
+
+<button type="submit" data-i18n="loginButton">
+Iniciar
+</button>
+
+</form>
+
+<!-- LOGIN MINI -->
+<div class="mini-login">
+
+<h1 data-i18n="miniLoginTitle">
+Inicio de sesión
+</h1>
+
+<button
+type="button"
+class="ghost"
+id="signInMini"
+data-i18n="miniLogin">
+Inicia sesión
+</button>
+
+</div>
+
+</div>
+
+<!-- REGISTRO CARD -->
+<div class="form-container sign-up-container">
+
+<!-- REGISTRO MINI -->
+<div class="mini-register">
+
+<h1 data-i18n="miniRegisterTitle">
+Registro
+</h1>
+
+<button
+type="button"
+class="ghost"
+id="signUpMini"
+data-i18n="miniRegister">
+Quiero registrarme
+</button>
+
+</div>
+
+<!-- REGISTRO COMPLETO -->
+<form class="full-register" action="validar.php" method="post">
+
+<h1 data-i18n="registerTitle">
+Registro
+</h1>
+
+<p data-i18n="registerSubtitle">
+Crea tu cuenta
+</p>
+
+<div class="username">
+<input type="text"
+name="usuario"
+required
+placeholder="Nombre completo"
+data-i18n-placeholder="fullname">
+</div>
+
+<div class="username">
+<input type="text"
+name="num"
+required
+placeholder="Número de cuenta"
+data-i18n-placeholder="account">
+</div>
+
+<div class="username">
+<input type="email"
+name="cuenta"
+required
+placeholder="Correo institucional"
+data-i18n-placeholder="email">
+</div>
+
+<div class="username password-box">
+  <input 
+    type="password"
+    id="passwordRegister"
+    name="password"
+    required
+    placeholder="Contraseña"
+    data-i18n-placeholder="password">
+
+  <img 
+    src="img/contrasena-de-ojo.png"
+    class="toggle-pass"
+    data-target="passwordRegister">
+</div>
+
+<button type="submit" data-i18n="registerButton">
+Registrarse
+</button>
+
+</form>
+
+</div>
+
+</div>
+</div>
+
+<script src="app.js"></script>
+
 </body>
 </html>
