@@ -90,8 +90,12 @@
         });
 
         function manejarReaccion(btn, tipo) {
-    const postCard = btn.closest(".post-card");
-    const postId = postCard.dataset.id; // Aquí leemos el ID que pusimos arriba
+    const postCard = btn.closest('.post-card');
+    const postId = postCard.dataset.id;
+
+    // Identificamos ambos botones
+    const likeBtn = postCard.querySelector('.like-btn');
+    const dislikeBtn = postCard.querySelector('.dislike-btn');
 
     const datos = new FormData();
     datos.append('post_id', postId);
@@ -103,9 +107,22 @@
     })
     .then(res => res.text())
     .then(nuevoTotal => {
-        btn.querySelector(".count-number").innerText = nuevoTotal;
-        btn.classList.toggle("active");
-    });
+        // Actualizamos el número del botón al que le dimos clic y alternamos su color
+        btn.querySelector('.count-number').innerText = nuevoTotal;
+        btn.classList.toggle('active');
+
+        // MAGIA VISUAL: Si encendimos uno, apagamos el otro y le restamos 1 a su contador
+        if (tipo === 'like' && dislikeBtn.classList.contains('active')) {
+            dislikeBtn.classList.remove('active');
+            let count = parseInt(dislikeBtn.querySelector('.count-number').innerText);
+            if (count > 0) dislikeBtn.querySelector('.count-number').innerText = count - 1;
+        } else if (tipo === 'dislike' && likeBtn.classList.contains('active')) {
+            likeBtn.classList.remove('active');
+            let count = parseInt(likeBtn.querySelector('.count-number').innerText);
+            if (count > 0) likeBtn.querySelector('.count-number').innerText = count - 1;
+        }
+    })
+    .catch(err => console.error("Error al reaccionar:", err));
 }
 
         function agregarComentario(event, input) {
@@ -192,74 +209,167 @@
             } else { guardar(); }
         }
 
-        function crearPost(texto, imgs, link) {
-            const post = document.createElement("div");
-            post.className = "post-card";
+        // 1. DIBUJAR EL POST CON COMENTARIOS ANIDADOS
+// 1. DIBUJAR EL POST CON COMENTARIOS ANIDADOS Y BOTONES AZULES
+function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null) {
+    const post = document.createElement("div");
+    post.className = "post-card";
 
-            const textoConEnlaces = texto.replace(
-                /((https?:\/\/|www\.)[^\s]+)/g, 
-                '<a href="$1" target="_blank" style="color: #007bff; text-decoration: underline;">$1</a>'
-            );
+    let mediaHTML = imgs.map(src => `<img src="${src}" style="width:100%; border-radius:8px; margin-top:10px;">`).join('');
+
+    // Separamos los principales de las respuestas
+    const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
+    const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
+
+    let comentariosHTML = principales.map(c => {
+        // Encontrar las respuestas a este comentario
+        const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
+            <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid #ddd; padding-left:10px; background:#f9f9f9;">
+                <div class="comment-text"><b>Anon:</b> ${r.comentario}</div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="comment-item" data-id="${c.id}">
+                <div class="comment-text"><b>Anon:</b> ${c.comentario}</div>
+                <div class="comment-actions" style="margin-top:5px;">
+                    <span onclick="prepararRespuesta(this)" style="color:blue; cursor:pointer; font-size:12px;">Responder</span>
+                </div>
+                <div class="reply-input-container"></div>
+                <div class="reply-list">${susRespuestas}</div>
+            </div>
+        `;
+    }).join('');
+
+    post.innerHTML = `
+        <div class="post-options-container" style="position:relative;">
+            <button class="options-btn" onclick="toggleMenu(this)">⋮</button>
+            <div class="options-menu"><button onclick="editarPost(this)">Editar</button></div>
+        </div>
+        <button class="delete-btn" onclick="this.parentElement.remove();">✕</button>
+        <div class="post-content">
+            <p class="post-text">${texto}</p>
+            <div class="post-images-grid">${mediaHTML}</div>
+        </div>
+        <div class="post-actions" style="margin-top:10px; display:flex; gap:10px;">
+            <button class="action-btn like-btn ${miReaccion === 'like' ? 'active' : ''}" onclick="manejarReaccion(this, 'like')">
+                <img src="assets/like.jpg" style="width:20px;"> Me interesa <span class="count-number">${likes}</span>
+            </button>
             
-            let mediaHTML = "";
-            imgs.forEach(src => {
-                const srcLower = src.toLowerCase();
-                if (srcLower.endsWith(".mp4") || srcLower.endsWith(".webm") || srcLower.endsWith(".mov")) {
-                    mediaHTML += `
-                        <video src="${src}" controls style="width:100%; border-radius:8px; background: #000; margin-top: 10px;">
-                            Tu navegador no soporta videos.
-                        </video>`;
-                } else {
-                    mediaHTML += `<img src="${src}" style="width:100%; border-radius:8px; margin-top: 10px;">`;
-                }
-            });
+            <button class="action-btn dislike-btn ${miReaccion === 'dislike' ? 'active' : ''}" onclick="manejarReaccion(this, 'dislike')">
+                <img src="assets/dislike.jpg" style="width:20px;"> No me interesa <span class="count-number">${dislikes}</span>
+            </button>
+        </div>
+        <div class="comments-section">
+            <div class="comments-list">${comentariosHTML}</div>
+            <div style="margin-top:10px; display:flex; flex-direction:column; gap:5px;">
+                <input type="text" placeholder="Escribe un comentario..." 
+                    onkeypress="if(event.key==='Enter') enviarComentario(this.value, this.closest('.post-card').dataset.id, 0)" 
+                    style="width:100%; padding:8px; border-radius:20px; border:1px solid #ddd; outline:none; box-sizing:border-box;">
+                <input type="file" accept="image/*" style="font-size:11px;">
+            </div>
+        </div>
+    `;
+    return post;
+}
 
-            post.innerHTML = `
-                <div class="post-options-container" style="position:relative;">
-                    <button class="options-btn" onclick="toggleMenu(this)">⋮</button>
-                    <div class="options-menu"><button onclick="editarPost(this)">Editar</button></div>
-                </div>
-                <button class="delete-btn" onclick="this.parentElement.remove();">✕</button>
-                <div class="post-content">
-                    ${texto ? `<p class="post-text">${textoConEnlaces}</p>` : ""}
-                    <div class="post-images-grid">${mediaHTML}</div>
-                </div>
-                <div class="post-actions" style="margin-top:10px; display:flex; gap:10px;">
-                    <button class="action-btn like-btn" onclick="manejarReaccion(this, 'like')">
-                        <img src="assets/like.jpg"> Me interesa <span class="count-number">0</span>
-                    </button>
-                    <button class="action-btn dislike-btn" onclick="manejarReaccion(this, 'dislike')">
-                        <img src="assets/dislike.jpg"> No me interesa <span class="count-number">0</span>
-                    </button>
-                </div>
-                <div class="comments-section">
-                    <div class="comments-list"></div>
-                    <div style="margin-top:10px; display:flex; flex-direction:column; gap:5px;">
-                        <input type="text" placeholder="Escribe un comentario..." 
-                            onkeypress="agregarComentario(event, this)" 
-                            style="width:100%; padding:8px; border-radius:20px; border:1px solid #ddd; outline:none; box-sizing:border-box;">
-                        <input type="file" accept="image/*" style="font-size:11px;">
-                    </div>
-                </div>
-            `;
-            return post;
+// 2. MAGIA DE REACCIONES EXCLUSIVAS (Se apaga el otro botón)
+function manejarReaccion(btn, tipo) {
+    // Buscamos la publicación actual
+    const postCard = btn.closest(".post-card");
+    const postId = postCard.dataset.id;
+
+    // Identificamos los botones (asegúrate de que en tu HTML tengan las clases 'like-btn' y 'dislike-btn')
+    const likeBtn = postCard.querySelector(".like-btn");
+    const dislikeBtn = postCard.querySelector(".dislike-btn");
+
+    const datos = new FormData();
+    datos.append('post_id', postId);
+    datos.append('tipo', tipo);
+
+    fetch('reaccionar.php', {
+        method: 'POST',
+        body: datos
+    })
+    .then(res => res.text())
+    .then(nuevoTotal => {
+        // 1. Actualizamos el numerito del botón que presionaste
+        btn.querySelector(".count-number").innerText = nuevoTotal;
+        
+        // 2. Encendemos o apagamos este botón (se pone/quita azul)
+        btn.classList.toggle("active");
+
+        // 3. MAGIA: Si este botón se encendió, apagamos el otro y le restamos 1
+        if (btn.classList.contains("active")) {
+            if (tipo === 'like' && dislikeBtn && dislikeBtn.classList.contains("active")) {
+                dislikeBtn.classList.remove("active");
+                let count = parseInt(dislikeBtn.querySelector(".count-number").innerText);
+                if (count > 0) dislikeBtn.querySelector(".count-number").innerText = count - 1;
+            } else if (tipo === 'dislike' && likeBtn && likeBtn.classList.contains("active")) {
+                likeBtn.classList.remove("active");
+                let count = parseInt(likeBtn.querySelector(".count-number").innerText);
+                if (count > 0) likeBtn.querySelector(".count-number").innerText = count - 1;
+            }
         }
+    })
+    .catch(err => console.error("Error en la reacción:", err));
+}
 
-        window.onload = () => {
-            fetch('obtener_posts.php')
-                .then(response => response.json())
-                .then(data => {
-                    const resultado = document.getElementById("resultado");
-                    resultado.innerHTML = ""; 
-                    data.forEach(post => {
-                        const mediaArray = post.imagen ? ['uploads/' + post.imagen] : [];
-                        const nuevoPost = crearPost(post.texto || "", mediaArray, ""); 
-                        nuevoPost.dataset.id = post.id;
-                        resultado.appendChild(nuevoPost);
-                    });
-                })
-                .catch(err => console.error("Error cargando contenido:", err));
-        };
+// 3. ABRIR CAJITA PARA RESPONDER
+function prepararRespuesta(span) {
+    const contenedor = span.closest(".comment-item").querySelector(".reply-input-container");
+    if (contenedor.innerHTML !== "") return; // Evita abrir varios a la vez
+
+    const input = document.createElement("input");
+    input.placeholder = "Escribe tu respuesta...";
+    input.style = "width: 80%; margin-left: 30px; margin-top: 5px; padding: 5px; border-radius: 10px; border:1px solid #ccc;";
+    
+    input.onkeypress = (e) => {
+        if(e.key === "Enter") {
+            enviarComentario(input.value, span.closest(".post-card").dataset.id, span.closest(".comment-item").dataset.id);
+        }
+    };
+    contenedor.appendChild(input);
+    input.focus();
+}
+
+// 4. ENVIAR A PHP
+function enviarComentario(texto, postId, padreId) {
+    if (!texto.trim()) return;
+    const fd = new FormData();
+    fd.append('post_id', postId);
+    fd.append('comentario', texto);
+    fd.append('padre_id', padreId || 0);
+
+    fetch('comentar.php', { method: 'POST', body: fd })
+    .then(() => location.reload()); // Recarga para ver el comentario nuevo
+}
+
+// 5. INICIALIZAR LA PÁGINA
+window.onload = () => {
+    fetch('obtener_posts.php')
+        .then(res => res.json())
+        .then(data => {
+            const resDiv = document.getElementById("resultado");
+            resDiv.innerHTML = ""; 
+            data.forEach(post => {
+                const imgs = post.imagen ? ['uploads/' + post.imagen] : [];
+                
+                // IMPORTANTE: Le pasamos 'post.mi_reaccion' al final
+                const nuevoPost = crearPost(
+                    post.texto || "", 
+                    imgs, 
+                    post.total_likes || 0, 
+                    post.total_dislikes || 0, 
+                    post.comentarios_data || [],
+                    post.mi_reaccion || null
+                ); 
+                nuevoPost.dataset.id = post.id;
+                resDiv.appendChild(nuevoPost);
+            });
+        })
+        .catch(err => console.error("Error cargando contenido:", err));
+};
     </script>
 </body>
 </html>
