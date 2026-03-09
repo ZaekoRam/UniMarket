@@ -3,63 +3,79 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Acceso al Sistema</title>
   <link rel="stylesheet" href="style_login.css">
 </head>
 
 <body>
 
-  <div class="top-controls">
+  <a href="./menu.html" class="home-chip" data-i18n="back">
+    <span class="home-chip-icon">🏠</span>
+    <span class="home-chip-text">Inicio</span>
+  </a>
 
-    <button class="lang-switch" id="langBtn">
-      <span class="lang-slider">
-        <img id="langFlag" src="img/es.png">
-      </span>
-      <span class="lang-label" id="langText">Español</span>
-    </button>
+  <aside class="side-tools" id="sideTools">
+    <div class="side-toggle-wrap">
+      <button class="side-toggle" type="button" aria-label="Herramientas">
+        <span class="side-toggle-icon">☰</span>
+      </button>
+    </div>
 
-    <button class="chip" id="themeBtn">
-      <span class="emoji">🌙</span>
-    </button>
+    <ul class="example-2">
+      <li class="icon-content">
+        <button class="tool-btn action-btn" id="langBtn" type="button" aria-label="Idioma" data-social="language">
+          <div class="filled"></div>
+          <img id="langFlag" src="img/es.png" alt="Español">
+        </button>
+        <div class="tooltip" id="langText">Español</div>
+      </li>
 
-  </div>
+      <li class="icon-content">
+        <button class="tool-btn action-btn" id="themeBtn" type="button" aria-label="Tema" data-social="theme">
+          <div class="filled"></div>
+          <span class="tool-emoji" id="themeEmoji">🌙</span>
+        </button>
+        <div class="tooltip" id="themeText">Modo oscuro</div>
+      </li>
 
-  <a href="./menu.html" class="back-link" data-i18n="back">Página Principal</a>
+      <li class="icon-content">
+        <a href="https://www.ucol.mx/" target="_blank" aria-label="UdeC" data-social="udec">
+          <div class="filled"></div>
+          <img src="img/udc.png" alt="UdeC">
+        </a>
+        <div class="tooltip">UdeC</div>
+      </li>
+
+      <li class="icon-content">
+        <a href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank" aria-label="Facebook" data-social="facebook">
+          <div class="filled"></div>
+          <img src="img/facebook.png" alt="Facebook">
+        </a>
+        <div class="tooltip">Facebook</div>
+      </li>
+
+      <li class="icon-content">
+        <a href="https://github.com/ZaekoRam/UniMarket" target="_blank" aria-label="GitHub" data-social="github">
+          <div class="filled"></div>
+          <img src="img/github.png" alt="GitHub">
+        </a>
+        <div class="tooltip">GitHub</div>
+      </li>
+    </ul>
+  </aside>
 
   <div class="container login-active" id="container">
 
-    <!-- ================= LADO IZQUIERDO ================= -->
     <div class="brand">
       <h1 class="logo">UniMarket</h1>
       <div class="logo-line"></div>
       <div class="logo-line thin"></div>
-
-      <div class="semi-menu" id="semiMenu">
-        <button class="semi-toggle" id="semiToggle" type="button">
-          <span class="menu-icon"></span>
-        </button>
-
-        <a class="semi-item i1" href="https://www.ucol.mx/" target="_blank">
-          <img src="img/udc.png" alt="UDC">
-        </a>
-
-        <a class="semi-item i2" href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank">
-          <img src="img/facebook.png" alt="Facebook">
-        </a>
-
-        <a class="semi-item i3" href="https://github.com/ZaekoRam/UniMarket" target="_blank">
-          <img src="img/github.png" alt="GitHub">
-        </a>
-
-      </div>
     </div>
 
-    <!-- ================= LADO DERECHO ================= -->
     <div class="panel">
 
-      <!-- LOGIN CARD -->
       <div class="form-container sign-in-container">
-
         <form class="full-login" action="validar.php" method="post">
 
           <h1 data-i18n="loginTitle">Inicio de sesión</h1>
@@ -70,65 +86,30 @@
           </div>
 
           <div class="username password-box">
-
-            <input type="password" id="passwordLogin" name="password" required placeholder="Contraseña"
-              data-i18n-placeholder="password">
-
-            <img src="img/contrasena-de-ojo.png" class="toggle-pass" data-target="passwordLogin">
-
+            <input type="password" id="passwordLogin" name="password" required placeholder="Contraseña" data-i18n-placeholder="password">
+            <img src="img/contrasena-de-ojo.png" class="toggle-pass" data-target="passwordLogin" alt="Mostrar contraseña">
           </div>
 
-          <div class="recordar" data-i18n="forgot">
-            ¿Olvidó su contraseña?
-          </div>
+          <div class="recordar" data-i18n="forgot">¿Olvidó su contraseña?</div>
 
-          <button type="submit" data-i18n="loginButton">
-            Iniciar
-          </button>
-
+          <button type="submit" data-i18n="loginButton">Iniciar</button>
         </form>
 
-        <!-- LOGIN MINI -->
         <div class="mini-login">
-
-          <h1 data-i18n="miniLoginTitle">
-            Inicio de sesión
-          </h1>
-
-          <button type="button" class="ghost" id="signInMini" data-i18n="miniLogin">
-            Inicia sesión
-          </button>
-
+          <h1 data-i18n="miniLoginTitle">Inicio de sesión</h1>
+          <button type="button" class="ghost" id="signInMini" data-i18n="miniLogin">Inicia sesión</button>
         </div>
-
       </div>
 
-      <!-- REGISTRO CARD -->
       <div class="form-container sign-up-container">
-
-        <!-- REGISTRO MINI -->
         <div class="mini-register">
-
-          <h1 data-i18n="miniRegisterTitle">
-            Registro
-          </h1>
-
-          <button type="button" class="ghost" id="signUpMini" data-i18n="miniRegister">
-            Quiero registrarme
-          </button>
-
+          <h1 data-i18n="miniRegisterTitle">Registro</h1>
+          <button type="button" class="ghost" id="signUpMini" data-i18n="miniRegister">Quiero registrarme</button>
         </div>
 
-        <!-- REGISTRO COMPLETO -->
         <form class="full-register" action="validar.php" method="post">
-
-          <h1 data-i18n="registerTitle">
-            Registro
-          </h1>
-
-          <p data-i18n="registerSubtitle">
-            Crea tu cuenta
-          </p>
+          <h1 data-i18n="registerTitle">Registro</h1>
+          <p data-i18n="registerSubtitle">Crea tu cuenta</p>
 
           <div class="username">
             <input type="text" name="usuario" required placeholder="Nombre completo" data-i18n-placeholder="fullname">
@@ -143,25 +124,18 @@
           </div>
 
           <div class="username password-box">
-            <input type="password" id="passwordRegister" name="password" required placeholder="Contraseña"
-              data-i18n-placeholder="password">
-
-            <img src="img/contrasena-de-ojo.png" class="toggle-pass" data-target="passwordRegister">
+            <input type="password" id="passwordRegister" name="password" required placeholder="Contraseña" data-i18n-placeholder="password">
+            <img src="img/contrasena-de-ojo.png" class="toggle-pass" data-target="passwordRegister" alt="Mostrar contraseña">
           </div>
 
-          <button type="submit" data-i18n="registerButton">
-            Registrarse
-          </button>
-
+          <button type="submit" data-i18n="registerButton">Registrarse</button>
         </form>
-
       </div>
 
     </div>
   </div>
 
   <script src="app.js"></script>
-
 </body>
 
 </html>

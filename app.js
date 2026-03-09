@@ -1,8 +1,6 @@
-// ====== TOGGLE LOGIN / REGISTER ======
 const container = document.getElementById("container");
-
-const signUpMini = document.getElementById("signUpMini"); // abre registro
-const signInMini = document.getElementById("signInMini"); // vuelve a login
+const signUpMini = document.getElementById("signUpMini");
+const signInMini = document.getElementById("signInMini");
 
 function setLogin() {
   container.classList.add("login-active");
@@ -14,26 +12,34 @@ function setRegister() {
   container.classList.remove("login-active");
 }
 
-// Estado inicial
 setLogin();
 
-// Botones
-signUpMini.addEventListener("click", setRegister);
-signInMini.addEventListener("click", setLogin);
+signUpMini?.addEventListener("click", setRegister);
+signInMini?.addEventListener("click", setLogin);
 
-// ====== MENÚ SEMICIRCULAR ======
-const semiMenu = document.getElementById("semiMenu");
-const semiToggle = document.getElementById("semiToggle");
-
-semiToggle.addEventListener("click", () => {
-  semiMenu.classList.toggle("open");
-});
+// TEMA
 const themeBtn = document.getElementById("themeBtn");
+const themeEmoji = document.getElementById("themeEmoji");
+const themeText = document.getElementById("themeText");
+
+function updateThemeTextByLanguage(lang) {
+  const isLight = document.body.classList.contains("light");
+  if (themeText) {
+    themeText.textContent = isLight
+      ? (lang === "es" ? "Modo claro" : "Light mode")
+      : (lang === "es" ? "Modo oscuro" : "Dark mode");
+  }
+}
 
 function setTheme(light) {
   document.body.classList.toggle("light", light);
   localStorage.setItem("theme", light ? "light" : "dark");
-  if (themeBtn) themeBtn.querySelector(".emoji").textContent = light ? "☀️" : "🌙";
+
+  if (themeEmoji) {
+    themeEmoji.textContent = light ? "☀️" : "🌙";
+  }
+
+  updateThemeTextByLanguage(localStorage.getItem("lang") || "es");
 }
 
 setTheme(localStorage.getItem("theme") === "light");
@@ -42,26 +48,25 @@ themeBtn?.addEventListener("click", () => {
   setTheme(!document.body.classList.contains("light"));
 });
 
+// IDIOMA
 const langBtn = document.getElementById("langBtn");
 const langText = document.getElementById("langText");
 const langFlag = document.getElementById("langFlag");
 
 const translations = {
   es: {
-    back: "Página Principal",
+    back: "Inicio",
     loginTitle: "Inicio de sesión",
     loginSubtitle: "Entra con tus datos",
     forgot: "¿Olvidó su contraseña?",
     loginButton: "Iniciar",
     miniLoginTitle: "Inicio de sesión",
     miniLogin: "Inicia sesión",
-
     registerTitle: "Registro",
     registerSubtitle: "Crea tu cuenta",
     miniRegisterTitle: "Registro",
     miniRegister: "Quiero registrarme",
     registerButton: "Registrarse",
-
     username: "Nombre de usuario",
     password: "Contraseña",
     fullname: "Nombre completo",
@@ -70,20 +75,18 @@ const translations = {
   },
 
   en: {
-    back: "Main page",
+    back: "Home",
     loginTitle: "Sign in",
     loginSubtitle: "Enter your details",
     forgot: "Forgot your password?",
     loginButton: "Login",
     miniLoginTitle: "Sign in",
     miniLogin: "Sign in",
-
     registerTitle: "Register",
     registerSubtitle: "Create your account",
     miniRegisterTitle: "Register",
     miniRegister: "Create account",
     registerButton: "Register",
-
     username: "Username",
     password: "Password",
     fullname: "Full name",
@@ -110,16 +113,24 @@ function setLanguage(lang) {
   });
 
   if (lang === "es") {
-    langBtn.classList.remove("en");
-    langFlag.src = "img/es.png";
-    langFlag.alt = "Español";
-    langText.textContent = "Español";
+    if (langFlag) {
+      langFlag.src = "img/es.png";
+      langFlag.alt = "Español";
+    }
+    if (langText) {
+      langText.textContent = "Español";
+    }
   } else {
-    langBtn.classList.add("en");
-    langFlag.src = "img/en.png";
-    langFlag.alt = "English";
-    langText.textContent = "English";
+    if (langFlag) {
+      langFlag.src = "img/en.png";
+      langFlag.alt = "English";
+    }
+    if (langText) {
+      langText.textContent = "English";
+    }
   }
+
+  updateThemeTextByLanguage(lang);
 }
 
 setLanguage(localStorage.getItem("lang") || "es");
@@ -128,24 +139,18 @@ langBtn?.addEventListener("click", () => {
   const current = localStorage.getItem("lang") || "es";
   setLanguage(current === "es" ? "en" : "es");
 });
+
+// OJITO CONTRASEÑA
 document.querySelectorAll(".toggle-pass").forEach(icon => {
-
   icon.addEventListener("click", () => {
-
     const input = document.getElementById(icon.dataset.target);
 
     if (input.type === "password") {
-
       input.type = "text";
       icon.src = "img/ojo.png";
-
     } else {
-
       input.type = "password";
       icon.src = "img/contrasena-de-ojo.png";
-
     }
-
   });
-
 });
