@@ -3,89 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniMarket - Home</title>
+    <title>UniMarket - Inicio</title>
     <link rel="stylesheet" href="style_home.css">
-    <style>
-        /* Estilos rápidos para las nuevas funciones */
-        .post-images-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
-        
-        /* CAMBIO: Imagen completa sin cortes */
-        .post-images-grid img { 
-            width: 100%; 
-            height: auto; 
-            max-height: 600px; /* Evita que fotos extremadamente largas rompan el feed */
-            object-fit: contain; 
-            border-radius: 8px; 
-            background: #f9f9f9; /* Fondo ligero por si la imagen tiene transparencias */
-        }
-
-        .action-btn.active { background: #e7f3ff; color: #1877f2; }
-        .comment-item { background: #f0f2f5; padding: 10px; border-radius: 12px; margin-top: 8px; font-size: 14px; }
-        .reply-list { margin-left: 20px; border-left: 2px solid #ddd; padding-left: 10px; }
-        .comment-actions { font-size: 12px; margin-top: 5px; cursor: pointer; color: #65676b; display: flex; gap: 10px; align-items: center; }
-        .comment-img { max-width: 100px; display: block; margin-top: 5px; border-radius: 5px; }
-        .options-menu { display: none; position: absolute; background: white; border: 1px solid #ddd; border-radius: 8px; z-index: 10; left: 0; top: 30px; }
-        .options-menu.show { display: block; }
-        .options-menu button { display: block; width: 100%; padding: 8px; border: none; background: none; cursor: pointer; text-align: left; }
-        .count-number { font-weight: bold; margin-left: 3px; color: inherit; }
-    </style>
 </head>
 <body>
 
-    <div class="music">
-        <audio autoplay controls loop><source src="assets/lofi.mp3" type="audio/mp3"></audio>
-    </div>
-
-    <div class="Info"><h1 id="titulo" contenteditable="true">UniMarket</h1></div>
-
-    <input id="abrir-cerrar" type="checkbox" />
-    <label for="abrir-cerrar" class="toggle-button"><span>☰</span></label>
-
-    <nav class="menu-desplegable">
-        <ul>
-            <li><a href="./Login.html">Iniciar Sesión</a></li>
-            <li><a href="https://www.ucol.mx/" target="_blank">UDC_WEB</a></li>
-            <li><a href="https://www.facebook.com/UdeC.oficial/" target="_blank">Facebook</a></li>
-            <li><a href="https://github.com/ZaekoRam/UniMarket" target="_blank">Github</a></li>
-        </ul>
-    </nav>
-
-    <div class="feed-container">
-        <div class="publish-box">
-            <form id="contenidoForm" action="menu.php" method="POST" enctype="multipart/form-data">
-                <textarea id="texto" name="texto" placeholder="¿Qué estás pensando?" rows="2"></textarea>
-    
-                <div id="previewContainer" class="post-images-grid"></div>
-    
-                <input type="file" id="archivoImagen" name="imagen" accept="image/*">
-    
-                <input type="url" id="urlEnlace" name="link" placeholder="Enlace externo (https://...)">
-    
-                <button type="submit" class="btn-publicar">Publicar</button>
-            </form>
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="sidebar-mascot">✨</div>
+            <div class="sidebar-brand">UniMarket</div>
         </div>
-        <div id="resultado"></div>
-    </div>
+
+        <nav class="sidebar-menu">
+            <a href="#" class="menu-item active">
+                <span class="icon">🏠</span>
+                <span class="label">Inicio</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">👤</span>
+                <span class="label">Perfil</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">💬</span>
+                <span class="label">Mensajes</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">🔔</span>
+                <span class="label">Notificaciones</span>
+            </a>
+
+            <a href="#" class="menu-item">
+                <span class="icon">⚙️</span>
+                <span class="label">Configuración</span>
+            </a>
+
+            <a href="./Login.html" class="menu-item">
+                <span class="icon">🚪</span>
+                <span class="label">Cerrar sesión</span>
+            </a>
+
+            <button id="themeToggle" class="theme-switch" type="button" aria-label="Cambiar tema">
+                <span class="theme-thumb" id="themeThumb">🌙</span>
+                <span class="theme-text" id="themeText">Dark Mode</span>
+            </button>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="welcome-box">
+                <div class="profile-circle" id="profileCircle">
+                    <img id="profileImage" src="" alt="Foto de perfil" style="display: none;">
+                    <span id="profileInitial">U</span>
+                </div>
+
+                <div class="welcome-text">
+                    <p class="small-text">Todo comienza por un 0</p>
+                    <h1 id="saludoUsuario">Hola, Usuario</h1>
+                </div>
+            </div>
+
+            <div class="topbar-logo">UniMarket</div>
+        </header>
+
+        <section class="feed-container">
+            <div class="publish-box">
+                <div class="publish-header">
+                    <div class="profile-circle small" id="publishCircle">
+                        <img id="publishImage" src="" alt="Foto de perfil" style="display: none;">
+                        <span id="publishInitial">U</span>
+                    </div>
+
+                    <div>
+                        <h3>Crear publicación</h3>
+                        <p>Comparte algo con la comunidad de UniMarket</p>
+                    </div>
+                </div>
+
+                <form id="contenidoForm" action="menu.php" method="POST" enctype="multipart/form-data">
+                    <textarea id="texto" name="texto" placeholder="¿Qué vamos a emprender hoy?" rows="3"></textarea>
+
+                    <div id="previewContainer" class="post-images-grid preview-grid"></div>
+
+                    <label class="custom-file">
+                        <input type="file" id="archivoImagen" name="imagen" accept="image/*">
+                        <span>📷 Agregar imagen</span>
+                    </label>
+
+                    <input type="url" id="urlEnlace" name="link" placeholder="Enlace externo (https://...)">
+
+                    <button type="submit" class="btn-publicar">Publicar</button>
+                </form>
+            </div>
+
+            <div id="resultado"></div>
+        </section>
+    </main>
 
     <script>
-        const form = document.getElementById("contenidoForm");
+        const body = document.body;
+        const themeToggle = document.getElementById("themeToggle");
+        const themeThumb = document.getElementById("themeThumb");
+        const themeText = document.getElementById("themeText");
+
+        function aplicarTema(modo) {
+            if (modo === "light") {
+                body.classList.add("light-mode");
+                themeThumb.textContent = "☀️";
+                themeText.textContent = "Light Mode";
+            } else {
+                body.classList.remove("light-mode");
+                themeThumb.textContent = "🌙";
+                themeText.textContent = "Dark Mode";
+            }
+        }
+
+        const temaGuardado = localStorage.getItem("tema") || "dark";
+        aplicarTema(temaGuardado);
+
+        themeToggle.addEventListener("click", () => {
+            const esLight = body.classList.contains("light-mode");
+            const nuevoTema = esLight ? "dark" : "light";
+            localStorage.setItem("tema", nuevoTema);
+            aplicarTema(nuevoTema);
+        });
+
+        const saludoUsuario = document.getElementById("saludoUsuario");
+
+        const profileImage = document.getElementById("profileImage");
+        const profileInitial = document.getElementById("profileInitial");
+
+        const publishImage = document.getElementById("publishImage");
+        const publishInitial = document.getElementById("publishInitial");
+
+        fetch("obtener_sesion.php")
+            .then(res => res.json())
+            .then(data => {
+                const nombre = data.usuario ? data.usuario : "Usuario";
+                const inicial = nombre.trim().charAt(0).toUpperCase();
+
+                saludoUsuario.textContent = `Hola, ${nombre}`;
+
+                if (data.foto_perfil && data.foto_perfil.trim() !== "") {
+                    profileImage.src = data.foto_perfil;
+                    profileImage.style.display = "block";
+                    profileInitial.style.display = "none";
+
+                    publishImage.src = data.foto_perfil;
+                    publishImage.style.display = "block";
+                    publishInitial.style.display = "none";
+                } else {
+                    profileInitial.textContent = inicial;
+                    profileInitial.style.display = "flex";
+                    profileImage.style.display = "none";
+
+                    publishInitial.textContent = inicial;
+                    publishInitial.style.display = "flex";
+                    publishImage.style.display = "none";
+                }
+            })
+            .catch(() => {
+                saludoUsuario.textContent = "Hola, Usuario";
+                profileInitial.textContent = "U";
+                publishInitial.textContent = "U";
+            });
+
         const resultado = document.getElementById("resultado");
-        const textarea = document.getElementById("texto");
         const inputArchivo = document.getElementById("archivoImagen");
         const previewContainer = document.getElementById("previewContainer");
-        let imagenesBase64 = [];
 
         inputArchivo.addEventListener("change", (e) => {
-            imagenesBase64 = [];
             previewContainer.innerHTML = "";
+
             Array.from(e.target.files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    imagenesBase64.push(ev.target.result);
                     const img = document.createElement("img");
                     img.src = ev.target.result;
-                    img.style.maxHeight = "150px"; // Preview pequeña
-                    img.style.width = "auto";
                     previewContainer.appendChild(img);
                 };
                 reader.readAsDataURL(file);
@@ -94,120 +191,99 @@
 
         function manejarReaccion(btn, tipo) {
             const container = btn.parentElement;
-            const likeBtn = container.querySelector('.like-btn');
-            const dislikeBtn = container.querySelector('.dislike-btn');
+            const likeBtn = container.querySelector(".like-btn");
+            const dislikeBtn = container.querySelector(".dislike-btn");
 
             const updateDisplay = (el, delta) => {
-                let span = el.querySelector('.count-number');
+                let span = el.querySelector(".count-number");
                 if (!span) {
-                    span = document.createElement('span');
-                    span.className = 'count-number';
-                    span.innerText = '0';
+                    span = document.createElement("span");
+                    span.className = "count-number";
+                    span.innerText = "0";
                     el.appendChild(span);
                 }
+
                 let val = parseInt(span.innerText) + delta;
                 span.innerText = val < 0 ? 0 : val;
             };
 
-            if (tipo === 'like') {
-                if (likeBtn.classList.contains('active')) {
+            if (tipo === "like") {
+                if (likeBtn.classList.contains("active")) {
                     updateDisplay(likeBtn, -1);
-                    likeBtn.classList.remove('active');
+                    likeBtn.classList.remove("active");
                 } else {
-                    if (dislikeBtn.classList.contains('active')) {
+                    if (dislikeBtn.classList.contains("active")) {
                         updateDisplay(dislikeBtn, -1);
-                        dislikeBtn.classList.remove('active');
+                        dislikeBtn.classList.remove("active");
                     }
                     updateDisplay(likeBtn, 1);
-                    likeBtn.classList.add('active');
+                    likeBtn.classList.add("active");
                 }
             } else {
-                if (dislikeBtn.classList.contains('active')) {
+                if (dislikeBtn.classList.contains("active")) {
                     updateDisplay(dislikeBtn, -1);
-                    dislikeBtn.classList.remove('active');
+                    dislikeBtn.classList.remove("active");
                 } else {
-                    if (likeBtn.classList.contains('active')) {
+                    if (likeBtn.classList.contains("active")) {
                         updateDisplay(likeBtn, -1);
-                        likeBtn.classList.remove('active');
+                        likeBtn.classList.remove("active");
                     }
                     updateDisplay(dislikeBtn, 1);
-                    dislikeBtn.classList.add('active');
+                    dislikeBtn.classList.add("active");
                 }
             }
-            guardarCambios();
         }
 
         function agregarComentario(e, input, parentList = null) {
-            if (e.key === 'Enter' && input.value.trim() !== '') {
+            if (e.key === "Enter" && input.value.trim() !== "") {
                 const text = input.value;
-                const fileInput = input.parentElement.querySelector('input[type="file"]');
-                const file = fileInput ? fileInput.files[0] : null;
+                const list = parentList || input.closest(".comments-section").querySelector(".comments-list");
 
-                const procesar = (imgData = null) => {
-                    const list = parentList || input.closest('.comments-section').querySelector('.comments-list');
-                    const item = document.createElement('div');
-                    item.className = 'comment-item';
-                    item.innerHTML = `
+                const item = document.createElement("div");
+                item.className = "comment-item";
+                item.innerHTML = `
+                    <div class="comment-bubble">
+                        <strong>Tú</strong>
                         <div>${text}</div>
-                        ${imgData ? `<img src="${imgData}" class="comment-img">` : ""}
-                        <div class="comment-actions">
-                            <span class="like-btn" onclick="manejarReaccion(this, 'like')">👍 <span class="count-number">0</span></span>
-                            <span class="dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 <span class="count-number">0</span></span>
-                            <span onclick="mostrarInputRespuesta(this)">Responder</span>
-                        </div>
-                        <div class="reply-list"></div>
-                    `;
-                    list.appendChild(item);
-                    input.value = "";
-                    if(fileInput) fileInput.value = "";
-                    guardarCambios();
-                };
-
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => procesar(ev.target.result);
-                    reader.readAsDataURL(file);
-                } else { procesar(); }
+                    </div>
+                    <div class="comment-actions">
+                        <span class="like-btn" onclick="manejarReaccion(this, 'like')">👍 <span class="count-number">0</span></span>
+                        <span class="dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 <span class="count-number">0</span></span>
+                    </div>
+                `;
+                list.appendChild(item);
+                input.value = "";
             }
         }
 
-        function mostrarInputRespuesta(span) {
-            const target = span.parentElement.nextElementSibling;
-            if (target.querySelector('.reply-input')) return;
-            const div = document.createElement('div');
-            div.style.marginTop = "10px";
-            div.innerHTML = `<input type="text" class="reply-input" placeholder="Responder..." onkeypress="agregarComentario(event, this, this.parentElement.parentElement)">
-                             <input type="file" accept="image/*" style="font-size:10px; width:80px;">`;
-            target.appendChild(div);
+        function toggleMenu(btn) {
+            btn.nextElementSibling.classList.toggle("show");
         }
 
-        function toggleMenu(btn) { btn.nextElementSibling.classList.toggle('show'); }
-
         function editarPost(btn) {
-            const post = btn.closest('.post-card');
-            const texto = post.querySelector('.post-text')?.innerText || "";
-            const url = post.querySelector('.link-preview-card')?.href || "";
-            
+            const post = btn.closest(".post-card");
+            const texto = post.querySelector(".post-text")?.innerText || "";
+            const url = post.querySelector(".link-preview-card")?.href || "";
+
             post.innerHTML = `
-                <div style="padding:10px;">
-                    <textarea class="edit-text" style="width:100%">${texto}</textarea>
-                    <input type="url" class="edit-url" value="${url}" style="width:100%; margin:5px 0;">
-                    <input type="file" class="edit-files" multiple style="font-size:12px;">
+                <div class="edit-post-box">
+                    <textarea class="edit-text">${texto}</textarea>
+                    <input type="url" class="edit-url" value="${url}" placeholder="Editar enlace">
+                    <input type="file" class="edit-files">
                     <button onclick="finalizarEdicion(this)">Guardar</button>
                 </div>
             `;
         }
 
         function finalizarEdicion(btn) {
-            const post = btn.closest('.post-card');
-            const texto = post.querySelector('.edit-text').value;
-            const url = post.querySelector('.edit-url').value;
-            const files = post.querySelector('.edit-files').files;
-            
+            const post = btn.closest(".post-card");
+            const texto = post.querySelector(".edit-text").value;
+            const url = post.querySelector(".edit-url").value;
+            const files = post.querySelector(".edit-files").files;
+
             const guardar = (imgs = []) => {
                 const nuevo = crearPost(texto, imgs, url);
                 post.replaceWith(nuevo);
-                guardarCambios();
             };
 
             if (files.length > 0) {
@@ -216,62 +292,90 @@
                     const r = new FileReader();
                     r.onload = (e) => {
                         cargadas.push(e.target.result);
-                        if(cargadas.length === files.length) guardar(cargadas);
+                        if (cargadas.length === files.length) guardar(cargadas);
                     };
                     r.readAsDataURL(f);
                 });
-            } else { guardar(); }
+            } else {
+                guardar();
+            }
         }
 
         function crearPost(texto, imgs, link) {
-            const post = document.createElement("div");
+            const post = document.createElement("article");
             post.className = "post-card";
-            const dominio = link ? new URL(link).hostname : "";
+
+            let dominio = "";
+            try {
+                dominio = link ? new URL(link).hostname : "";
+            } catch {
+                dominio = link;
+            }
+
+            const nombreUsuario = saludoUsuario.textContent.replace("Hola, ", "") || "Usuario";
+            const inicial = nombreUsuario.trim().charAt(0).toUpperCase();
 
             post.innerHTML = `
-                <div class="post-options-container" style="position:relative;">
-                    <button class="options-btn" onclick="toggleMenu(this)">⋮</button>
-                    <div class="options-menu"><button onclick="editarPost(this)">Editar</button></div>
+                <div class="post-header">
+                    <div class="post-user">
+                        <div class="profile-circle small">${inicial}</div>
+                        <div>
+                            <h4>${nombreUsuario}</h4>
+                            <span>Hace un momento</span>
+                        </div>
+                    </div>
+
+                    <div class="post-options-container">
+                        <button class="options-btn" onclick="toggleMenu(this)">⋯</button>
+                        <div class="options-menu">
+                            <button onclick="editarPost(this)">Editar</button>
+                        </div>
+                    </div>
                 </div>
-                <button class="delete-btn" onclick="this.parentElement.remove(); guardarCambios();">✕</button>
+
+                <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
+
                 <div class="post-content">
                     ${texto ? `<p class="post-text">${texto}</p>` : ""}
-                    <div class="post-images-grid">${imgs.map(src => `<img src="${src}">`).join('')}</div>
+                    <div class="post-images-grid">${imgs.map(src => `<img src="${src}">`).join("")}</div>
                 </div>
-                ${link ? `<a href="${link}" target="_blank" class="link-preview-card"><div class="link-info">${dominio}</div></a>` : ""}
-                <div class="post-actions" style="margin-top:10px; display:flex; gap:10px;">
-                    <button class="action-btn like-btn" onclick="manejarReaccion(this, 'like')">👍 Like <span class="count-number">0</span></button>
-                    <button class="action-btn dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 Dislike <span class="count-number">0</span></button>
+
+                ${link ? `
+                    <a href="${link}" target="_blank" class="link-preview-card">
+                        <div class="link-domain">${dominio}</div>
+                        <div class="link-url">${link}</div>
+                    </a>
+                ` : ""}
+
+                <div class="post-actions">
+                    <button class="action-btn like-btn" onclick="manejarReaccion(this, 'like')">👍 Me gusta <span class="count-number">0</span></button>
+                    <button class="action-btn dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 No me gusta <span class="count-number">0</span></button>
                 </div>
-                <div class="comments-section" style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
+
+                <div class="comments-section">
                     <div class="comments-list"></div>
-                    <div style="display:flex; gap:5px; margin-top:10px;">
-                        <input type="text" placeholder="Comentar..." onkeypress="agregarComentario(event, this)">
-                        <input type="file" accept="image/*" style="width:80px; font-size:10px;">
+                    <div class="comment-input-row">
+                        <input type="text" placeholder="Escribe un comentario..." onkeypress="agregarComentario(event, this)">
                     </div>
                 </div>
             `;
+
             return post;
         }
 
-
-    window.onload = () => {
-    fetch('obtener_posts.php')
-        .then(response => response.json())
-        .then(data => {
-            const resultado = document.getElementById("resultado");
-            resultado.innerHTML = ""; // Limpiamos cualquier rastro de Local Storage
-            data.forEach(post => {
-                // Si la DB tiene imagen, creamos la ruta a la carpeta uploads
-                const imgArray = post.imagen ? ['uploads/' + post.imagen] : [];
-                
-                // Usamos la función crearPost para el diseño, pero con datos de SQL
-                const nuevoPost = crearPost(post.texto || "", imgArray, ""); 
-                resultado.appendChild(nuevoPost);
-            });
-        })
-        .catch(err => console.error("Error:", err));
-};
+        window.onload = () => {
+            fetch("obtener_posts.php")
+                .then(response => response.json())
+                .then(data => {
+                    resultado.innerHTML = "";
+                    data.forEach(post => {
+                        const imgArray = post.imagen ? ["uploads/" + post.imagen] : [];
+                        const nuevoPost = crearPost(post.texto || "", imgArray, "");
+                        resultado.appendChild(nuevoPost);
+                    });
+                })
+                .catch(err => console.error("Error:", err));
+        };
     </script>
 </body>
 </html>

@@ -4,12 +4,12 @@ const container = document.getElementById("container");
 const signUpMini = document.getElementById("signUpMini"); // abre registro
 const signInMini = document.getElementById("signInMini"); // vuelve a login
 
-function setLogin(){
+function setLogin() {
   container.classList.add("login-active");
   container.classList.remove("register-active");
 }
 
-function setRegister(){
+function setRegister() {
   container.classList.add("register-active");
   container.classList.remove("login-active");
 }
@@ -30,7 +30,7 @@ semiToggle.addEventListener("click", () => {
 });
 const themeBtn = document.getElementById("themeBtn");
 
-function setTheme(light){
+function setTheme(light) {
   document.body.classList.toggle("light", light);
   localStorage.setItem("theme", light ? "light" : "dark");
   if (themeBtn) themeBtn.querySelector(".emoji").textContent = light ? "☀️" : "🌙";
@@ -92,7 +92,7 @@ const translations = {
   }
 };
 
-function setLanguage(lang){
+function setLanguage(lang) {
   localStorage.setItem("lang", lang);
 
   document.querySelectorAll("[data-i18n]").forEach(el => {
@@ -109,7 +109,7 @@ function setLanguage(lang){
     }
   });
 
-  if(lang === "es"){
+  if (lang === "es") {
     langBtn.classList.remove("en");
     langFlag.src = "img/es.png";
     langFlag.alt = "Español";
@@ -130,22 +130,22 @@ langBtn?.addEventListener("click", () => {
 });
 document.querySelectorAll(".toggle-pass").forEach(icon => {
 
-icon.addEventListener("click", () => {
+  icon.addEventListener("click", () => {
 
-const input = document.getElementById(icon.dataset.target);
+    const input = document.getElementById(icon.dataset.target);
 
-if(input.type === "password"){
+    if (input.type === "password") {
 
-input.type = "text";
-icon.src = "img/ojo.png";
+      input.type = "text";
+      icon.src = "img/ojo.png";
 
-}else{
+    } else {
 
-input.type = "password";
-icon.src = "img/contrasena-de-ojo.png";
+      input.type = "password";
+      icon.src = "img/contrasena-de-ojo.png";
 
-}
+    }
 
-});
+  });
 
 });
