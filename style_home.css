@@ -744,3 +744,32 @@ body.light-mode .comments-section {
         grid-template-columns: 1fr;
     }
 }
+.sidebar-mascot {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 8px 0 18px !important;
+
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  min-height: unset !important;
+}
+
+.sidebar-mascot img {
+  width: 72px !important;
+  height: 72px !important;
+  object-fit: contain !important;
+  display: block !important;
+
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}

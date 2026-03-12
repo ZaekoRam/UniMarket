@@ -151,3 +151,15 @@ document.querySelectorAll(".toggle-pass").forEach(icon => {
     }
   });
 });
+const sideTools = document.getElementById("sideTools");
+const robotToggle = document.getElementById("robotToggle");
+
+robotToggle?.addEventListener("click", () => {
+  sideTools.classList.toggle("open");
+});
+document.addEventListener("click", (e) => {
+  if (!sideTools) return;
+  if (!sideTools.contains(e.target)) {
+    sideTools.classList.remove("open");
+  }
+});

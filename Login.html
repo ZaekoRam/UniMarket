@@ -17,55 +17,50 @@
   </span>
 </a>
 
-  <aside class="side-tools" id="sideTools">
-    <div class="side-toggle-wrap">
-      <button class="side-toggle" type="button" aria-label="Herramientas">
-        <span class="side-toggle-icon">☰</span>
+  <aside class="side-tools collapsed" id="sideTools">
+  <div class="side-toggle-wrap">
+    <button class="side-toggle" id="robotToggle" type="button" aria-label="Herramientas">
+      <img src="img/UNI_EMOTE_CONFIG.png" alt="Configuración" class="side-toggle-img">
+    </button>
+  </div>
+
+  <ul class="example-2" id="toolsMenu">
+    <li class="icon-content">
+      <button class="tool-btn action-btn" id="langBtn" type="button" aria-label="Idioma" data-social="language">
+        <div class="filled"></div>
+        <img id="langFlag" src="img/es.png" alt="Español">
       </button>
-    </div>
+    </li>
 
-    <ul class="example-2">
-      <li class="icon-content">
-        <button class="tool-btn action-btn" id="langBtn" type="button" aria-label="Idioma" data-social="language">
-          <div class="filled"></div>
-          <img id="langFlag" src="img/es.png" alt="Español">
-        </button>
-        <div class="tooltip" id="langText">Español</div>
-      </li>
+    <li class="icon-content">
+      <button class="tool-btn action-btn" id="themeBtn" type="button" aria-label="Tema" data-social="theme">
+        <div class="filled"></div>
+        <span class="tool-emoji" id="themeEmoji">🌙</span>
+      </button>
+    </li>
 
-      <li class="icon-content">
-        <button class="tool-btn action-btn" id="themeBtn" type="button" aria-label="Tema" data-social="theme">
-          <div class="filled"></div>
-          <span class="tool-emoji" id="themeEmoji">🌙</span>
-        </button>
-        <div class="tooltip" id="themeText">Modo oscuro</div>
-      </li>
+    <li class="icon-content">
+      <a href="https://www.ucol.mx/" target="_blank" aria-label="UdeC" data-social="udec">
+        <div class="filled"></div>
+        <img src="img/udc.png" alt="UdeC">
+      </a>
+    </li>
 
-      <li class="icon-content">
-        <a href="https://www.ucol.mx/" target="_blank" aria-label="UdeC" data-social="udec">
-          <div class="filled"></div>
-          <img src="img/udc.png" alt="UdeC">
-        </a>
-        <div class="tooltip">UdeC</div>
-      </li>
+    <li class="icon-content">
+      <a href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank" aria-label="Facebook" data-social="facebook">
+        <div class="filled"></div>
+        <img src="img/facebook.png" alt="Facebook">
+      </a>
+    </li>
 
-      <li class="icon-content">
-        <a href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank" aria-label="Facebook" data-social="facebook">
-          <div class="filled"></div>
-          <img src="img/facebook.png" alt="Facebook">
-        </a>
-        <div class="tooltip">Facebook</div>
-      </li>
-
-      <li class="icon-content">
-        <a href="https://github.com/ZaekoRam/UniMarket" target="_blank" aria-label="GitHub" data-social="github">
-          <div class="filled"></div>
-          <img src="img/github.png" alt="GitHub">
-        </a>
-        <div class="tooltip">GitHub</div>
-      </li>
-    </ul>
-  </aside>
+    <li class="icon-content">
+      <a href="https://github.com/ZaekoRam/UniMarket" target="_blank" aria-label="GitHub" data-social="github">
+        <div class="filled"></div>
+        <img src="img/github.png" alt="GitHub">
+      </a>
+    </li>
+  </ul>
+</aside>
 
   <div class="container login-active" id="container">
 
