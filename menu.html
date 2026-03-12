@@ -301,81 +301,191 @@
             }
         }
 
-        function crearPost(texto, imgs, link) {
-            const post = document.createElement("article");
-            post.className = "post-card";
+   // 1. DIBUJAR EL POST (CON DISEÑO, NOMBRE Y FOTO DE PERFIL)
+function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo") {
+    const post = document.createElement("div");
+    post.className = "post-card";
 
-            let dominio = "";
-            try {
-                dominio = link ? new URL(link).hostname : "";
-            } catch {
-                dominio = link;
+    let mediaHTML = imgs.map(src => `<img src="${src}" class="post-img" style="border-radius:14px; margin-top:10px; width:100%;">`).join('');
+
+    // --- LÓGICA DE COMENTARIOS ANIDADOS ---
+    const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
+    const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
+
+    let comentariosHTML = principales.map(c => {
+        const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
+            <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid var(--accent-2, #42d79a); padding-left:10px; margin-top:5px;">
+                <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">Anon:</strong> ${r.comentario}</div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
+                <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">Anon:</strong> ${c.comentario}</div>
+                <div class="comment-actions" style="margin-top:8px;">
+                    <span onclick="prepararRespuesta(this)" style="color:var(--muted, #9dc7b8); cursor:pointer; font-size:12px; font-weight:600;">↳ Responder</span>
+                </div>
+                <div class="reply-input-container"></div>
+                <div class="reply-list">${susRespuestas}</div>
+            </div>
+        `;
+    }).join('');
+
+    // --- LA MAGIA DEL NOMBRE Y EL CÍRCULO ---
+    const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
+    const inicial = nombreFinal.trim().charAt(0).toUpperCase();
+
+    post.innerHTML = `
+        <div class="post-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="post-user" style="display:flex; align-items:center; gap:10px;">
+                <div class="profile-circle small" style="width:40px; height:40px; border-radius:50%; background:var(--accent, #76f3c2); color:#000; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px;">
+                    ${inicial}
+                </div>
+                <div>
+                    <h4 style="margin:0; color:var(--text, #fff); font-size:15px;">${nombreFinal}</h4>
+                    <span style="font-size:12px; color:var(--muted, #9dc7b8);">Hace un momento</span>
+                </div>
+            </div>
+
+            <div class="post-options-container" style="position:relative;">
+                <button class="options-btn" onclick="toggleMenu(this)" style="background:none; border:none; color:var(--text, #fff); font-size:20px; cursor:pointer;">⋯</button>
+                <div class="options-menu" style="display:none; position:absolute; right:0; background:var(--panel-strong, #111); border:1px solid rgba(255,255,255,0.1); border-radius:8px; overflow:hidden;">
+                    <button onclick="editarPost(this)" style="width:100%; padding:10px; background:none; border:none; color:#fff; cursor:pointer;">Editar</button>
+                    <button class="delete-btn" onclick="this.closest('.post-card').remove();" style="width:100%; padding:10px; background:none; border:none; color:#ff7d92; cursor:pointer;">Eliminar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="post-content" style="margin-top:15px;">
+            <p class="post-text">${texto}</p>
+            <div class="post-images-grid">${mediaHTML}</div>
+        </div>
+
+        <div class="post-actions" style="margin-top:15px; display:flex; gap:10px;">
+            <button class="action-btn like-btn ${miReaccion === 'like' ? 'active' : ''}" onclick="manejarReaccion(this, 'like')">
+                👍 Me gusta <span class="count-number">${likes}</span>
+            </button>
+            <button class="action-btn dislike-btn ${miReaccion === 'dislike' ? 'active' : ''}" onclick="manejarReaccion(this, 'dislike')">
+                👎 No me gusta <span class="count-number">${dislikes}</span>
+            </button>
+        </div>
+
+        <div class="comments-section" style="margin-top:15px;">
+            <div class="comments-list">${comentariosHTML}</div>
+            <div class="comment-input-row" style="margin-top:10px;">
+                <input type="text" placeholder="Escribe un comentario..." 
+                    onkeypress="if(event.key==='Enter') enviarComentario(this.value, this.closest('.post-card').dataset.id, 0)"
+                    style="width: 100%; background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 12px 14px; outline: none;">
+            </div>
+        </div>
+    `;
+    return post;
+}
+
+// 2. FUNCIÓN PARA LIKES EXCLUSIVOS (La que se te había borrado)
+function manejarReaccion(btn, tipo) {
+    const postCard = btn.closest('.post-card');
+    const postId = postCard.dataset.id;
+    const likeBtn = postCard.querySelector('.like-btn');
+    const dislikeBtn = postCard.querySelector('.dislike-btn');
+
+    const datos = new FormData();
+    datos.append('post_id', postId);
+    datos.append('tipo', tipo);
+
+    fetch('reaccionar.php', { method: 'POST', body: datos })
+    .then(res => res.text())
+    .then(nuevoTotal => {
+        btn.querySelector('.count-number').innerText = nuevoTotal;
+        btn.classList.toggle('active');
+
+        if (btn.classList.contains("active")) {
+            if (tipo === 'like' && dislikeBtn && dislikeBtn.classList.contains("active")) {
+                dislikeBtn.classList.remove("active");
+                let count = parseInt(dislikeBtn.querySelector(".count-number").innerText);
+                if (count > 0) dislikeBtn.querySelector(".count-number").innerText = count - 1;
+            } else if (tipo === 'dislike' && likeBtn && likeBtn.classList.contains("active")) {
+                likeBtn.classList.remove("active");
+                let count = parseInt(likeBtn.querySelector(".count-number").innerText);
+                if (count > 0) likeBtn.querySelector(".count-number").innerText = count - 1;
             }
-
-            const nombreUsuario = saludoUsuario.textContent.replace("Hola, ", "") || "Usuario";
-            const inicial = nombreUsuario.trim().charAt(0).toUpperCase();
-
-            post.innerHTML = `
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="profile-circle small">${inicial}</div>
-                        <div>
-                            <h4>${nombreUsuario}</h4>
-                            <span>Hace un momento</span>
-                        </div>
-                    </div>
-
-                    <div class="post-options-container">
-                        <button class="options-btn" onclick="toggleMenu(this)">⋯</button>
-                        <div class="options-menu">
-                            <button onclick="editarPost(this)">Editar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>
-
-                <div class="post-content">
-                    ${texto ? `<p class="post-text">${texto}</p>` : ""}
-                    <div class="post-images-grid">${imgs.map(src => `<img src="${src}">`).join("")}</div>
-                </div>
-
-                ${link ? `
-                    <a href="${link}" target="_blank" class="link-preview-card">
-                        <div class="link-domain">${dominio}</div>
-                        <div class="link-url">${link}</div>
-                    </a>
-                ` : ""}
-
-                <div class="post-actions">
-                    <button class="action-btn like-btn" onclick="manejarReaccion(this, 'like')">👍 Me gusta <span class="count-number">0</span></button>
-                    <button class="action-btn dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 No me gusta <span class="count-number">0</span></button>
-                </div>
-
-                <div class="comments-section">
-                    <div class="comments-list"></div>
-                    <div class="comment-input-row">
-                        <input type="text" placeholder="Escribe un comentario..." onkeypress="agregarComentario(event, this)">
-                    </div>
-                </div>
-            `;
-
-            return post;
         }
+    })
+    .catch(err => console.error("Error al reaccionar:", err));
+}
 
-        window.onload = () => {
-            fetch("obtener_posts.php")
-                .then(response => response.json())
-                .then(data => {
-                    resultado.innerHTML = "";
-                    data.forEach(post => {
-                        const imgArray = post.imagen ? ["uploads/" + post.imagen] : [];
-                        const nuevoPost = crearPost(post.texto || "", imgArray, "");
-                        resultado.appendChild(nuevoPost);
-                    });
-                })
-                .catch(err => console.error("Error:", err));
-        };
+// 3. FUNCIÓN PARA PREPARAR RESPUESTA ANIDADA (También se borró)
+function prepararRespuesta(span) {
+    const contenedor = span.closest(".comment-item").querySelector(".reply-input-container");
+    if (contenedor.innerHTML !== "") return; 
+
+    const input = document.createElement("input");
+    input.placeholder = "Escribe tu respuesta...";
+    input.style = "width: 90%; margin-left: 30px; margin-top: 10px; padding: 10px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); outline: none;";
+    
+    input.onkeypress = (e) => {
+        if(e.key === "Enter") {
+            enviarComentario(input.value, span.closest(".post-card").dataset.id, span.closest(".comment-item").dataset.id);
+        }
+    };
+    contenedor.appendChild(input);
+    input.focus();
+}
+
+// 4. FUNCIÓN PARA ENVIAR EL COMENTARIO A PHP (Esta igual faltaba)
+function enviarComentario(texto, postId, padreId) {
+    if (!texto.trim()) return;
+    const fd = new FormData();
+    fd.append('post_id', postId);
+    fd.append('comentario', texto);
+    fd.append('padre_id', padreId || 0);
+
+    fetch('comentar.php', { method: 'POST', body: fd })
+    .then(() => location.reload());
+}
+
+// 5. CARGAR PUBLICACIONES AL INICIAR
+window.onload = () => {
+    fetch("obtener_posts.php")
+        .then(response => response.json())
+        .then(data => {
+            let resultado = document.getElementById("resultado");
+            if (!resultado) {
+                resultado = document.createElement("div");
+                resultado.id = "resultado";
+                document.querySelector(".main-content").appendChild(resultado);
+            }
+            
+            resultado.innerHTML = "";
+            data.forEach(post => {
+                const imgArray = post.imagen ? ["uploads/" + post.imagen] : [];
+                
+                const nuevoPost = crearPost(
+                    post.texto || "", 
+                    imgArray, 
+                    post.total_likes || 0, 
+                    post.total_dislikes || 0, 
+                    post.comentarios_data || [],
+                    post.mi_reaccion || null,
+                    post.nombre_autor 
+                );
+                
+                nuevoPost.dataset.id = post.id;
+                resultado.appendChild(nuevoPost);
+            });
+        })
+        .catch(err => console.error("Error:", err));
+};
+
+// 6. FUNCIÓN DEL MENÚ DE PUNTITOS
+function toggleMenu(btn) {
+    const menu = btn.nextElementSibling;
+    if(menu.style.display === "none" || menu.style.display === "") {
+        menu.style.display = "block";
+    } else {
+        menu.style.display = "none";
+    }
+}
     </script>
 </body>
 </html>

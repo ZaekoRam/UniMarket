@@ -17,7 +17,6 @@ setLogin();
 signUpMini?.addEventListener("click", setRegister);
 signInMini?.addEventListener("click", setLogin);
 
-// TEMA
 const themeBtn = document.getElementById("themeBtn");
 const themeEmoji = document.getElementById("themeEmoji");
 const themeText = document.getElementById("themeText");
@@ -48,7 +47,6 @@ themeBtn?.addEventListener("click", () => {
   setTheme(!document.body.classList.contains("light"));
 });
 
-// IDIOMA
 const langBtn = document.getElementById("langBtn");
 const langText = document.getElementById("langText");
 const langFlag = document.getElementById("langFlag");
@@ -68,8 +66,8 @@ const translations = {
     miniRegister: "Quiero registrarme",
     registerButton: "Registrarse",
     username: "Nombre de usuario",
-    password: "Contraseña",
     fullname: "Nombre completo",
+    password: "Contraseña",
     account: "Número de cuenta",
     email: "Correo institucional"
   },
@@ -88,8 +86,8 @@ const translations = {
     miniRegister: "Create account",
     registerButton: "Register",
     username: "Username",
-    password: "Password",
     fullname: "Full name",
+    password: "Password",
     account: "Student ID",
     email: "Institutional email"
   }
@@ -105,12 +103,10 @@ function setLanguage(lang) {
     }
   });
 
-  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-    const key = el.dataset.i18nPlaceholder;
-    if (translations[lang][key]) {
-      el.placeholder = translations[lang][key];
-    }
-  });
+  const glitchHome = document.querySelector(".glitch-home-glitch");
+if (glitchHome) {
+  glitchHome.textContent = lang === "es" ? "_Inicio" : "_Home";
+}
 
   if (lang === "es") {
     if (langFlag) {
@@ -140,10 +136,11 @@ langBtn?.addEventListener("click", () => {
   setLanguage(current === "es" ? "en" : "es");
 });
 
-// OJITO CONTRASEÑA
 document.querySelectorAll(".toggle-pass").forEach(icon => {
   icon.addEventListener("click", () => {
     const input = document.getElementById(icon.dataset.target);
+
+    if (!input) return;
 
     if (input.type === "password") {
       input.type = "text";

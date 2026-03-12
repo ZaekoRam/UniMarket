@@ -24,6 +24,7 @@
 }
 
 body.light-mode {
+    overflow-x: hidden !important;
     --bg-main: linear-gradient(135deg, #eefaf7, #def5ee, #f7fffc);
     --bg-radial-1: rgba(62, 201, 143, 0.18);
     --bg-radial-2: rgba(34, 174, 128, 0.14);
@@ -48,6 +49,7 @@ body.light-mode {
 }
 
 body {
+    overflow-x: hidden !important;
     margin: 0;
     font-family: 'Inter', sans-serif;
     color: var(--text);
