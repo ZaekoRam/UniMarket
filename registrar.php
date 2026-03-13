@@ -13,8 +13,7 @@ $check_query = "SELECT * FROM usuarios WHERE num = '$num' OR cuenta = '$cuenta'"
 $check_result = mysqli_query($conexion, $check_query);
 
 if (mysqli_num_rows($check_result) > 0) {
-    // Si ya existe, lo regresamos con un aviso
-    //yes
+    // Si ya existe, lo regresamos con aviso
     echo "<script>
             alert('¡Aguanta! Ese correo o número de cuenta ya está registrado. Intenta iniciar sesión.');
             window.location='Login.html';
