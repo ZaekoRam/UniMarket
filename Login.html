@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso al Sistema</title>
+  <link rel="stylesheet" href="style_login.css">
+</head>
+
+<body>
+  <div class="bg-effect"></div>
+  <a href="./menu.html" class="home-chip home-chip-glitch">
+  <span class="glitch-home-wrap">
+    <span class="home-chip-text" data-i18n="back">Inicio</span>
+    <span class="glitch-home-glitch" aria-hidden="true">Inicio</span>
+  </span>
+</a>
+
+  <aside class="side-tools collapsed" id="sideTools">
+  <div class="side-toggle-wrap">
+    <button class="side-toggle" id="robotToggle" type="button" aria-label="Herramientas">
+      <img src="img/UNI_EMOTE_CONFIG.png" alt="Configuración" class="side-toggle-img">
+    </button>
+  </div>
+
+  <ul class="example-2" id="toolsMenu">
+    <li class="icon-content">
+      <button class="tool-btn action-btn" id="langBtn" type="button" aria-label="Idioma" data-social="language">
+        <div class="filled"></div>
+        <img id="langFlag" src="img/es.png" alt="Español">
+      </button>
+    </li>
+
+    <li class="icon-content">
+      <button class="tool-btn action-btn" id="themeBtn" type="button" aria-label="Tema" data-social="theme">
+        <div class="filled"></div>
+        <span class="tool-emoji" id="themeEmoji">🌙</span>
+      </button>
+    </li>
+
+    <li class="icon-content">
+      <a href="https://www.ucol.mx/" target="_blank" aria-label="UdeC" data-social="udec">
+        <div class="filled"></div>
+        <img src="img/udc.png" alt="UdeC">
+      </a>
+    </li>
+
+    <li class="icon-content">
+      <a href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank" aria-label="Facebook" data-social="facebook">
+        <div class="filled"></div>
+        <img src="img/facebook.png" alt="Facebook">
+      </a>
+    </li>
+
+    <li class="icon-content">
+      <a href="https://github.com/ZaekoRam/UniMarket" target="_blank" aria-label="GitHub" data-social="github">
+        <div class="filled"></div>
+        <img src="img/github.png" alt="GitHub">
+      </a>
+    </li>
+  </ul>
+</aside>
+
+  <div class="container login-active" id="container">
+
+    <div class="brand">
+      <h1 class="logo">UniMarket</h1>
+      <div class="logo-line"></div>
+      <div class="logo-line thin"></div>
+    </div>
+
+    <div class="panel">
+
+      <div class="form-container sign-in-container">
+        <form class="full-login" action="validar.php" method="post" novalidate>
+          <h1 data-i18n="loginTitle">Inicio de sesión</h1>
+          <p data-i18n="loginSubtitle">Entra con tus datos</p>
+
+          <div class="input-container">
+            <input type="text" id="loginUsuario" name="usuario" placeholder=" " required>
+            <label for="loginUsuario" class="label" data-i18n="username">Nombre de usuario</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container password-box">
+            <input type="password" id="passwordLogin" name="password" placeholder=" " required>
+            <label for="passwordLogin" class="label" data-i18n="password">Contraseña</label>
+            <div class="underline"></div>
+            <img src="img/contrasena-de-ojo.png" class="toggle-pass" data-target="passwordLogin" alt="Mostrar contraseña">
+          </div>
+
+          <div class="recordar" data-i18n="forgot">¿Olvidó su contraseña?</div>
+
+          <button type="submit" data-i18n="loginButton">Iniciar</button>
+        </form>
+
+        <div class="mini-login">
+          <h1 data-i18n="miniLoginTitle">Inicio de sesión</h1>
+          <button type="button" class="ghost" id="signInMini" data-i18n="miniLogin">Inicia sesión</button>
+        </div>
+      </div>
+
+      <div class="form-container sign-up-container">
+        <div class="mini-register">
+          <h1 data-i18n="miniRegisterTitle">Registro</h1>
+          <button type="button" class="ghost" id="signUpMini" data-i18n="miniRegister">Quiero registrarme</button>
+        </div>
+
+        <form class="full-register" action="registrar.php" method="post" novalidate>
+          <h1 data-i18n="registerTitle">Registro</h1>
+          <p data-i18n="registerSubtitle">Crea tu cuenta</p>
+
+          <div class="input-container">
+            <input type="text" id="registerNombreCompleto" name="nombre_completo" placeholder=" " required>
+            <label for="registerNombreCompleto" class="label" data-i18n="fullname">Nombre completo</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container">
+            <input type="text" id="registerUsuario" name="usuario" placeholder=" " required>
+            <label for="registerUsuario" class="label" data-i18n="username">Nombre de usuario</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container">
+            <input type="text" id="registerNum" name="num" placeholder=" " required>
+            <label for="registerNum" class="label" data-i18n="account">Número de cuenta</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container">
+            <input type="email" id="registerCorreo" name="cuenta" placeholder=" " required>
+            <label for="registerCorreo" class="label" data-i18n="email">Correo institucional</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container password-box">
+            <input type="password" id="passwordRegister" name="password" placeholder=" " required>
+            <label for="passwordRegister" class="label" data-i18n="password">Contraseña</label>
+            <div class="underline"></div>
+            <img src="img/contrasena-de-ojo.png" class="toggle-pass" data-target="passwordRegister" alt="Mostrar contraseña">
+          </div>
+
+          <button type="submit" data-i18n="registerButton">Registrarse</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
