@@ -3,16 +3,15 @@
 * {
   box-sizing: border-box;
 }
-
 :root {
-  --bg: #1a0f16; /* fondo oscuro rosado */
+  --bg: #061b1a; /* fondo oscuro Miku */
 
-  --card1: #ffd6e7; /* rosa pastel claro */
-  --card2: #ffc2dc; /* rosa pastel */
+  --card1: #baf3ee; /* turquesa pastel claro */
+  --card2: #9fe5de; /* turquesa pastel */
 
-  --btn1: #ff8fc1; /* botón rosa */
-  --btn2: #ff6fae; /* botón más oscuro */
-  --shadow: 0 18px 40px rgba(0, 0, 0, .35);
+  --btn1: #39c5bb; /* botón Miku */
+  --btn2: #0f8f87; /* botón oscuro */
+  --shadow: 0 18px 40px rgba(0, 0, 0, .45);
   --radius: 18px;
 
   --login-full: 440px;
@@ -25,26 +24,28 @@
 
   --spot-x: 28%;
   --spot-y: 44%;
-  --spot-1: rgba(255, 182, 214, 0.65);  /* rosa pastel claro */
-  --spot-2: rgba(255, 105, 180, 0.35);  /* rosa fresita */
-  --spot-3: rgba(90, 30, 60, 0.20);     /* rosa oscuro suave */
-  --spot-4: rgba(0, 0, 0, 0.92);        /* sombra fondo */
+
+  --spot-1: rgba(102, 255, 240, 0.60); /* glow Miku claro */
+  --spot-2: rgba(57, 197, 187, 0.40);  /* Miku principal */
+  --spot-3: rgba(10, 60, 58, 0.25);    /* sombra turquesa */
+  --spot-4: rgba(0, 0, 0, 0.92);       /* fondo oscuro */
+
   --spot-blur: 70px;
 
   --home-bg: rgba(255, 255, 255, .06);
   --home-border: rgba(255, 255, 255, .14);
   --home-text: #d8fff1;
 
-  --tool-shell: rgba(10, 16, 14, 0.82);
+  --tool-shell: rgba(8, 22, 21, 0.85);
   --tool-border: rgba(255, 255, 255, 0.08);
   --tool-icon-bg: #ffffff;
-  --tool-icon-color: #4d4d4d;
+  --tool-icon-color: #3b3b3b;
 
   --field-text: #1b1b1b;
   --field-line: rgba(0, 0, 0, 0.18);
-  --field-line-active: #1f1f1f;
+  --field-line-active: #0f8f87;
   --field-label: rgba(0, 0, 0, 0.42);
-  --field-label-active: #2a2a2a;
+  --field-label-active: #0f8f87;
 }
 
 body.light {
@@ -147,7 +148,6 @@ body::before {
     filter: blur(var(--spot-blur)) brightness(.92);
   }
 }
-
 .home-chip {
   position: fixed;
   top: 18px;
@@ -155,22 +155,27 @@ body::before {
   z-index: 25;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 10px 16px;
+  padding: 10px 22px;
   border-radius: 999px;
-  background: linear-gradient(180deg,#ffb6d5,#ff8fc1);
-  border: 1px solid #ff8fc1;
-  color: white;
+  background: linear-gradient(180deg, #39c5bb, #0f8f87);
+  border: 1px solid rgba(102, 255, 240, 0.25);
+  color: #ffffff;
   text-decoration: none;
   font-weight: 800;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, .18);
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, .22),
+    0 0 18px rgba(57, 197, 187, 0.22);
   backdrop-filter: blur(12px);
   transition: transform .2s ease, box-shadow .2s ease, background .25s ease;
 }
 
 .home-chip:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, .22);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, .28),
+    0 0 22px rgba(102, 255, 240, 0.30);
 }
 
 .home-chip-icon {
@@ -282,8 +287,8 @@ body::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 58px;
-  height: 58px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   color: var(--tool-icon-color);
   background-color: var(--tool-icon-bg);
@@ -382,10 +387,13 @@ body::before {
 
 .logo {
   font-size: 92px;
-  color: #ff8fc1;
+  color: #66fff0;
   margin: 0;
   letter-spacing: -1px;
   line-height: 1;
+  text-shadow:
+    0 0 14px rgba(57, 197, 187, 0.20),
+    0 0 34px rgba(57, 197, 187, 0.14);
 }
 
 .logo-line {
@@ -393,8 +401,9 @@ body::before {
   height: 10px;
   width: 620px;
   max-width: 95%;
-  background: linear-gradient(90deg, #ffb6d5, #ff6fae);
+  background: linear-gradient(90deg, #66fff0, #39c5bb, #0f8f87);
   border-radius: 999px;
+  box-shadow: 0 0 18px rgba(57, 197, 187, 0.22);
 }
 
 .logo-line.thin {
@@ -453,6 +462,9 @@ body::before {
   pointer-events: none;
   visibility: hidden;
   transition: opacity var(--t) var(--ease), transform var(--t) var(--ease);
+}
+.full-login {
+  padding: 58px 32px 28px;
 }
 
 .full-register {
