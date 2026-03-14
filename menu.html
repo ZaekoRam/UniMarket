@@ -10,7 +10,9 @@
 
     <aside class="sidebar">
         <div class="sidebar-top">
-            <div class="sidebar-mascot">✨</div>
+            <div class="sidebar-mascot">
+                <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
+            </div>
             <div class="sidebar-brand">UniMarket</div>
         </div>
 
@@ -45,10 +47,23 @@
                 <span class="label">Cerrar sesión</span>
             </a>
 
-            <button id="themeToggle" class="theme-switch" type="button" aria-label="Cambiar tema">
-                <span class="theme-thumb" id="themeThumb">🌙</span>
-                <span class="theme-text" id="themeText">Dark Mode</span>
-            </button>
+            <label class="theme-switch modern-switch" aria-label="Cambiar tema">
+    <input type="checkbox" id="themeToggleInput">
+    <span class="slider">
+        <div class="star star_1"></div>
+        <div class="star star_2"></div>
+        <div class="star star_3"></div>
+
+        <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
+            <path
+                transform="matrix(.77976 0 0 .78395-299.99-418.63)"
+                fill="#fff"
+                d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
+            </path>
+        </svg>
+    </span>
+    <span class="theme-text" id="themeText">Dark Mode</span>
+</label>
         </nav>
     </aside>
 
@@ -104,32 +119,30 @@
     </main>
 
     <script>
-        const body = document.body;
-        const themeToggle = document.getElementById("themeToggle");
-        const themeThumb = document.getElementById("themeThumb");
-        const themeText = document.getElementById("themeText");
+const body = document.body;
+const themeToggleInput = document.getElementById("themeToggleInput");
+const themeText = document.getElementById("themeText");
 
-        function aplicarTema(modo) {
-            if (modo === "light") {
-                body.classList.add("light-mode");
-                themeThumb.textContent = "☀️";
-                themeText.textContent = "Light Mode";
-            } else {
-                body.classList.remove("light-mode");
-                themeThumb.textContent = "🌙";
-                themeText.textContent = "Dark Mode";
-            }
-        }
+function aplicarTema(modo) {
+    if (modo === "light") {
+        body.classList.add("light-mode");
+        themeToggleInput.checked = true;
+        themeText.textContent = "Light Mode";
+    } else {
+        body.classList.remove("light-mode");
+        themeToggleInput.checked = false;
+        themeText.textContent = "Dark Mode";
+    }
+}
 
-        const temaGuardado = localStorage.getItem("tema") || "dark";
-        aplicarTema(temaGuardado);
+const temaGuardado = localStorage.getItem("tema") || "dark";
+aplicarTema(temaGuardado);
 
-        themeToggle.addEventListener("click", () => {
-            const esLight = body.classList.contains("light-mode");
-            const nuevoTema = esLight ? "dark" : "light";
-            localStorage.setItem("tema", nuevoTema);
-            aplicarTema(nuevoTema);
-        });
+themeToggleInput.addEventListener("change", () => {
+    const nuevoTema = themeToggleInput.checked ? "light" : "dark";
+    localStorage.setItem("tema", nuevoTema);
+    aplicarTema(nuevoTema);
+});
 
         const saludoUsuario = document.getElementById("saludoUsuario");
 
