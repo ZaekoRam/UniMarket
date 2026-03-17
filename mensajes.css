@@ -1,0 +1,167 @@
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
+body{
+background:linear-gradient(135deg,#8fd3c9,#c6e7e3);
+}
+
+.layout{
+display:flex;
+height:100vh;
+}
+
+
+/* SIDEBAR (igual que tu perfil.css) */
+
+.sidebar{
+width:90px;
+background:#e9f3f1;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding-top:20px;
+margin:10px;
+border-radius:20px;
+}
+
+.logo{
+width:55px;
+height:55px;
+background:#1fa69a;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+margin-bottom:30px;
+}
+
+.sidebar nav a{
+margin:20px 0;
+text-decoration:none;
+font-size:22px;
+}
+
+.active{
+background:#1fa69a;
+color:white;
+padding:10px;
+border-radius:10px;
+}
+
+
+/* MENSAJES */
+
+.mensajes{
+flex:1;
+margin:10px;
+border-radius:20px;
+display:flex;
+overflow:hidden;
+background:#f4f7f7;
+}
+
+
+/* LISTA CHATS */
+
+.chats{
+width:250px;
+background:white;
+padding:15px;
+}
+
+.chat{
+display:flex;
+gap:10px;
+padding:10px;
+border-radius:10px;
+cursor:pointer;
+}
+
+.chat:hover{
+background:#eee;
+}
+
+.chat.activo{
+background:#d7ebe8;
+}
+
+.chat img{
+border-radius:50%;
+}
+
+
+/* CHAT */
+
+.chat-box{
+flex:1;
+display:flex;
+flex-direction:column;
+}
+
+
+/* HEADER */
+
+.header-chat{
+padding:15px;
+background:white;
+border-bottom:1px solid #ddd;
+}
+
+
+/* MENSAJES */
+
+.mensajes-box{
+flex:1;
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.msg{
+padding:10px;
+border-radius:10px;
+max-width:60%;
+}
+
+.recibido{
+background:#e5e5e5;
+}
+
+.enviado{
+background:#1fa69a;
+color:white;
+align-self:flex-end;
+}
+
+
+/* INPUT */
+
+.input-chat{
+display:flex;
+padding:10px;
+background:white;
+border-top:1px solid #ddd;
+gap:10px;
+}
+
+.input-chat input{
+flex:1;
+padding:10px;
+border-radius:10px;
+border:1px solid #ccc;
+}
+
+.input-chat button{
+background:#1fa69a;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:10px;
+cursor:pointer;
+}
