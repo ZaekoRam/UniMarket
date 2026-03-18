@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniMarket - Configuraciones</title>
+  <link rel="stylesheet" href="configuraciones.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-mascot">
+        <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
+      </div>
+      <div class="sidebar-brand">UniMarket</div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <a href="menu.html" class="menu-item">
+        <span class="icon">🏠</span>
+        <span class="label">Inicio</span>
+      </a>
+
+      <a href="perfil.html" class="menu-item">
+        <span class="icon">👤</span>
+        <span class="label">Perfil</span>
+      </a>
+
+      <a href="mensajes.html" class="menu-item">
+        <span class="icon">💬</span>
+        <span class="label">Mensajes</span>
+      </a>
+
+      <a href="notificaciones.html" class="menu-item">
+        <span class="icon">🔔</span>
+        <span class="label">Notificaciones</span>
+      </a>
+
+      <a href="configuraciones.html" class="menu-item active">
+        <span class="icon">⚙️</span>
+        <span class="label">Configuraciones</span>
+      </a>
+
+      <a href="Login.html" class="menu-item">
+        <span class="icon">🚪</span>
+        <span class="label">Cerrar sesión</span>
+      </a>
+
+      <label class="theme-switch modern-switch" aria-label="Cambiar tema">
+        <input type="checkbox" id="themeToggleInput">
+        <span class="slider">
+          <div class="star star_1"></div>
+          <div class="star star_2"></div>
+          <div class="star star_3"></div>
+
+          <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
+            <path
+              transform="matrix(.77976 0 0 .78395-299.99-418.63)"
+              fill="#fff"
+              d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
+            </path>
+          </svg>
+        </span>
+        <span class="theme-text" id="themeText">Dark Mode</span>
+      </label>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="page-title-box">
+        <p class="mini-label">Preferencias de UniMarket</p>
+        <h1>Configuraciones</h1>
+      </div>
+    </header>
+
+    <section class="settings-wrapper">
+      <div class="settings-grid">
+
+        <section class="settings-card">
+          <div class="card-head">
+            <div class="card-icon">🎨</div>
+            <div>
+              <h2>Apariencia</h2>
+              <p>Personaliza cómo se ve UniMarket.</p>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-text">
+              <h3>Modo oscuro</h3>
+              <p>Activa o desactiva el tema oscuro del sistema.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="themeSwitchCard">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-text">
+              <h3>Tamaño de interfaz</h3>
+              <p>Vista base para futuras opciones de accesibilidad.</p>
+            </div>
+            <select class="select-box">
+              <option>Normal</option>
+              <option>Compacta</option>
+              <option>Grande</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="settings-card">
+          <div class="card-head">
+            <div class="card-icon">🔔</div>
+            <div>
+              <h2>Notificaciones</h2>
+              <p>Controla qué avisos quieres recibir.</p>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-text">
+              <h3>Comentarios</h3>
+              <p>Recibir alertas cuando comenten tus publicaciones.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-text">
+              <h3>Mensajes</h3>
+              <p>Mostrar avisos cuando llegue un mensaje nuevo.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-text">
+              <h3>Novedades del sistema</h3>
+              <p>Enterarte de funciones o cambios nuevos.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </section>
+
+        <section class="settings-card">
+          <div class="card-head">
+            <div class="card-icon">🔒</div>
+            <div>
+              <h2>Privacidad</h2>
+              <p>Define cómo te muestras en la plataforma.</p>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-text">
+              <h3>Mostrar estado</h3>
+              <p>Permitir que otros vean si estás activo.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-text">
+              <h3>Perfil público</h3>
+              <p>Visible para otros usuarios dentro de UniMarket.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </section>
+
+        <section class="settings-card">
+          <div class="card-head">
+            <div class="card-icon">👤</div>
+            <div>
+              <h2>Cuenta</h2>
+              <p>Datos generales de la cuenta y acciones rápidas.</p>
+            </div>
+          </div>
+
+          <div class="info-block">
+            <span class="info-label">Usuario actual</span>
+            <strong>Invitado</strong>
+          </div>
+
+          <div class="info-block">
+            <span class="info-label">Correo</span>
+            <strong>Sin correo vinculado</strong>
+          </div>
+
+          <div class="account-actions">
+            <button class="primary-btn" type="button">Guardar cambios</button>
+            <button class="ghost-btn" type="button">Cerrar sesión</button>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const themeToggleInput = document.getElementById("themeToggleInput");
+    const themeText = document.getElementById("themeText");
+    const themeSwitchCard = document.getElementById("themeSwitchCard");
+
+    function aplicarTema(modo) {
+      const light = modo === "light";
+
+      document.body.classList.toggle("light-mode", light);
+      themeToggleInput.checked = light;
+      themeSwitchCard.checked = light;
+      themeText.textContent = light ? "Light Mode" : "Dark Mode";
+    }
+
+    const temaGuardado = localStorage.getItem("theme") || "dark";
+    aplicarTema(temaGuardado);
+
+    function cambiarTemaDesdeUI(light) {
+      const nuevoTema = light ? "light" : "dark";
+      localStorage.setItem("theme", nuevoTema);
+      aplicarTema(nuevoTema);
+    }
+
+    themeToggleInput.addEventListener("change", () => {
+      cambiarTemaDesdeUI(themeToggleInput.checked);
+    });
+
+    themeSwitchCard.addEventListener("change", () => {
+      cambiarTemaDesdeUI(themeSwitchCard.checked);
+    });
+  </script>
+</body>
+</html>

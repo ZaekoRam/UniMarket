@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniMarket - Perfil</title>
+  <link rel="stylesheet" href="perfil.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-mascot">
+        <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
+      </div>
+      <div class="sidebar-brand">UniMarket</div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <a href="menu.html" class="menu-item">
+        <span class="icon">🏠</span>
+        <span class="label">Inicio</span>
+      </a>
+
+      <a href="perfil.html" class="menu-item active">
+        <span class="icon">👤</span>
+        <span class="label">Perfil</span>
+      </a>
+
+      <a href="mensajes.html" class="menu-item">
+        <span class="icon">💬</span>
+        <span class="label">Mensajes</span>
+      </a>
+
+      <a href="notificaciones.html" class="menu-item">
+        <span class="icon">🔔</span>
+        <span class="label">Notificaciones</span>
+      </a>
+
+      <a href="configuraciones.html" class="menu-item">
+        <span class="icon">⚙️</span>
+        <span class="label">Configuración</span>
+      </a>
+
+      <a href="Login.html" class="menu-item">
+        <span class="icon">🚪</span>
+        <span class="label">Cerrar sesión</span>
+      </a>
+
+      <label class="theme-switch modern-switch" aria-label="Cambiar tema">
+        <input type="checkbox" id="themeToggleInput">
+        <span class="slider">
+          <div class="star star_1"></div>
+          <div class="star star_2"></div>
+          <div class="star star_3"></div>
+
+          <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
+            <path
+              transform="matrix(.77976 0 0 .78395-299.99-418.63)"
+              fill="#fff"
+              d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
+            </path>
+          </svg>
+        </span>
+        <span class="theme-text" id="themeText">Dark Mode</span>
+      </label>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="retro-title-box">
+        <p class="retro-mini">Mi rincón en UniMarket</p>
+        <h1>Perfil</h1>
+      </div>
+    </header>
+
+    <section class="profile-wrapper">
+      <div class="profile-card">
+        <div class="profile-banner">
+          <div class="scan-lines"></div>
+          <div class="profile-avatar" id="profileAvatar">K</div>
+        </div>
+
+        <div class="profile-info">
+          <div class="profile-main">
+            <div>
+              <h2 class="profile-name" id="viewNombre">Keyli Govea</h2>
+              <p class="profile-user" id="viewUsuario">@keyli</p>
+            </div>
+
+            <div class="profile-actions">
+              <button class="edit-btn" id="editBtn">Editar perfil</button>
+              <button class="save-btn hidden" id="saveBtn">Guardar</button>
+              <button class="cancel-btn hidden" id="cancelBtn">Cancelar</button>
+            </div>
+          </div>
+
+          <div class="edit-grid hidden" id="editFieldsTop">
+            <div class="field-group">
+              <label>Nombre</label>
+              <input type="text" id="inputNombre">
+            </div>
+
+            <div class="field-group">
+              <label>@usuario</label>
+              <input type="text" id="inputUsuario">
+            </div>
+
+            <div class="field-group full">
+              <label>Bio corta</label>
+              <textarea id="inputBio" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="retro-badges" id="viewTags"></div>
+
+          <div class="field-group full hidden" id="editTagsWrap">
+            <label>Tags separados por coma</label>
+            <input type="text" id="inputTags" placeholder="retro web, uni vibes, creative">
+          </div>
+
+          <p class="profile-bio" id="viewBio"></p>
+
+          <div class="profile-details" id="viewDetails">
+            <div class="detail-box">
+              <span class="detail-label">Carrera</span>
+              <strong id="viewCarrera">Tecnologías de la Información</strong>
+            </div>
+
+            <div class="detail-box">
+              <span class="detail-label">Campus</span>
+              <strong id="viewCampus">Universidad de Colima</strong>
+            </div>
+
+            <div class="detail-box">
+              <span class="detail-label">Emprendimientos</span>
+              <strong id="viewEmprendimientos">4 publicaciones</strong>
+            </div>
+
+            <div class="detail-box">
+              <span class="detail-label">Estado</span>
+              <strong id="viewEstado">Disponible</strong>
+            </div>
+          </div>
+
+          <div class="edit-grid hidden" id="editDetails">
+            <div class="field-group">
+              <label>Carrera</label>
+              <input type="text" id="inputCarrera">
+            </div>
+
+            <div class="field-group">
+              <label>Campus</label>
+              <input type="text" id="inputCampus">
+            </div>
+
+            <div class="field-group">
+              <label>Emprendimientos</label>
+              <input type="text" id="inputEmprendimientos">
+            </div>
+
+            <div class="field-group">
+              <label>Estado</label>
+              <input type="text" id="inputEstado">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="retro-panels">
+        <section class="retro-panel">
+          <div class="panel-head">
+            <span class="dot pink"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <h3>Sobre mí</h3>
+          </div>
+          <div class="panel-body">
+            <p id="viewSobreMi"></p>
+
+            <div class="field-group full hidden" id="editSobreMiWrap">
+              <label>Sobre mí</label>
+              <textarea id="inputSobreMi" rows="6"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="retro-panel">
+          <div class="panel-head">
+            <span class="dot pink"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <h3>Mis gustos</h3>
+          </div>
+          <div class="panel-body">
+            <ul class="retro-list" id="viewGustos"></ul>
+
+            <div class="field-group full hidden" id="editGustosWrap">
+              <label>Gustos separados por coma</label>
+              <textarea id="inputGustos" rows="5"></textarea>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="guestbook-card">
+        <div class="guestbook-header">
+          <h3>Libro de perfil</h3>
+          <p>Una zona estilo retro para presentarte</p>
+        </div>
+
+        <div class="guestbook-box">
+          <div class="guestbook-line">
+            <span class="gb-label">Mood:</span>
+            <span class="gb-value" id="viewMood"></span>
+          </div>
+          <div class="guestbook-line">
+            <span class="gb-label">Color favorito:</span>
+            <span class="gb-value" id="viewColor"></span>
+          </div>
+          <div class="guestbook-line">
+            <span class="gb-label">Meta actual:</span>
+            <span class="gb-value" id="viewMeta"></span>
+          </div>
+          <div class="guestbook-line">
+            <span class="gb-label">Estilo:</span>
+            <span class="gb-value" id="viewEstilo"></span>
+          </div>
+        </div>
+
+        <div class="edit-grid hidden" id="editGuestbook">
+          <div class="field-group">
+            <label>Mood</label>
+            <input type="text" id="inputMood">
+          </div>
+
+          <div class="field-group">
+            <label>Color favorito</label>
+            <input type="text" id="inputColor">
+          </div>
+
+          <div class="field-group">
+            <label>Meta actual</label>
+            <input type="text" id="inputMeta">
+          </div>
+
+          <div class="field-group">
+            <label>Estilo</label>
+            <input type="text" id="inputEstilo">
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="perfil.js"></script>
+</body>
+</html>
