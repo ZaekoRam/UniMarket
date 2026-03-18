@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniMarket - Inicio</title>
     <link rel="stylesheet" href="style_home.css">
 </head>
+
 <body>
 
     <aside class="sidebar">
@@ -22,22 +24,22 @@
                 <span class="label">Inicio</span>
             </a>
 
-            <a href="#" class="menu-item">
+            <a href="perfil.html" class="menu-item">
                 <span class="icon">👤</span>
                 <span class="label">Perfil</span>
             </a>
 
-            <a href="#" class="menu-item">
+            <a href="mensajes.html" class="menu-item">
                 <span class="icon">💬</span>
                 <span class="label">Mensajes</span>
             </a>
 
-            <a href="#" class="menu-item">
+            <a href="notificaciones.html" class="menu-item">
                 <span class="icon">🔔</span>
                 <span class="label">Notificaciones</span>
             </a>
 
-            <a href="#" class="menu-item">
+            <a href="configuraciones.html" class="menu-item">
                 <span class="icon">⚙️</span>
                 <span class="label">Configuración</span>
             </a>
@@ -48,22 +50,20 @@
             </a>
 
             <label class="theme-switch modern-switch" aria-label="Cambiar tema">
-    <input type="checkbox" id="themeToggleInput">
-    <span class="slider">
-        <div class="star star_1"></div>
-        <div class="star star_2"></div>
-        <div class="star star_3"></div>
+                <input type="checkbox" id="themeToggleInput">
+                <span class="slider">
+                    <div class="star star_1"></div>
+                    <div class="star star_2"></div>
+                    <div class="star star_3"></div>
 
-        <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
-            <path
-                transform="matrix(.77976 0 0 .78395-299.99-418.63)"
-                fill="#fff"
-                d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
-            </path>
-        </svg>
-    </span>
-    <span class="theme-text" id="themeText">Dark Mode</span>
-</label>
+                    <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
+                        <path transform="matrix(.77976 0 0 .78395-299.99-418.63)" fill="#fff"
+                            d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
+                        </path>
+                    </svg>
+                </span>
+                <span class="theme-text" id="themeText">Dark Mode</span>
+            </label>
         </nav>
     </aside>
 
@@ -77,7 +77,7 @@
 
                 <div class="welcome-text">
                     <p class="small-text">Todo comienza por un 0</p>
-                    <h1 id="saludoUsuario">Hola, Usuario</h1>
+                    <h1 id="saludoUsuario">Hola, Invitado</h1>
                 </div>
             </div>
 
@@ -119,30 +119,30 @@
     </main>
 
     <script>
-const body = document.body;
-const themeToggleInput = document.getElementById("themeToggleInput");
-const themeText = document.getElementById("themeText");
+        const body = document.body;
+        const themeToggleInput = document.getElementById("themeToggleInput");
+        const themeText = document.getElementById("themeText");
 
-function aplicarTema(modo) {
-    if (modo === "light") {
-        body.classList.add("light-mode");
-        themeToggleInput.checked = true;
-        themeText.textContent = "Light Mode";
-    } else {
-        body.classList.remove("light-mode");
-        themeToggleInput.checked = false;
-        themeText.textContent = "Dark Mode";
-    }
-}
+        function aplicarTema(modo) {
+            if (modo === "light") {
+                body.classList.add("light-mode");
+                themeToggleInput.checked = true;
+                themeText.textContent = "Light Mode";
+            } else {
+                body.classList.remove("light-mode");
+                themeToggleInput.checked = false;
+                themeText.textContent = "Dark Mode";
+            }
+        }
 
-const temaGuardado = localStorage.getItem("tema") || "dark";
-aplicarTema(temaGuardado);
+        const temaGuardado = localStorage.getItem("theme") || "dark";
+        aplicarTema(temaGuardado);
 
-themeToggleInput.addEventListener("change", () => {
-    const nuevoTema = themeToggleInput.checked ? "light" : "dark";
-    localStorage.setItem("tema", nuevoTema);
-    aplicarTema(nuevoTema);
-});
+        themeToggleInput.addEventListener("change", () => {
+            const nuevoTema = themeToggleInput.checked ? "light" : "dark";
+            localStorage.setItem("theme", nuevoTema);
+            aplicarTema(nuevoTema);
+        });
 
         const saludoUsuario = document.getElementById("saludoUsuario");
 
@@ -155,7 +155,7 @@ themeToggleInput.addEventListener("change", () => {
         fetch("obtener_sesion.php")
             .then(res => res.json())
             .then(data => {
-                const nombre = data.usuario ? data.usuario : "Usuario";
+                const nombre = data.usuario ? data.usuario : "Invitado";
                 const inicial = nombre.trim().charAt(0).toUpperCase();
 
                 saludoUsuario.textContent = `Hola, ${nombre}`;
@@ -179,9 +179,9 @@ themeToggleInput.addEventListener("change", () => {
                 }
             })
             .catch(() => {
-                saludoUsuario.textContent = "Hola, Usuario";
-                profileInitial.textContent = "U";
-                publishInitial.textContent = "U";
+                saludoUsuario.textContent = "Hola, Invitado";
+                profileInitial.textContent = "I";
+                publishInitial.textContent = "I";
             });
 
         const resultado = document.getElementById("resultado");
@@ -314,25 +314,25 @@ themeToggleInput.addEventListener("change", () => {
             }
         }
 
-   // 1. DIBUJAR EL POST (CON DISEÑO, NOMBRE Y FOTO DE PERFIL)
-function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo") {
-    const post = document.createElement("div");
-    post.className = "post-card";
+        // 1. DIBUJAR EL POST (CON DISEÑO, NOMBRE Y FOTO DE PERFIL)
+        function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo") {
+            const post = document.createElement("div");
+            post.className = "post-card";
 
-    let mediaHTML = imgs.map(src => `<img src="${src}" class="post-img" style="border-radius:14px; margin-top:10px; width:100%;">`).join('');
+            let mediaHTML = imgs.map(src => `<img src="${src}" class="post-img" style="border-radius:14px; margin-top:10px; width:100%;">`).join('');
 
-    // --- LÓGICA DE COMENTARIOS ANIDADOS ---
-    const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
-    const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
+            // --- LÓGICA DE COMENTARIOS ANIDADOS ---
+            const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
+            const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
 
-    let comentariosHTML = principales.map(c => {
-        const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
+            let comentariosHTML = principales.map(c => {
+                const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
             <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid var(--accent-2, #42d79a); padding-left:10px; margin-top:5px;">
                 <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">Anon:</strong> ${r.comentario}</div>
             </div>
         `).join('');
 
-        return `
+                return `
             <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
                 <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">Anon:</strong> ${c.comentario}</div>
                 <div class="comment-actions" style="margin-top:8px;">
@@ -342,13 +342,13 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
                 <div class="reply-list">${susRespuestas}</div>
             </div>
         `;
-    }).join('');
+            }).join('');
 
-    // --- LA MAGIA DEL NOMBRE Y EL CÍRCULO ---
-    const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
-    const inicial = nombreFinal.trim().charAt(0).toUpperCase();
+            // --- LA MAGIA DEL NOMBRE Y EL CÍRCULO ---
+            const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
+            const inicial = nombreFinal.trim().charAt(0).toUpperCase();
 
-    post.innerHTML = `
+            post.innerHTML = `
         <div class="post-header" style="display:flex; justify-content:space-between; align-items:center;">
             <div class="post-user" style="display:flex; align-items:center; gap:10px;">
                 <div class="profile-circle small" style="width:40px; height:40px; border-radius:50%; background:var(--accent, #76f3c2); color:#000; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px;">
@@ -392,113 +392,114 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
             </div>
         </div>
     `;
-    return post;
-}
+            return post;
+        }
 
-// 2. FUNCIÓN PARA LIKES EXCLUSIVOS (La que se te había borrado)
-function manejarReaccion(btn, tipo) {
-    const postCard = btn.closest('.post-card');
-    const postId = postCard.dataset.id;
-    const likeBtn = postCard.querySelector('.like-btn');
-    const dislikeBtn = postCard.querySelector('.dislike-btn');
+        // 2. FUNCIÓN PARA LIKES EXCLUSIVOS (La que se te había borrado)
+        function manejarReaccion(btn, tipo) {
+            const postCard = btn.closest('.post-card');
+            const postId = postCard.dataset.id;
+            const likeBtn = postCard.querySelector('.like-btn');
+            const dislikeBtn = postCard.querySelector('.dislike-btn');
 
-    const datos = new FormData();
-    datos.append('post_id', postId);
-    datos.append('tipo', tipo);
+            const datos = new FormData();
+            datos.append('post_id', postId);
+            datos.append('tipo', tipo);
 
-    fetch('reaccionar.php', { method: 'POST', body: datos })
-    .then(res => res.text())
-    .then(nuevoTotal => {
-        btn.querySelector('.count-number').innerText = nuevoTotal;
-        btn.classList.toggle('active');
+            fetch('reaccionar.php', { method: 'POST', body: datos })
+                .then(res => res.text())
+                .then(nuevoTotal => {
+                    btn.querySelector('.count-number').innerText = nuevoTotal;
+                    btn.classList.toggle('active');
 
-        if (btn.classList.contains("active")) {
-            if (tipo === 'like' && dislikeBtn && dislikeBtn.classList.contains("active")) {
-                dislikeBtn.classList.remove("active");
-                let count = parseInt(dislikeBtn.querySelector(".count-number").innerText);
-                if (count > 0) dislikeBtn.querySelector(".count-number").innerText = count - 1;
-            } else if (tipo === 'dislike' && likeBtn && likeBtn.classList.contains("active")) {
-                likeBtn.classList.remove("active");
-                let count = parseInt(likeBtn.querySelector(".count-number").innerText);
-                if (count > 0) likeBtn.querySelector(".count-number").innerText = count - 1;
+                    if (btn.classList.contains("active")) {
+                        if (tipo === 'like' && dislikeBtn && dislikeBtn.classList.contains("active")) {
+                            dislikeBtn.classList.remove("active");
+                            let count = parseInt(dislikeBtn.querySelector(".count-number").innerText);
+                            if (count > 0) dislikeBtn.querySelector(".count-number").innerText = count - 1;
+                        } else if (tipo === 'dislike' && likeBtn && likeBtn.classList.contains("active")) {
+                            likeBtn.classList.remove("active");
+                            let count = parseInt(likeBtn.querySelector(".count-number").innerText);
+                            if (count > 0) likeBtn.querySelector(".count-number").innerText = count - 1;
+                        }
+                    }
+                })
+                .catch(err => console.error("Error al reaccionar:", err));
+        }
+
+        // 3. FUNCIÓN PARA PREPARAR RESPUESTA ANIDADA (También se borró)
+        function prepararRespuesta(span) {
+            const contenedor = span.closest(".comment-item").querySelector(".reply-input-container");
+            if (contenedor.innerHTML !== "") return;
+
+            const input = document.createElement("input");
+            input.placeholder = "Escribe tu respuesta...";
+            input.style = "width: 90%; margin-left: 30px; margin-top: 10px; padding: 10px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); outline: none;";
+
+            input.onkeypress = (e) => {
+                if (e.key === "Enter") {
+                    enviarComentario(input.value, span.closest(".post-card").dataset.id, span.closest(".comment-item").dataset.id);
+                }
+            };
+            contenedor.appendChild(input);
+            input.focus();
+        }
+
+        // 4. FUNCIÓN PARA ENVIAR EL COMENTARIO A PHP (Esta igual faltaba)
+        function enviarComentario(texto, postId, padreId) {
+            if (!texto.trim()) return;
+            const fd = new FormData();
+            fd.append('post_id', postId);
+            fd.append('comentario', texto);
+            fd.append('padre_id', padreId || 0);
+
+            fetch('comentar.php', { method: 'POST', body: fd })
+                .then(() => location.reload());
+        }
+
+        // 5. CARGAR PUBLICACIONES AL INICIAR
+        window.onload = () => {
+            fetch("obtener_posts.php")
+                .then(response => response.json())
+                .then(data => {
+                    let resultado = document.getElementById("resultado");
+                    if (!resultado) {
+                        resultado = document.createElement("div");
+                        resultado.id = "resultado";
+                        document.querySelector(".main-content").appendChild(resultado);
+                    }
+
+                    resultado.innerHTML = "";
+                    data.forEach(post => {
+                        const imgArray = post.imagen ? ["uploads/" + post.imagen] : [];
+
+                        const nuevoPost = crearPost(
+                            post.texto || "",
+                            imgArray,
+                            post.total_likes || 0,
+                            post.total_dislikes || 0,
+                            post.comentarios_data || [],
+                            post.mi_reaccion || null,
+                            post.nombre_autor
+                        );
+
+                        nuevoPost.dataset.id = post.id;
+                        resultado.appendChild(nuevoPost);
+                    });
+                })
+                .catch(err => console.error("Error:", err));
+        };
+
+        // 6. FUNCIÓN DEL MENÚ DE PUNTITOS
+        function toggleMenu(btn) {
+            const menu = btn.nextElementSibling;
+            if (menu.style.display === "none" || menu.style.display === "") {
+                menu.style.display = "block";
+            } else {
+                menu.style.display = "none";
             }
         }
-    })
-    .catch(err => console.error("Error al reaccionar:", err));
-}
-
-// 3. FUNCIÓN PARA PREPARAR RESPUESTA ANIDADA (También se borró)
-function prepararRespuesta(span) {
-    const contenedor = span.closest(".comment-item").querySelector(".reply-input-container");
-    if (contenedor.innerHTML !== "") return; 
-
-    const input = document.createElement("input");
-    input.placeholder = "Escribe tu respuesta...";
-    input.style = "width: 90%; margin-left: 30px; margin-top: 10px; padding: 10px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); outline: none;";
-    
-    input.onkeypress = (e) => {
-        if(e.key === "Enter") {
-            enviarComentario(input.value, span.closest(".post-card").dataset.id, span.closest(".comment-item").dataset.id);
-        }
-    };
-    contenedor.appendChild(input);
-    input.focus();
-}
-
-// 4. FUNCIÓN PARA ENVIAR EL COMENTARIO A PHP (Esta igual faltaba)
-function enviarComentario(texto, postId, padreId) {
-    if (!texto.trim()) return;
-    const fd = new FormData();
-    fd.append('post_id', postId);
-    fd.append('comentario', texto);
-    fd.append('padre_id', padreId || 0);
-
-    fetch('comentar.php', { method: 'POST', body: fd })
-    .then(() => location.reload());
-}
-
-// 5. CARGAR PUBLICACIONES AL INICIAR
-window.onload = () => {
-    fetch("obtener_posts.php")
-        .then(response => response.json())
-        .then(data => {
-            let resultado = document.getElementById("resultado");
-            if (!resultado) {
-                resultado = document.createElement("div");
-                resultado.id = "resultado";
-                document.querySelector(".main-content").appendChild(resultado);
-            }
-            
-            resultado.innerHTML = "";
-            data.forEach(post => {
-                const imgArray = post.imagen ? ["uploads/" + post.imagen] : [];
-                
-                const nuevoPost = crearPost(
-                    post.texto || "", 
-                    imgArray, 
-                    post.total_likes || 0, 
-                    post.total_dislikes || 0, 
-                    post.comentarios_data || [],
-                    post.mi_reaccion || null,
-                    post.nombre_autor 
-                );
-                
-                nuevoPost.dataset.id = post.id;
-                resultado.appendChild(nuevoPost);
-            });
-        })
-        .catch(err => console.error("Error:", err));
-};
-
-// 6. FUNCIÓN DEL MENÚ DE PUNTITOS
-function toggleMenu(btn) {
-    const menu = btn.nextElementSibling;
-    if(menu.style.display === "none" || menu.style.display === "") {
-        menu.style.display = "block";
-    } else {
-        menu.style.display = "none";
-    }
-}
     </script>
 </body>
+
 </html>
