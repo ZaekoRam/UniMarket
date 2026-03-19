@@ -18,32 +18,32 @@
     <nav class="sidebar-menu">
       <a href="menu.html" class="menu-item">
         <span class="icon">🏠</span>
-        <span class="label">Inicio</span>
+        <span class="label" data-i18n="inicio">Inicio</span>
       </a>
 
       <a href="perfil.html" class="menu-item">
         <span class="icon">👤</span>
-        <span class="label">Perfil</span>
+        <span class="label" data-i18n="perfil">Perfil</span>
       </a>
 
       <a href="mensajes.html" class="menu-item active">
         <span class="icon">💬</span>
-        <span class="label">Mensajes</span>
+        <span class="label" data-i18n="mensajes">Mensajes</span>
       </a>
 
       <a href="notificaciones.html" class="menu-item">
         <span class="icon">🔔</span>
-        <span class="label">Notificaciones</span>
+        <span class="label" data-i18n="notificaciones">Notificaciones</span>
       </a>
 
       <a href="configuraciones.html" class="menu-item">
         <span class="icon">⚙️</span>
-        <span class="label">Configuración</span>
+        <span class="label" data-i18n="configuraciones">Configuraciones</span>
       </a>
 
       <a href="Login.html" class="menu-item">
         <span class="icon">🚪</span>
-        <span class="label">Cerrar sesión</span>
+        <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
       </a>
 
       <label class="theme-switch modern-switch" aria-label="Cambiar tema">
@@ -69,27 +69,27 @@
   <main class="main-content">
     <header class="topbar">
       <div class="page-title-box">
-        <p class="mini-label">Conversaciones en UniMarket</p>
-        <h1>Mensajes</h1>
+        <p class="mini-label" data-i18n="conversacionesUniMarket">Conversaciones en UniMarket</p>
+        <h1 data-i18n="mensajes">Mensajes</h1>
       </div>
     </header>
 
     <section class="messages-layout">
       <aside class="chat-list-panel">
         <div class="chat-list-header">
-          <h2>Chats</h2>
-          <button class="new-chat-btn">+ Nuevo</button>
+          <h2 data-i18n="chats">Chats</h2>
+          <button class="new-chat-btn" data-i18n="nuevo">+ Nuevo</button>
         </div>
 
         <div class="search-box">
-          <input type="text" placeholder="Buscar conversación...">
+          <input type="text" id="searchInput" placeholder="Buscar conversación...">
         </div>
 
         <div class="chat-list empty-state-list">
           <div class="empty-list-box">
             <div class="empty-list-icon">💬</div>
-            <h3>Aún no hay conversaciones</h3>
-            <p>Cuando alguien te escriba o inicies un chat, aparecerá aquí.</p>
+            <h3 data-i18n="sinConversaciones">Aún no hay conversaciones</h3>
+            <p data-i18n="sinConversacionesDesc">Cuando alguien te escriba o inicies un chat, aparecerá aquí.</p>
           </div>
         </div>
       </aside>
@@ -99,8 +99,8 @@
           <div class="chat-user">
             <div class="chat-avatar large">?</div>
             <div>
-              <h2>Sin conversación seleccionada</h2>
-              <p>Elige o crea un chat cuando el sistema esté listo</p>
+              <h2 data-i18n="sinConversacionSeleccionada">Sin conversación seleccionada</h2>
+              <p data-i18n="eligeChat">Elige o crea un chat cuando el sistema esté listo</p>
             </div>
           </div>
 
@@ -112,15 +112,15 @@
         <div class="chat-body">
           <div class="chat-empty-state">
             <div class="chat-empty-icon">✉️</div>
-            <h3>No hay mensajes todavía</h3>
-            <p>Esta ventana quedará lista para cuando se conecte el sistema de mensajería.</p>
+            <h3 data-i18n="sinMensajes">No hay mensajes todavía</h3>
+            <p data-i18n="sinMensajesDesc">Esta ventana quedará lista para cuando se conecte el sistema de mensajería.</p>
           </div>
         </div>
 
         <div class="chat-input-bar">
           <button class="input-icon">＋</button>
-          <input type="text" placeholder="Escribe un mensaje...">
-          <button class="send-btn">Enviar</button>
+          <input type="text" id="messageInput" placeholder="Escribe un mensaje...">
+          <button class="send-btn" data-i18n="enviar">Enviar</button>
         </div>
       </section>
     </section>
@@ -129,21 +129,79 @@
   <script>
     const themeToggleInput = document.getElementById("themeToggleInput");
     const themeText = document.getElementById("themeText");
+    const searchInput = document.getElementById("searchInput");
+    const messageInput = document.getElementById("messageInput");
+
+    const translations = {
+      es: {
+        inicio: "Inicio",
+        perfil: "Perfil",
+        mensajes: "Mensajes",
+        notificaciones: "Notificaciones",
+        configuraciones: "Configuraciones",
+        cerrarSesion: "Cerrar sesión",
+        conversacionesUniMarket: "Conversaciones en UniMarket",
+        chats: "Chats",
+        nuevo: "+ Nuevo",
+        buscarConversacion: "Buscar conversación...",
+        sinConversaciones: "Aún no hay conversaciones",
+        sinConversacionesDesc: "Cuando alguien te escriba o inicies un chat, aparecerá aquí.",
+        sinConversacionSeleccionada: "Sin conversación seleccionada",
+        eligeChat: "Elige o crea un chat cuando el sistema esté listo",
+        sinMensajes: "No hay mensajes todavía",
+        sinMensajesDesc: "Esta ventana quedará lista para cuando se conecte el sistema de mensajería.",
+        escribirMensaje: "Escribe un mensaje...",
+        enviar: "Enviar"
+      },
+      en: {
+        inicio: "Home",
+        perfil: "Profile",
+        mensajes: "Messages",
+        notificaciones: "Notifications",
+        configuraciones: "Settings",
+        cerrarSesion: "Log out",
+        conversacionesUniMarket: "Conversations in UniMarket",
+        chats: "Chats",
+        nuevo: "+ New",
+        buscarConversacion: "Search conversation...",
+        sinConversaciones: "There are no conversations yet",
+        sinConversacionesDesc: "When someone messages you or you start a chat, it will appear here.",
+        sinConversacionSeleccionada: "No conversation selected",
+        eligeChat: "Choose or create a chat when the system is ready",
+        sinMensajes: "There are no messages yet",
+        sinMensajesDesc: "This window will be ready once the messaging system is connected.",
+        escribirMensaje: "Write a message...",
+        enviar: "Send"
+      }
+    };
 
     function aplicarTema(modo) {
-      if (modo === "light") {
-        document.body.classList.add("light-mode");
-        themeToggleInput.checked = true;
-        themeText.textContent = "Light Mode";
-      } else {
-        document.body.classList.remove("light-mode");
-        themeToggleInput.checked = false;
-        themeText.textContent = "Dark Mode";
-      }
+      const light = modo === "light";
+      document.body.classList.toggle("light-mode", light);
+      themeToggleInput.checked = light;
+      themeText.textContent = light ? "Light Mode" : "Dark Mode";
+    }
+
+    function aplicarIdioma(lang) {
+      localStorage.setItem("lang", lang);
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        if (translations[lang][key]) {
+          el.textContent = translations[lang][key];
+        }
+      });
+
+      searchInput.placeholder = translations[lang].buscarConversacion;
+      messageInput.placeholder = translations[lang].escribirMensaje;
     }
 
     const temaGuardado = localStorage.getItem("theme") || "dark";
     aplicarTema(temaGuardado);
+
+    const idiomaGuardado = localStorage.getItem("lang") || "es";
+    aplicarIdioma(idiomaGuardado);
 
     themeToggleInput.addEventListener("change", () => {
       const nuevoTema = themeToggleInput.checked ? "light" : "dark";

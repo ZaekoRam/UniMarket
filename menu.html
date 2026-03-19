@@ -21,32 +21,32 @@
         <nav class="sidebar-menu">
             <a href="#" class="menu-item active">
                 <span class="icon">🏠</span>
-                <span class="label">Inicio</span>
+                <span class="label" data-i18n="inicio">Inicio</span>
             </a>
 
             <a href="perfil.html" class="menu-item">
                 <span class="icon">👤</span>
-                <span class="label">Perfil</span>
+                <span class="label" data-i18n="perfil">Perfil</span>
             </a>
 
             <a href="mensajes.html" class="menu-item">
                 <span class="icon">💬</span>
-                <span class="label">Mensajes</span>
+                <span class="label" data-i18n="mensajes">Mensajes</span>
             </a>
 
             <a href="notificaciones.html" class="menu-item">
                 <span class="icon">🔔</span>
-                <span class="label">Notificaciones</span>
+                <span class="label" data-i18n="notificaciones">Notificaciones</span>
             </a>
 
             <a href="configuraciones.html" class="menu-item">
                 <span class="icon">⚙️</span>
-                <span class="label">Configuración</span>
+                <span class="label" data-i18n="configuraciones">Configuraciones</span>
             </a>
 
             <a href="./Login.html" class="menu-item">
                 <span class="icon">🚪</span>
-                <span class="label">Cerrar sesión</span>
+                <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
             </a>
 
             <label class="theme-switch modern-switch" aria-label="Cambiar tema">
@@ -76,7 +76,7 @@
                 </div>
 
                 <div class="welcome-text">
-                    <p class="small-text">Todo comienza por un 0</p>
+                    <p class="small-text" data-i18n="fraseInicio">Todo comienza por un 0</p>
                     <h1 id="saludoUsuario">Hola, Invitado</h1>
                 </div>
             </div>
@@ -93,8 +93,8 @@
                     </div>
 
                     <div>
-                        <h3>Crear publicación</h3>
-                        <p>Comparte algo con la comunidad de UniMarket</p>
+                        <h3 data-i18n="crearPublicacion">Crear publicación</h3>
+                        <p data-i18n="subCrearPublicacion">Comparte algo con la comunidad de UniMarket</p>
                     </div>
                 </div>
 
@@ -105,12 +105,12 @@
 
                     <label class="custom-file">
                         <input type="file" id="archivoImagen" name="imagen" accept="image/*">
-                        <span>📷 Agregar imagen</span>
+                        <span id="labelImagen">📷 Agregar imagen</span>
                     </label>
 
                     <input type="url" id="urlEnlace" name="link" placeholder="Enlace externo (https://...)">
 
-                    <button type="submit" class="btn-publicar">Publicar</button>
+                    <button type="submit" class="btn-publicar" data-i18n="publicar">Publicar</button>
                 </form>
             </div>
 
@@ -122,6 +122,106 @@
         const body = document.body;
         const themeToggleInput = document.getElementById("themeToggleInput");
         const themeText = document.getElementById("themeText");
+
+        const translations = {
+            es: {
+                inicio: "Inicio",
+                perfil: "Perfil",
+                mensajes: "Mensajes",
+                notificaciones: "Notificaciones",
+                configuraciones: "Configuraciones",
+                cerrarSesion: "Cerrar sesión",
+                fraseInicio: "Todo comienza por un 0",
+                crearPublicacion: "Crear publicación",
+                subCrearPublicacion: "Comparte algo con la comunidad de UniMarket",
+                publicar: "Publicar",
+                saludoInvitado: "Hola, Invitado",
+                saludoUsuario: "Hola, {nombre}",
+                placeholderTexto: "¿Qué vamos a emprender hoy?",
+                agregarImagen: "📷 Agregar imagen",
+                placeholderEnlace: "Enlace externo (https://...)",
+                anonimo: "Anón",
+                responder: "↳ Responder",
+                meGusta: "👍 Me gusta",
+                noMeGusta: "👎 No me gusta",
+                escribeComentario: "Escribe un comentario...",
+                escribeRespuesta: "Escribe tu respuesta...",
+                editar: "Editar",
+                eliminar: "Eliminar",
+                editarEnlace: "Editar enlace",
+                guardar: "Guardar",
+                haceUnMomento: "Hace un momento"
+            },
+            en: {
+                inicio: "Home",
+                perfil: "Profile",
+                mensajes: "Messages",
+                notificaciones: "Notifications",
+                configuraciones: "Settings",
+                cerrarSesion: "Log out",
+                fraseInicio: "Everything starts from zero",
+                crearPublicacion: "Create post",
+                subCrearPublicacion: "Share something with the UniMarket community",
+                publicar: "Post",
+                saludoInvitado: "Hello, Guest",
+                saludoUsuario: "Hello, {nombre}",
+                placeholderTexto: "What are we building today?",
+                agregarImagen: "📷 Add image",
+                placeholderEnlace: "External link (https://...)",
+                anonimo: "Anon",
+                responder: "↳ Reply",
+                meGusta: "👍 Like",
+                noMeGusta: "👎 Dislike",
+                escribeComentario: "Write a comment...",
+                escribeRespuesta: "Write your reply...",
+                editar: "Edit",
+                eliminar: "Delete",
+                editarEnlace: "Edit link",
+                guardar: "Save",
+                haceUnMomento: "Just now"
+            }
+        };
+
+        function getLang() {
+            return localStorage.getItem("lang") || "es";
+        }
+
+        function t(key) {
+            const lang = getLang();
+            return translations[lang][key] || key;
+        }
+
+        function aplicarIdioma(lang) {
+            localStorage.setItem("lang", lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll("[data-i18n]").forEach(el => {
+                const key = el.dataset.i18n;
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            document.getElementById("texto").placeholder = translations[lang].placeholderTexto;
+            document.getElementById("labelImagen").textContent = translations[lang].agregarImagen;
+            document.getElementById("urlEnlace").placeholder = translations[lang].placeholderEnlace;
+
+            const saludoActual = document.getElementById("saludoUsuario");
+            const nombreActual = saludoActual.dataset.nombreActual || "";
+
+            if (nombreActual) {
+                saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
+            } else {
+                saludoActual.textContent = translations[lang].saludoInvitado;
+            }
+
+            const inicialInvitado = lang === "en" ? "G" : "I";
+
+            if (!saludoActual.dataset.nombreActual) {
+                document.getElementById("profileInitial").textContent = inicialInvitado;
+                document.getElementById("publishInitial").textContent = inicialInvitado;
+            }
+        }
 
         function aplicarTema(modo) {
             if (modo === "light") {
@@ -152,13 +252,23 @@
         const publishImage = document.getElementById("publishImage");
         const publishInitial = document.getElementById("publishInitial");
 
+        const idiomaGuardado = localStorage.getItem("lang") || "es";
+        aplicarIdioma(idiomaGuardado);
+
         fetch("obtener_sesion.php")
             .then(res => res.json())
             .then(data => {
-                const nombre = data.usuario ? data.usuario : "Invitado";
-                const inicial = nombre.trim().charAt(0).toUpperCase();
+                const nombre = data.usuario ? data.usuario : "";
+                const nombreBase = nombre || (getLang() === "en" ? "Guest" : "Invitado");
+                const inicial = nombreBase.trim().charAt(0).toUpperCase();
 
-                saludoUsuario.textContent = `Hola, ${nombre}`;
+                saludoUsuario.dataset.nombreActual = nombre;
+
+                if (nombre) {
+                    saludoUsuario.textContent = t("saludoUsuario").replace("{nombre}", nombre);
+                } else {
+                    saludoUsuario.textContent = t("saludoInvitado");
+                }
 
                 if (data.foto_perfil && data.foto_perfil.trim() !== "") {
                     profileImage.src = data.foto_perfil;
@@ -179,9 +289,13 @@
                 }
             })
             .catch(() => {
-                saludoUsuario.textContent = "Hola, Invitado";
-                profileInitial.textContent = "I";
-                publishInitial.textContent = "I";
+                saludoUsuario.dataset.nombreActual = "";
+                saludoUsuario.textContent = t("saludoInvitado");
+
+                const inicialInvitado = getLang() === "en" ? "G" : "I";
+
+                profileInitial.textContent = inicialInvitado;
+                publishInitial.textContent = inicialInvitado;
             });
 
         const resultado = document.getElementById("resultado");
@@ -256,12 +370,12 @@
                 item.className = "comment-item";
                 item.innerHTML = `
                     <div class="comment-bubble">
-                        <strong>Tú</strong>
+                        <strong>${t("anonimo")}</strong>
                         <div>${text}</div>
                     </div>
                     <div class="comment-actions">
-                        <span class="like-btn" onclick="manejarReaccion(this, 'like')">👍 <span class="count-number">0</span></span>
-                        <span class="dislike-btn" onclick="manejarReaccion(this, 'dislike')">👎 <span class="count-number">0</span></span>
+                        <span class="like-btn" onclick="manejarReaccion(this, 'like')">${t("meGusta")} <span class="count-number">0</span></span>
+                        <span class="dislike-btn" onclick="manejarReaccion(this, 'dislike')">${t("noMeGusta")} <span class="count-number">0</span></span>
                     </div>
                 `;
                 list.appendChild(item);
@@ -281,9 +395,9 @@
             post.innerHTML = `
                 <div class="edit-post-box">
                     <textarea class="edit-text">${texto}</textarea>
-                    <input type="url" class="edit-url" value="${url}" placeholder="Editar enlace">
+                    <input type="url" class="edit-url" value="${url}" placeholder="${t("editarEnlace")}">
                     <input type="file" class="edit-files">
-                    <button onclick="finalizarEdicion(this)">Guardar</button>
+                    <button onclick="finalizarEdicion(this)">${t("guardar")}</button>
                 </div>
             `;
         }
@@ -314,29 +428,27 @@
             }
         }
 
-        // 1. DIBUJAR EL POST (CON DISEÑO, NOMBRE Y FOTO DE PERFIL)
         function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo") {
             const post = document.createElement("div");
             post.className = "post-card";
 
             let mediaHTML = imgs.map(src => `<img src="${src}" class="post-img" style="border-radius:14px; margin-top:10px; width:100%;">`).join('');
 
-            // --- LÓGICA DE COMENTARIOS ANIDADOS ---
             const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
             const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
 
             let comentariosHTML = principales.map(c => {
                 const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
             <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid var(--accent-2, #42d79a); padding-left:10px; margin-top:5px;">
-                <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">Anon:</strong> ${r.comentario}</div>
+                <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">${t("anonimo")}:</strong> ${r.comentario}</div>
             </div>
         `).join('');
 
                 return `
             <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
-                <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">Anon:</strong> ${c.comentario}</div>
+                <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">${t("anonimo")}:</strong> ${c.comentario}</div>
                 <div class="comment-actions" style="margin-top:8px;">
-                    <span onclick="prepararRespuesta(this)" style="color:var(--muted, #9dc7b8); cursor:pointer; font-size:12px; font-weight:600;">↳ Responder</span>
+                    <span onclick="prepararRespuesta(this)" style="color:var(--muted, #9dc7b8); cursor:pointer; font-size:12px; font-weight:600;">${t("responder")}</span>
                 </div>
                 <div class="reply-input-container"></div>
                 <div class="reply-list">${susRespuestas}</div>
@@ -344,7 +456,6 @@
         `;
             }).join('');
 
-            // --- LA MAGIA DEL NOMBRE Y EL CÍRCULO ---
             const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
             const inicial = nombreFinal.trim().charAt(0).toUpperCase();
 
@@ -356,15 +467,15 @@
                 </div>
                 <div>
                     <h4 style="margin:0; color:var(--text, #fff); font-size:15px;">${nombreFinal}</h4>
-                    <span style="font-size:12px; color:var(--muted, #9dc7b8);">Hace un momento</span>
+                    <span style="font-size:12px; color:var(--muted, #9dc7b8);">${t("haceUnMomento")}</span>
                 </div>
             </div>
 
             <div class="post-options-container" style="position:relative;">
                 <button class="options-btn" onclick="toggleMenu(this)" style="background:none; border:none; color:var(--text, #fff); font-size:20px; cursor:pointer;">⋯</button>
                 <div class="options-menu" style="display:none; position:absolute; right:0; background:var(--panel-strong, #111); border:1px solid rgba(255,255,255,0.1); border-radius:8px; overflow:hidden;">
-                    <button onclick="editarPost(this)" style="width:100%; padding:10px; background:none; border:none; color:#fff; cursor:pointer;">Editar</button>
-                    <button class="delete-btn" onclick="this.closest('.post-card').remove();" style="width:100%; padding:10px; background:none; border:none; color:#ff7d92; cursor:pointer;">Eliminar</button>
+                    <button onclick="editarPost(this)" style="width:100%; padding:10px; background:none; border:none; color:#fff; cursor:pointer;">${t("editar")}</button>
+                    <button class="delete-btn" onclick="this.closest('.post-card').remove();" style="width:100%; padding:10px; background:none; border:none; color:#ff7d92; cursor:pointer;">${t("eliminar")}</button>
                 </div>
             </div>
         </div>
@@ -376,17 +487,17 @@
 
         <div class="post-actions" style="margin-top:15px; display:flex; gap:10px;">
             <button class="action-btn like-btn ${miReaccion === 'like' ? 'active' : ''}" onclick="manejarReaccion(this, 'like')">
-                👍 Me gusta <span class="count-number">${likes}</span>
+                ${t("meGusta")} <span class="count-number">${likes}</span>
             </button>
             <button class="action-btn dislike-btn ${miReaccion === 'dislike' ? 'active' : ''}" onclick="manejarReaccion(this, 'dislike')">
-                👎 No me gusta <span class="count-number">${dislikes}</span>
+                ${t("noMeGusta")} <span class="count-number">${dislikes}</span>
             </button>
         </div>
 
         <div class="comments-section" style="margin-top:15px;">
             <div class="comments-list">${comentariosHTML}</div>
             <div class="comment-input-row" style="margin-top:10px;">
-                <input type="text" placeholder="Escribe un comentario..." 
+                <input type="text" placeholder="${t("escribeComentario")}" 
                     onkeypress="if(event.key==='Enter') enviarComentario(this.value, this.closest('.post-card').dataset.id, 0)"
                     style="width: 100%; background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 12px 14px; outline: none;">
             </div>
@@ -395,7 +506,6 @@
             return post;
         }
 
-        // 2. FUNCIÓN PARA LIKES EXCLUSIVOS (La que se te había borrado)
         function manejarReaccion(btn, tipo) {
             const postCard = btn.closest('.post-card');
             const postId = postCard.dataset.id;
@@ -427,13 +537,12 @@
                 .catch(err => console.error("Error al reaccionar:", err));
         }
 
-        // 3. FUNCIÓN PARA PREPARAR RESPUESTA ANIDADA (También se borró)
         function prepararRespuesta(span) {
             const contenedor = span.closest(".comment-item").querySelector(".reply-input-container");
             if (contenedor.innerHTML !== "") return;
 
             const input = document.createElement("input");
-            input.placeholder = "Escribe tu respuesta...";
+            input.placeholder = t("escribeRespuesta");
             input.style = "width: 90%; margin-left: 30px; margin-top: 10px; padding: 10px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); outline: none;";
 
             input.onkeypress = (e) => {
@@ -445,7 +554,6 @@
             input.focus();
         }
 
-        // 4. FUNCIÓN PARA ENVIAR EL COMENTARIO A PHP (Esta igual faltaba)
         function enviarComentario(texto, postId, padreId) {
             if (!texto.trim()) return;
             const fd = new FormData();
@@ -457,7 +565,6 @@
                 .then(() => location.reload());
         }
 
-        // 5. CARGAR PUBLICACIONES AL INICIAR
         window.onload = () => {
             fetch("obtener_posts.php")
                 .then(response => response.json())
@@ -490,7 +597,6 @@
                 .catch(err => console.error("Error:", err));
         };
 
-        // 6. FUNCIÓN DEL MENÚ DE PUNTITOS
         function toggleMenu(btn) {
             const menu = btn.nextElementSibling;
             if (menu.style.display === "none" || menu.style.display === "") {
