@@ -1,33 +1,37 @@
 <?php
-// Iniciar sesión para guardar el rol del usuario
 session_start();
-
-// 1. Conexión a la base de datos (Servidor, Usuario, Pass, Nombre BD)
 $conexion = mysqli_connect("localhost", "root", "", "sistema_login");
 
-// 2. Recoger los datos enviados desde el HTML
-$usuario  = $_POST['usuario'];
-$password = $_POST['password'];
+$usuario  = mysqli_real_escape_string($conexion, $_POST['usuario']);
+$password_ingresada = $_POST['password'];
 
-// 3. Consultar si el usuario y la contraseña existen
-$consulta = "SELECT * FROM usuarios WHERE usuario = '$usuario' AND password = '$password'";
+$consulta = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
 $resultado = mysqli_query($conexion, $consulta);
 
-// 4. Verificar el resultado
 if (mysqli_num_rows($resultado) > 0) {
-    // ESTA LÍNEA ES VITAL: Extrae los datos de la fila encontrada
     $datos = mysqli_fetch_array($resultado); 
     
-    // Ahora sí, guardamos en la sesión usando los nombres exactos de tus columnas en SQL
-    $_SESSION['usuario_id'] = $datos['id']; // Asegúrate que en tu tabla se llame 'id'
-    $_SESSION['usuario'] = $datos['usuario'];
-    $_SESSION['rol'] = $datos['rol'];
-
-    header("location:menu.html");
+    // Verificamos la contraseña
+    if (password_verify($password_ingresada, $datos['PASSWORD'])) {
+        
+        // ¡Metemos todo a la mochila de la sesión!
+        $_SESSION['usuario_id'] = $datos['id'];
+        $_SESSION['usuario'] = $datos['usuario'];
+        $_SESSION['rol'] = $datos['rol'];
+        $_SESSION['nombre_completo'] = $datos['nombre_completo']; // 👈 ¡Aquí guardamos el nombre completo!
+    
+        header("location:menu.html");
+        exit();
+        
+    } else {
+        echo "<script>
+                alert('Contraseña incorrecta, twin. Intenta de nuevo.');
+                window.location='Login.html';
+              </script>";
+    }
 } else {
-    // Si es incorrecto, mostrar error y regresar al login
     echo "<script>
-            alert('Usuario o contraseña incorrectos');
+            alert('Ese usuario no existe. ¡Regístrate primero!');
             window.location='Login.html';
           </script>";
 }

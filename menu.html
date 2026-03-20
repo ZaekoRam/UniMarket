@@ -213,20 +213,31 @@
             document.getElementById("urlEnlace").placeholder = translations[lang].placeholderEnlace;
 
             const saludoActual = document.getElementById("saludoUsuario");
-            const nombreActual = saludoActual.dataset.nombreActual || "";
+        const nombreActual = saludoActual.dataset.nombreActual || "";
 
-            if (nombreActual) {
-                saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
-            } else {
-                saludoActual.textContent = translations[lang].saludoInvitado;
+        if (nombreActual) {
+            // Ponemos el saludo con el nombre
+            saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
+            
+            // 🔥 MAGIA DE LAS DOS INICIALES PARA LOS ICONOS PRINCIPALES 🔥
+            const palabras = nombreActual.trim().split(" ");
+            let iniciales = palabras[0].charAt(0).toUpperCase();
+            if (palabras.length > 1) {
+                iniciales += palabras[1].charAt(0).toUpperCase();
             }
-
+            
+            // Se las ponemos a los circulitos de perfil y de publicar
+            document.getElementById("profileInitial").textContent = iniciales;
+            document.getElementById("publishInitial").textContent = iniciales;
+            
+        } else {
+            // Si es invitado (no ha iniciado sesión)
+            saludoActual.textContent = translations[lang].saludoInvitado;
             const inicialInvitado = lang === "en" ? "G" : "I";
-
-            if (!saludoActual.dataset.nombreActual) {
-                document.getElementById("profileInitial").textContent = inicialInvitado;
-                document.getElementById("publishInitial").textContent = inicialInvitado;
-            }
+            
+            document.getElementById("profileInitial").textContent = inicialInvitado;
+            document.getElementById("publishInitial").textContent = inicialInvitado;
+        }
         }
 
         function aplicarTema(modo) {
@@ -444,32 +455,45 @@
         }
 
         function finalizarEdicion(btn) {
-            const post = btn.closest(".post-card");
-            const texto = post.querySelector(".edit-text").value;
-            const url = post.querySelector(".edit-url").value;
-            const files = post.querySelector(".edit-files").files;
+    const post = btn.closest(".post-card");
+    const postId = post.dataset.id; // Asegúrate de que tu <div class="post-card"> tenga el data-id="${post.id}"
+    
+    if (!postId) {
+        alert("Error: No se encontró el ID del post.");
+        return;
+    }
 
-            const guardar = (imgs = []) => {
-                const nuevo = crearPost(texto, imgs, url);
-                post.replaceWith(nuevo);
-            };
+    const texto = post.querySelector(".edit-text").value;
+    // const url = post.querySelector(".edit-url").value; // Descomenta si usas URL
+    
+    const datos = new FormData();
+    datos.append("post_id", postId);
+    datos.append("texto", texto);
+    // datos.append("url", url); // Descomenta si usas URL
 
-            if (files.length > 0) {
-                let cargadas = [];
-                Array.from(files).forEach(f => {
-                    const r = new FileReader();
-                    r.onload = (e) => {
-                        cargadas.push(e.target.result);
-                        if (cargadas.length === files.length) guardar(cargadas);
-                    };
-                    r.readAsDataURL(f);
-                });
-            } else {
-                guardar();
-            }
+    // Le mandamos la info a PHP
+    fetch("editar_post.php", {
+        method: "POST",
+        body: datos
+    })
+    .then(res => res.text())
+    .then(respuesta => {
+        if (respuesta.trim() === "ok") {
+            // ¡Éxito! Recargamos la página para que se vean los cambios fresquecitos desde la BD
+            // (O si tienes una función como cargarPosts(), puedes llamarla en lugar de reload)
+            window.location.reload(); 
+        } else {
+            alert(respuesta); // Muestra el error de PHP (ej. "No tienes permiso")
         }
+    })
+    .catch(err => {
+        console.error("Error al editar:", err);
+        alert("Hubo un problema al conectar con el servidor.");
+    });
+}
 
-        function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo") {
+        // 👇 Le agregamos los 3 IDs al final de esta línea para saber de quién es el post
+function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null) {
             const post = document.createElement("div");
             post.className = "post-card";
 
@@ -497,8 +521,32 @@
                 `;
             }).join('');
 
-            const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
-            const inicial = nombreFinal.trim().charAt(0).toUpperCase();
+           const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
+
+// Sacamos las palabras del nombre completo
+const palabras = nombreFinal.trim().split(" ");
+// Agarramos la primera letra de la primera palabra
+let inicial = palabras[0].charAt(0).toUpperCase();
+// Si hay más de una palabra (ej. tiene apellido), agarramos la primera letra de la segunda palabra también
+if (palabras.length > 1) {
+    inicial += palabras[1].charAt(0).toUpperCase();
+}
+
+            // 🔒 AQUÍ ESTÁ LA MAGIA: Guardamos tu menú en una variable
+            let opcionesHTML = "";
+            
+            // Y SOLO lo dibujamos si el post es tuyo o si eres admin
+            if (autorId == miId || miRol === 'admin') {
+                opcionesHTML = `
+                    <div class="post-options-container">
+                        <button class="options-btn" onclick="toggleMenu(this)">⋯</button>
+                        <div class="options-menu">
+                            <button onclick="editarPost(this)">${t("editar")}</button>
+                            <button onclick="eliminarPost(this)" style="color:#ff7d92;">${t("eliminar")}</button>
+                        </div>
+                    </div>
+                `;
+            }
 
             post.innerHTML = `
                 <div class="post-header">
@@ -512,13 +560,8 @@
                         </div>
                     </div>
 
-                    <div class="post-options-container">
-                        <button class="options-btn" onclick="toggleMenu(this)">⋯</button>
-                        <div class="options-menu">
-                            <button onclick="editarPost(this)">${t("editar")}</button>
-                            <button onclick="eliminarPost(this)" style="color:#ff7d92;">${t("eliminar")}</button>
-                        </div>
-                    </div>
+                    ${opcionesHTML}
+
                 </div>
 
                 <div class="post-content" style="margin-top:15px;">
@@ -606,37 +649,93 @@
                 .then(() => location.reload());
         }
 
-        window.onload = () => {
-            fetch("obtener_posts.php")
-                .then(response => response.json())
-                .then(data => {
-                    let resultado = document.getElementById("resultado");
-                    if (!resultado) {
-                        resultado = document.createElement("div");
-                        resultado.id = "resultado";
-                        document.querySelector(".main-content").appendChild(resultado);
+        window.onload = async () => {
+            let miUsuarioId = null;
+            let miRol = null;
+
+            // 1. Cargamos la sesión
+            try {
+                const peticionSesion = await fetch("obtener_sesion.php");
+                const sesion = await peticionSesion.json();
+                miUsuarioId = sesion.usuario_id;
+                miRol = sesion.rol;
+
+                // 👇 AQUÍ RECIBIMOS EL NOMBRE COMPLETO
+                const saludoActual = document.getElementById("saludoUsuario");
+                
+                if (sesion.nombre_completo) {
+                    saludoActual.dataset.nombreActual = sesion.nombre_completo;
+                } else if (sesion.usuario) {
+                    saludoActual.dataset.nombreActual = sesion.usuario;
+                }
+
+                // 👇 APLICAMOS EL SALUDO Y LA MAGIA DE LAS INICIALES
+                const nombreActual = saludoActual.dataset.nombreActual || "";
+                
+                // Asegurarnos de que tenemos el idioma actual (si no, por defecto "es")
+                const lang = localStorage.getItem("lang") || "es";
+
+                if (nombreActual) {
+                    saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
+                    
+                    // Sacamos las dos iniciales
+                    const palabras = nombreActual.trim().split(" ");
+                    let iniciales = palabras[0].charAt(0).toUpperCase();
+                    if (palabras.length > 1) {
+                        iniciales += palabras[1].charAt(0).toUpperCase();
                     }
+                    
+                    // Se las ponemos a los iconos
+                    document.getElementById("profileInitial").textContent = iniciales;
+                    document.getElementById("publishInitial").textContent = iniciales;
+                } else {
+                    // Si es invitado
+                    saludoActual.textContent = translations[lang].saludoInvitado;
+                    const inicialInvitado = lang === "en" ? "G" : "I";
+                    document.getElementById("profileInitial").textContent = inicialInvitado;
+                    document.getElementById("publishInitial").textContent = inicialInvitado;
+                }
 
-                    resultado.innerHTML = "";
-                    data.forEach(post => {
-                        const imgArray = post.imagen ? ["uploads/" + post.imagen] : [];
+            } catch (e) {
+                console.error("No se pudo cargar la sesión", e);
+            }
 
-                        const nuevoPost = crearPost(
-                            post.texto || "",
-                            imgArray,
-                            post.total_likes || 0,
-                            post.total_dislikes || 0,
-                            post.comentarios_data || [],
-                            post.mi_reaccion || null,
-                            post.nombre_autor
-                        );
+            // 2. Ahora sí, traemos los posts (ESTO SE QUEDA IGUAL)
+            fetch("obtener_posts.php")
+            // ... (aquí sigue el resto de tu código normal) ...
+        .then(response => response.json())
+        .then(data => {
+            let resultado = document.getElementById("resultado");
+            if (!resultado) {
+                resultado = document.createElement("div");
+                resultado.id = "resultado";
+                document.querySelector(".main-content").appendChild(resultado);
+            }
 
-                        nuevoPost.dataset.id = post.id;
-                        resultado.appendChild(nuevoPost);
-                    });
-                })
-                .catch(err => console.error("Error:", err));
-        };
+            resultado.innerHTML = "";
+            data.forEach(post => {
+                const imgArray = post.imagen ? ["uploads/" + post.imagen] : [];
+
+                // 🚨 LE MANDAMOS 3 DATOS NUEVOS A crearPost al final 🚨
+                const nuevoPost = crearPost(
+                    post.texto || "",
+                    imgArray,
+                    post.total_likes || 0,
+                    post.total_dislikes || 0,
+                    post.comentarios_data || [],
+                    post.mi_reaccion || null,
+                    post.nombre_autor,
+                    post.usuario_id, // El ID del dueño del post
+                    miUsuarioId,     // Tu ID
+                    miRol            // Tu rol (para saber si eres admin)
+                );
+
+                nuevoPost.dataset.id = post.id;
+                resultado.appendChild(nuevoPost);
+            });
+        })
+        .catch(err => console.error("Error al cargar posts:", err));
+};
     </script>
 </body>
 

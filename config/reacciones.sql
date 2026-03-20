@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-02-2026 a las 17:13:33
+-- Tiempo de generación: 05-03-2026 a las 17:31:07
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -24,44 +24,36 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Estructura de tabla para la tabla `reacciones`
 --
 
-CREATE TABLE `usuarios` (
+CREATE TABLE `reacciones` (
   `id` int(11) NOT NULL,
-  `usuario` varchar(50) NOT NULL,
-  `PASSWORD` varchar(255) NOT NULL,
-  `rol` enum('lector','creador','admin') DEFAULT 'lector'
+  `publicacion_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `tipo` enum('like','dislike') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `usuarios`
---
-
-INSERT INTO `usuarios` (`id`, `usuario`, `PASSWORD`, `rol`) VALUES
-(1, 'juan', '123', 'lector'),
-(2, 'maria', '456', 'creador'),
-(3, 'admin', '789', 'admin');
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `usuarios`
+-- Indices de la tabla `reacciones`
 --
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `reacciones`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `reaccion_unica` (`publicacion_id`,`usuario_id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT de la tabla `reacciones`
 --
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `reacciones`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

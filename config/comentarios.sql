@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-02-2026 a las 17:13:33
+-- Tiempo de generación: 05-03-2026 a las 19:04:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -24,33 +24,33 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Estructura de tabla para la tabla `comentarios`
 --
 
-CREATE TABLE `usuarios` (
+CREATE TABLE `comentarios` (
   `id` int(11) NOT NULL,
-  `usuario` varchar(50) NOT NULL,
-  `PASSWORD` varchar(255) NOT NULL,
-  `rol` enum('lector','creador','admin') DEFAULT 'lector'
+  `publicacion_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `comentario` text NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `padre_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `usuarios`
+-- Volcado de datos para la tabla `comentarios`
 --
 
-INSERT INTO `usuarios` (`id`, `usuario`, `PASSWORD`, `rol`) VALUES
-(1, 'juan', '123', 'lector'),
-(2, 'maria', '456', 'creador'),
-(3, 'admin', '789', 'admin');
+INSERT INTO `comentarios` (`id`, `publicacion_id`, `usuario_id`, `comentario`, `fecha`, `padre_id`) VALUES
+(1, 24, 2, 'holi', '2026-03-05 16:49:34', NULL);
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `usuarios`
+-- Indices de la tabla `comentarios`
 --
-ALTER TABLE `usuarios`
+ALTER TABLE `comentarios`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -58,10 +58,10 @@ ALTER TABLE `usuarios`
 --
 
 --
--- AUTO_INCREMENT de la tabla `usuarios`
+-- AUTO_INCREMENT de la tabla `comentarios`
 --
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `comentarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

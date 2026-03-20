@@ -5,8 +5,8 @@ $conexion = mysqli_connect("localhost", "root", "", "sistema_login");
 // Obtenemos el ID del usuario actual
 $usuario_id = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : 0;
 
-// Agregamos un LEFT JOIN para traer el nombre del usuario desde la tabla 'usuarios'
-$sql = "SELECT p.*, u.usuario AS nombre_autor,
+// 👇 EL CAMBIO ESTÁ AQUÍ: Cambiamos u.usuario por u.nombre_completo
+$sql = "SELECT p.*, u.nombre_completo AS nombre_autor,
         (SELECT COUNT(*) FROM reacciones r WHERE r.publicacion_id = p.id AND r.tipo = 'like') as total_likes,
         (SELECT COUNT(*) FROM reacciones r WHERE r.publicacion_id = p.id AND r.tipo = 'dislike') as total_dislikes,
         (SELECT tipo FROM reacciones r WHERE r.publicacion_id = p.id AND r.usuario_id = '$usuario_id' LIMIT 1) as mi_reaccion
@@ -30,6 +30,6 @@ while($row = mysqli_fetch_assoc($res)) {
     $posts[] = $row;
 }
 
-header('Content-Type: application/json');
 echo json_encode($posts);
+mysqli_close($conexion);
 ?>

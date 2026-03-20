@@ -71,7 +71,6 @@ const translations = {
     account: "Número de cuenta",
     email: "Correo institucional"
   },
-
   en: {
     back: "Home",
     loginTitle: "Sign in",
@@ -104,9 +103,9 @@ function setLanguage(lang) {
   });
 
   const glitchHome = document.querySelector(".glitch-home-glitch");
-if (glitchHome) {
-  glitchHome.textContent = lang === "es" ? "_Inicio" : "_Home";
-}
+  if (glitchHome) {
+    glitchHome.textContent = lang === "es" ? "Inicio" : "Home";
+  }
 
   if (lang === "es") {
     if (langFlag) {
@@ -139,7 +138,6 @@ langBtn?.addEventListener("click", () => {
 document.querySelectorAll(".toggle-pass").forEach(icon => {
   icon.addEventListener("click", () => {
     const input = document.getElementById(icon.dataset.target);
-
     if (!input) return;
 
     if (input.type === "password") {
@@ -149,17 +147,126 @@ document.querySelectorAll(".toggle-pass").forEach(icon => {
       input.type = "password";
       icon.src = "img/contrasena-de-ojo.png";
     }
+
+    actualizarEstadoRobot();
   });
 });
+
 const sideTools = document.getElementById("sideTools");
 const robotToggle = document.getElementById("robotToggle");
 
-robotToggle?.addEventListener("click", () => {
+robotToggle?.addEventListener("click", (e) => {
+  e.stopPropagation();
   sideTools.classList.toggle("open");
 });
+
 document.addEventListener("click", (e) => {
   if (!sideTools) return;
   if (!sideTools.contains(e.target)) {
     sideTools.classList.remove("open");
   }
 });
+
+/* =========================
+   ROBOT
+========================= */
+const robot = document.getElementById("loginRobot");
+const allInputs = document.querySelectorAll(
+  "#loginUsuario, #passwordLogin, #registerNombreCompleto, #registerUsuario, #registerNum, #registerCorreo, #passwordRegister"
+);
+
+let idleTimer = null;
+let happyTimer = null;
+
+function clearRobotStates() {
+  if (!robot) return;
+  robot.classList.remove("escribiendo", "cubrir", "feliz", "bailando");
+}
+
+function setRobotState(state) {
+  if (!robot) return;
+  clearRobotStates();
+  if (state) robot.classList.add(state);
+}
+
+function actualizarEstadoRobot() {
+  const active = document.activeElement;
+
+  if (!active || active.tagName !== "INPUT") {
+    setRobotState("");
+    return;
+  }
+
+  if (active.type === "password") {
+    setRobotState("cubrir");
+  } else {
+    setRobotState("escribiendo");
+  }
+}
+
+function triggerHappyRobot() {
+  clearTimeout(happyTimer);
+  setRobotState("feliz");
+
+  happyTimer = setTimeout(() => {
+    actualizarEstadoRobot();
+  }, 700);
+}
+
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+
+  if (robot && robot.classList.contains("bailando")) {
+    robot.classList.remove("bailando");
+    actualizarEstadoRobot();
+  }
+
+  idleTimer = setTimeout(() => {
+    const active = document.activeElement;
+    if (!active || active.tagName !== "INPUT") {
+      clearRobotStates();
+      robot?.classList.add("bailando");
+    }
+  }, 5000);
+}
+
+allInputs.forEach(input => {
+  input.addEventListener("focus", () => {
+    actualizarEstadoRobot();
+    resetIdleTimer();
+  });
+
+  input.addEventListener("blur", () => {
+    setTimeout(() => {
+      actualizarEstadoRobot();
+      resetIdleTimer();
+    }, 30);
+  });
+
+  input.addEventListener("input", () => {
+    if (input.type !== "password" && input.value.trim().length > 0) {
+      triggerHappyRobot();
+    } else {
+      actualizarEstadoRobot();
+    }
+    resetIdleTimer();
+  });
+});
+
+document.querySelectorAll('button[type="submit"], .ghost').forEach(btn => {
+  btn.addEventListener("mouseenter", () => {
+    triggerHappyRobot();
+    resetIdleTimer();
+  });
+
+  btn.addEventListener("mouseleave", () => {
+    actualizarEstadoRobot();
+  });
+});
+
+["mousemove", "keydown", "click", "touchstart"].forEach(eventName => {
+  document.addEventListener(eventName, resetIdleTimer, { passive: true });
+});
+
+resetIdleTimer();
+actualizarEstadoRobot();

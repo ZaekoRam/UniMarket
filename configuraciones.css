@@ -63,6 +63,7 @@ a {
   color: inherit;
 }
 
+/* SIDEBAR */
 .sidebar {
   position: fixed;
   top: 20px;
@@ -172,6 +173,7 @@ body.light-mode .menu-item.active {
   transform: translateX(0);
 }
 
+/* SWITCH SIDEBAR */
 .theme-switch {
   margin-top: 10px;
   width: 100%;
@@ -324,6 +326,7 @@ body.light-mode .menu-item.active {
   transform: translateX(0);
 }
 
+/* MAIN */
 .main-content {
   margin-left: 120px;
   padding: 28px 30px 50px;
@@ -354,6 +357,7 @@ body.light-mode .menu-item.active {
   letter-spacing: 2px;
 }
 
+/* SETTINGS */
 .settings-wrapper {
   max-width: 1100px;
   margin: 0 auto;
@@ -441,7 +445,7 @@ body.light-mode .setting-row {
 }
 
 .select-box {
-  min-width: 170px;
+  min-width: 150px;
   border: 1px solid rgba(255,255,255,0.08);
   background: var(--panel-soft);
   color: var(--text);
@@ -454,6 +458,7 @@ body.light-mode .select-box {
   border-color: rgba(0,0,0,0.08);
 }
 
+/* SWITCH CARD */
 .switch {
   position: relative;
   width: 58px;
@@ -496,6 +501,7 @@ body.light-mode .select-box {
   transform: translateX(26px);
 }
 
+/* INFO */
 .info-block {
   padding: 14px 16px;
   border-radius: 18px;
@@ -550,6 +556,7 @@ body.light-mode .ghost-btn {
   border-color: rgba(0,0,0,0.08);
 }
 
+/* RESPONSIVE */
 @media (max-width: 950px) {
   .settings-grid {
     grid-template-columns: 1fr;
