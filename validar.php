@@ -11,19 +11,21 @@ $resultado = mysqli_query($conexion, $consulta);
 if (mysqli_num_rows($resultado) > 0) {
     $datos = mysqli_fetch_array($resultado); 
     
-    // 👇 AQUÍ ESTÁ EL CAMBIO IMPORTANTE: Escribe el nombre de la columna EXACTAMENTE como está en tu BD
+    // Verificamos la contraseña
     if (password_verify($password_ingresada, $datos['PASSWORD'])) {
         
+        // ¡Metemos todo a la mochila de la sesión!
         $_SESSION['usuario_id'] = $datos['id'];
         $_SESSION['usuario'] = $datos['usuario'];
         $_SESSION['rol'] = $datos['rol'];
+        $_SESSION['nombre_completo'] = $datos['nombre_completo']; // 👈 ¡Aquí guardamos el nombre completo!
     
         header("location:menu.html");
         exit();
         
     } else {
         echo "<script>
-                alert('Contraseña incorrecta, twiin. Intenta de nuevo.');
+                alert('Contraseña incorrecta, twin. Intenta de nuevo.');
                 window.location='Login.html';
               </script>";
     }
