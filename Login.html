@@ -10,68 +10,87 @@
 
 <body>
   <div class="bg-effect"></div>
+
   <a href="./menu.html" class="home-chip home-chip-glitch">
-  <span class="glitch-home-wrap">
-    <span class="home-chip-text" data-i18n="back">Inicio</span>
-    <span class="glitch-home-glitch" aria-hidden="true">Inicio</span>
-  </span>
-</a>
+    <span class="glitch-home-wrap">
+      <span class="home-chip-text" data-i18n="back">Inicio</span>
+      <span class="glitch-home-glitch" aria-hidden="true">Inicio</span>
+    </span>
+  </a>
 
   <aside class="side-tools collapsed" id="sideTools">
-  <div class="side-toggle-wrap">
-    <button class="side-toggle" id="robotToggle" type="button" aria-label="Herramientas">
-      <img src="img/UNI_EMOTE_CONFIG.png" alt="Configuración" class="side-toggle-img">
-    </button>
-  </div>
-
-  <ul class="example-2" id="toolsMenu">
-    <li class="icon-content">
-      <button class="tool-btn action-btn" id="langBtn" type="button" aria-label="Idioma" data-social="language">
-        <div class="filled"></div>
-        <img id="langFlag" src="img/es.png" alt="Español">
+    <div class="side-toggle-wrap">
+      <button class="side-toggle" id="robotToggle" type="button" aria-label="Herramientas">
+        <img src="img/UNI_EMOTE_CONFIG.png" alt="Configuración" class="side-toggle-img">
       </button>
-    </li>
+    </div>
 
-    <li class="icon-content">
-      <button class="tool-btn action-btn" id="themeBtn" type="button" aria-label="Tema" data-social="theme">
-        <div class="filled"></div>
-        <span class="tool-emoji" id="themeEmoji">🌙</span>
-      </button>
-    </li>
+    <ul class="example-2" id="toolsMenu">
+      <li class="icon-content">
+        <button class="tool-btn action-btn" id="langBtn" type="button" aria-label="Idioma" data-social="language">
+          <div class="filled"></div>
+          <img id="langFlag" src="img/es.png" alt="Español">
+        </button>
+      </li>
 
-    <li class="icon-content">
-      <a href="https://www.ucol.mx/" target="_blank" aria-label="UdeC" data-social="udec">
-        <div class="filled"></div>
-        <img src="img/udc.png" alt="UdeC">
-      </a>
-    </li>
+      <li class="icon-content">
+        <button class="tool-btn action-btn" id="themeBtn" type="button" aria-label="Tema" data-social="theme">
+          <div class="filled"></div>
+          <span class="tool-emoji" id="themeEmoji">🌙</span>
+        </button>
+      </li>
 
-    <li class="icon-content">
-      <a href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank" aria-label="Facebook" data-social="facebook">
-        <div class="filled"></div>
-        <img src="img/facebook.png" alt="Facebook">
-      </a>
-    </li>
+      <li class="icon-content">
+        <a href="https://www.ucol.mx/" target="_blank" aria-label="UdeC" data-social="udec">
+          <div class="filled"></div>
+          <img src="img/udc.png" alt="UdeC">
+        </a>
+      </li>
 
-    <li class="icon-content">
-      <a href="https://github.com/ZaekoRam/UniMarket" target="_blank" aria-label="GitHub" data-social="github">
-        <div class="filled"></div>
-        <img src="img/github.png" alt="GitHub">
-      </a>
-    </li>
-  </ul>
-</aside>
+      <li class="icon-content">
+        <a href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank" aria-label="Facebook" data-social="facebook">
+          <div class="filled"></div>
+          <img src="img/facebook.png" alt="Facebook">
+        </a>
+      </li>
+
+      <li class="icon-content">
+        <a href="https://github.com/ZaekoRam/UniMarket" target="_blank" aria-label="GitHub" data-social="github">
+          <div class="filled"></div>
+          <img src="img/github.png" alt="GitHub">
+        </a>
+      </li>
+    </ul>
+  </aside>
 
   <div class="container login-active" id="container">
-
     <div class="brand">
       <h1 class="logo">UniMarket</h1>
       <div class="logo-line"></div>
       <div class="logo-line thin"></div>
+
+      <div class="mascot-wrap">
+        <div class="robot" id="loginRobot">
+          <div class="cabeza">
+           <img class="ojos" id="ojosRobot" src="img/ojos_abiertos.png">
+           <img class="boca" id="bocaRobot" src="img/boca_normal.png">
+          </div>
+          <div class="brazo izq">
+            <div class="mano izq"></div>
+          </div>
+
+          <div class="torso"></div>
+
+          <div class="brazo der">
+            <div class="mano der"></div>
+          </div>
+
+          <div class="cadera"></div>
+        </div>
+      </div>
     </div>
 
     <div class="panel">
-
       <div class="form-container sign-in-container">
         <form class="full-login" action="validar.php" method="post" novalidate>
           <h1 data-i18n="loginTitle">Inicio de sesión</h1>
@@ -145,7 +164,6 @@
           <button type="submit" data-i18n="registerButton">Registrarse</button>
         </form>
       </div>
-
     </div>
   </div>
 

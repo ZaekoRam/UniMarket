@@ -41,7 +41,7 @@ $sql = "INSERT INTO usuarios (nombre_completo, usuario, num, cuenta, password, r
 if (mysqli_query($conexion, $sql)) {
     // ¡Éxito!
     echo "<script>
-            alert('¡Registro exitoso, twiin! Ya puedes iniciar sesión con tu cuenta nuevecita.');
+            alert('¡Registro exitoso! Ya puedes iniciar sesión con tu cuenta nuevecita.');
             window.location='Login.html';
           </script>";
 } else {
