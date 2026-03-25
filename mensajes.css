@@ -692,33 +692,3 @@ body.light-mode .chat-input-bar {
     width: 100%;
   }
 }
-
-/* =========================================
-   FORZAR ALTURA COMPLETA Y FIJAR INPUT
-   ========================================= */
-
-/* 1. Hacemos que todo el layout de mensajes ocupe la pantalla completa (dejando un margen) */
-.messages-layout {
-  height: calc(100vh - 80px); /* Ajusta el 80px si necesitas más o menos espacio arriba/abajo */
-  min-height: 500px;
-}
-
-/* 2. Le decimos al área de chat que tome el 100% de esa altura */
-.chat-area {
-  display: flex;
-  flex-direction: column;
-  height: 100%; 
-  justify-content: space-between; /* Manda el header arriba y el input abajo */
-}
-
-/* 3. El cuerpo de los mensajes se expande y hace scroll */
-.chat-body {
-  flex: 1; 
-  overflow-y: auto; 
-  padding-bottom: 20px; /* Un respirito antes de la barra de texto */
-}
-
-/* 4. La barra de texto se ancla abajo */
-.chat-input-bar {
-  margin-top: auto; 
-}
