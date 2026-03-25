@@ -3,20 +3,41 @@ const signUpMini = document.getElementById("signUpMini");
 const signInMini = document.getElementById("signInMini");
 
 function setLogin() {
-  container.classList.add("login-active");
-  container.classList.remove("register-active");
+  container?.classList.add("login-active");
+  container?.classList.remove("register-active");
 }
 
 function setRegister() {
-  container.classList.add("register-active");
-  container.classList.remove("login-active");
+  container?.classList.add("register-active");
+  container?.classList.remove("login-active");
 }
 
 setLogin();
 
-signUpMini?.addEventListener("click", setRegister);
-signInMini?.addEventListener("click", setLogin);
+/* 🔥 FIX: recalcular mirada al cambiar layout */
+signUpMini?.addEventListener("click", () => {
+  setRegister();
+  setTimeout(() => {
+    const active = document.activeElement;
+    if (active && active.tagName === "INPUT") {
+      mirarInput(active);
+    }
+  }, 50);
+});
 
+signInMini?.addEventListener("click", () => {
+  setLogin();
+  setTimeout(() => {
+    const active = document.activeElement;
+    if (active && active.tagName === "INPUT") {
+      mirarInput(active);
+    }
+  }, 50);
+});
+
+/* =========================
+   THEME
+========================= */
 const themeBtn = document.getElementById("themeBtn");
 const themeEmoji = document.getElementById("themeEmoji");
 const themeText = document.getElementById("themeText");
@@ -47,6 +68,9 @@ themeBtn?.addEventListener("click", () => {
   setTheme(!document.body.classList.contains("light"));
 });
 
+/* =========================
+   LANGUAGE
+========================= */
 const langBtn = document.getElementById("langBtn");
 const langText = document.getElementById("langText");
 const langFlag = document.getElementById("langFlag");
@@ -97,7 +121,7 @@ function setLanguage(lang) {
 
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.dataset.i18n;
-    if (translations[lang][key]) {
+    if (translations[lang] && translations[lang][key]) {
       el.textContent = translations[lang][key];
     }
   });
@@ -138,7 +162,6 @@ langBtn?.addEventListener("click", () => {
 /* =========================
    ROBOT
 ========================= */
-
 const robot = document.getElementById("loginRobot");
 const ojos = document.getElementById("ojosRobot");
 const boca = document.getElementById("bocaRobot");
@@ -148,36 +171,86 @@ const allInputs = document.querySelectorAll(
 );
 
 let idleTimer = null;
-let happyTimer = null;
+let typingTimer = null;
+let blinkTimer = null;
+let currentState = "";
 
-/* 👁️ PARPADEO */
-function parpadear() {
-  if (!ojos) return;
+let baseOjosX = 0;
+let baseOjosY = 0;
+let ojosX = 0;
+let ojosY = 0;
 
-  ojos.src = "img/ojos_cerrados.png";
-
-  setTimeout(() => {
-    ojos.src = "img/ojos_abiertos.png";
-  }, 120);
+function clearRobotStates() {
+  if (!robot) return;
+  robot.classList.remove("escribiendo", "cubrir", "feliz", "bailando");
 }
 
-function loopParpadeo() {
-  const tiempo = 2000 + Math.random() * 4000;
+function setRobotState(state) {
+  if (!robot) return;
+  if (currentState === state) return;
 
-  setTimeout(() => {
-    parpadear();
-    loopParpadeo();
-  }, tiempo);
+  clearRobotStates();
+
+  if (state) {
+    robot.classList.add(state);
+  }
+
+  currentState = state;
 }
-loopParpadeo();
 
-/* 👀 MOVER OJOS */
 function moverOjos(x, y) {
   if (!ojos) return;
-  ojos.style.transform = `translate(${x}px, ${y}px)`;
+
+  ojosX += (x - ojosX) * 0.2;
+  ojosY += (y - ojosY) * 0.2;
+
+  ojos.style.transform = `translate(${ojosX}px, ${ojosY}px)`;
 }
 
-/* 👀 MIRAR INPUT */
+function resetOjos() {
+  ojosX = 0;
+  ojosY = 0;
+  moverOjos(0, 0);
+}
+
+function bocaFeliz() {
+  if (boca) boca.src = "img/boca_feliz.png";
+}
+
+function bocaNormal() {
+  if (boca) boca.src = "img/boca_normal.png";
+}
+
+function ojosAbiertos() {
+  if (ojos) ojos.src = "img/ojos_abiertos.png";
+}
+
+function ojosCerrados() {
+  if (ojos) ojos.src = "img/ojos_cerrados.png";
+}
+
+function esInputPassword(el) {
+  return el && el.type === "password";
+}
+
+function programarParpadeo() {
+  clearTimeout(blinkTimer);
+
+  const tiempo = 2500 + Math.random() * 2500;
+
+  blinkTimer = setTimeout(() => {
+    if (!ojos) return;
+
+    ojosCerrados();
+    setTimeout(() => {
+      ojosAbiertos();
+      programarParpadeo();
+    }, 120);
+  }, tiempo);
+}
+
+programarParpadeo();
+
 function mirarInput(input) {
   if (!ojos || !input || !robot) return;
 
@@ -190,180 +263,166 @@ function mirarInput(input) {
   const robotX = rectRobot.left + rectRobot.width / 2;
   const robotY = rectRobot.top + rectRobot.height / 2;
 
-let dx = (inputX - robotX) / 15 - 3;  // 👈 izquierda
-let dy = (inputY - robotY) / 15 + 2;  // 👈 abajo
+  let dx = (inputX - robotX) / 18;
+  let dy = (inputY - robotY) / 14;
 
-  dx = Math.max(-10, Math.min(10, dx));
-  dy = Math.max(-10, Math.min(10, dy));
+  dx = Math.max(-8, Math.min(8, dx));
+  dy = Math.max(-8, Math.min(8, dy));
+
+  baseOjosX = dx;
+  baseOjosY = dy;
 
   moverOjos(dx, dy);
 }
 
-/* 😊 BOCA */
-function bocaFeliz() {
-  if (boca) boca.src = "img/boca_feliz.png";
+function mirarEscritura(input) {
+  if (!input) return;
+
+  const pos = input.selectionStart || input.value.length || 0;
+
+  let offsetX = Math.sin(pos * 0.5) * 4;
+  let offsetY = Math.sin(pos * 0.3) * 1.5;
+
+  moverOjos(baseOjosX + offsetX, baseOjosY + offsetY);
 }
 
-function bocaNormal() {
-  if (boca) boca.src = "img/boca_normal.png";
-}
-
-/* ESTADOS */
-function clearRobotStates() {
-  if (!robot) return;
-  robot.classList.remove("escribiendo", "cubrir", "feliz", "bailando");
-}
-
-function setRobotState(state) {
-  if (!robot) return;
-  clearRobotStates();
-  if (state) robot.classList.add(state);
-}
-
-/* ACTUALIZAR */
+/* 🔥 YA NO cubre automáticamente */
 function actualizarEstadoRobot() {
-  if (robot && robot.classList.contains("bailando")) return;
+  if (!robot) return;
 
   const active = document.activeElement;
 
   if (!active || active.tagName !== "INPUT") {
     setRobotState("");
-    moverOjos(0, 0);
     bocaNormal();
+    resetOjos();
     return;
   }
 
-  setRobotState("cubrir");
+  setRobotState("");
   bocaNormal();
+  mirarInput(active);
 }
 
-/* IDLE */
 function resetIdleTimer() {
   clearTimeout(idleTimer);
 
-  if (robot && robot.classList.contains("bailando")) {
+  if (robot?.classList.contains("bailando")) {
     robot.classList.remove("bailando");
+    currentState = "";
+    actualizarEstadoRobot();
   }
 
   idleTimer = setTimeout(() => {
     const active = document.activeElement;
-
     if (!active || active.tagName !== "INPUT") {
-      clearRobotStates();
-      robot?.classList.add("bailando");
+      setRobotState("bailando");
+      bocaFeliz();
+      resetOjos();
     }
   }, 5000);
 }
 
-/* INPUTS */
 allInputs.forEach(input => {
-
   input.addEventListener("focus", () => {
+    clearTimeout(typingTimer);
     mirarInput(input);
     actualizarEstadoRobot();
     resetIdleTimer();
   });
 
   input.addEventListener("input", () => {
-// TODO tu código igual arriba sin cambios...
+    clearTimeout(typingTimer);
 
-/* INPUTS */
-allInputs.forEach(input => {
-
-  input.addEventListener("focus", () => {
-    mirarInput(input);
-    actualizarEstadoRobot();
-    resetIdleTimer();
-  });
-
-  input.addEventListener("input", () => {
-
-    const pos = input.selectionStart || 0;
-
-    // 🔥 LOOP en lugar de límite
-    let dx = (pos * 2) % 16 - 8;   // rango -8 a 8 en loop
-    let dy = 2;
-
-    moverOjos(dx, dy);
-
-    setRobotState("cubrir");
-    bocaNormal();
-    if (ojos) ojos.src = "img/ojos_abiertos.png";
+    if (esInputPassword(input)) {
+      setRobotState(""); // 🔥 CAMBIO
+      bocaNormal();
+      resetOjos();
+      ojosAbiertos();
+    } else {
+      setRobotState("escribiendo");
+      bocaNormal();
+      ojosAbiertos();
+      mirarEscritura(input);
+    }
 
     resetIdleTimer();
+
+    typingTimer = setTimeout(() => {
+      if (document.activeElement === input) {
+        actualizarEstadoRobot();
+      }
+    }, 140);
   });
 
   input.addEventListener("blur", () => {
+    clearTimeout(typingTimer);
+
     setTimeout(() => {
       actualizarEstadoRobot();
       resetIdleTimer();
     }, 30);
   });
-
-});});
-
-  input.addEventListener("blur", () => {
-    setTimeout(() => {
-      actualizarEstadoRobot();
-      resetIdleTimer();
-    }, 30);
-  });
-
 });
 
-/* BOTONES */
-document.querySelectorAll('button[type="submit"], .ghost').forEach(btn => {
-
-  btn.addEventListener("mouseenter", () => {
-    const active = document.activeElement;
-
-    if (active && active.tagName === "INPUT") return;
-
-    clearTimeout(happyTimer);
-    setRobotState("feliz");
-    bocaFeliz();
-    resetIdleTimer();
-  });
-
-  btn.addEventListener("mouseleave", () => {
-    clearTimeout(happyTimer);
-    actualizarEstadoRobot();
-    bocaNormal();
-  });
-
-});
-
-/* 👁️ TOGGLE PASSWORD */
+/* =========================
+   TOGGLE PASSWORD
+========================= */
 document.querySelectorAll(".toggle-pass").forEach(icon => {
   icon.addEventListener("click", () => {
     const input = document.getElementById(icon.dataset.target);
     if (!input) return;
 
-    const mostrando = input.type === "password";
+    const mostrando = input.type === "text";
 
-    if (mostrando) {
+    if (!mostrando) {
       input.type = "text";
       icon.src = "img/ojo.png";
 
-      setRobotState("cubrir");
+      setRobotState("cubrir"); // 🔥 SOLO AQUÍ
       bocaNormal();
-      if (ojos) ojos.src = "img/ojos_abiertos.png";
+      resetOjos();
+      ojosAbiertos();
 
     } else {
       input.type = "password";
       icon.src = "img/contrasena-de-ojo.png";
 
-      actualizarEstadoRobot();
+      setRobotState("");
+      bocaNormal();
+      mirarInput(input);
+      ojosAbiertos();
     }
 
     resetIdleTimer();
   });
 });
 
-/* ACTIVIDAD */
+/* =========================
+   GENERAL ACTIVITY
+========================= */
 ["mousemove", "keydown", "click", "touchstart"].forEach(eventName => {
   document.addEventListener(eventName, resetIdleTimer, { passive: true });
 });
 
+window.addEventListener("resize", () => {
+  const active = document.activeElement;
+  if (active && active.tagName === "INPUT") {
+    actualizarEstadoRobot();
+  }
+});
+
 resetIdleTimer();
 actualizarEstadoRobot();
+
+/* =========================
+   🔥 FIX BOTÓN MENÚ
+========================= */
+
+const robotToggle = document.getElementById("robotToggle");
+const sideTools = document.getElementById("sideTools");
+
+robotToggle?.addEventListener("click", () => {
+  console.log("CLICK ROBOT 😎");
+  sideTools.classList.toggle("open");
+});

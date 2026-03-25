@@ -1279,3 +1279,41 @@ body.light .glitch-home-glitch {
 .robot.escribiendo {
   animation: escribir 0.3s infinite;
 }
+
+/* =========================
+   🙈 CUBRIR (CON PNGs)
+========================= */
+
+/* 🚫 quitar animaciones base */
+.robot.cubrir .brazo {
+  animation: none;
+  
+}
+
+/* 🦾 cambiar brazos completos */
+.robot.cubrir .brazo.izq {
+  background-image: url("img/brazo_izq_cubrir.png");
+  transform: rotate(-10deg) translateX(30px) translateY(-94px);
+  width: 200px;        /* 👈 tamaño independiente */
+  height: 190px;
+  z-index: 10;
+}
+
+.robot.cubrir .brazo.der {
+  background-image: url("img/brazo_der_cubrir.png");
+  transform: rotate(10deg) translateX(-18px) translateY(-93px);
+   z-index: 10;
+   width: 120px;        /* 👈 tamaño independiente */
+  height: 190px;
+}
+
+/* ✋ ocultar manos (si tus PNG ya las incluyen) */
+.robot.cubrir .mano {
+  display: none;
+}
+
+/* 😮 cara */
+
+.robot.cubrir .boca {
+  content: url("img/boca_sorprendida.png");
+}
