@@ -127,6 +127,9 @@
   </main>
 
   <script>
+    // ==========================================
+    // 🌓 1. CÓDIGO DEL TEMA (LIGHT/DARK MODE) 
+    // ==========================================
     const themeToggleInput = document.getElementById("themeToggleInput");
     const themeText = document.getElementById("themeText");
 
@@ -150,6 +153,168 @@
       localStorage.setItem("theme", nuevoTema);
       aplicarTema(nuevoTema);
     });
+
+    // ==========================================
+    // 💬 2. MAGIA DEL CHAT 1 A 1 CON TU CSS
+    // ==========================================
+    const chatBody = document.querySelector(".chat-body");
+    const inputMensaje = document.querySelector(".chat-input-bar input");
+    const btnEnviar = document.querySelector(".send-btn");
+    
+    // 👇 ¡CORRECCIÓN AQUÍ! Ahora busca la clase exacta que tienes en tu HTML
+    const listaContactosDiv = document.querySelector(".chat-list"); 
+
+    let contactoActivoId = null; 
+
+    // 👥 CARGAR LA LISTA DE USUARIOS 
+    // 👥 CARGAR LA LISTA DE USUARIOS (ALINEADOS A LA IZQUIERDA SÍ O SÍ 🫡)
+    async function cargarUsuarios() {
+        try {
+            const res = await fetch("obtener_usuarios_chat.php");
+            const usuarios = await res.json();
+            
+            listaContactosDiv.innerHTML = ""; // Limpiamos la lista
+            
+            usuarios.forEach(user => {
+                const nombre = user.nombre_completo || user.usuario;
+                const iniciales = nombre.substring(0, 2).toUpperCase();
+
+                const div = document.createElement("div");
+                div.className = "chat-item"; 
+                
+                // 👇 FORZAMOS EL DISEÑO A LA IZQUIERDA
+                div.style.display = "flex";
+                div.style.alignItems = "center";
+                div.style.justifyContent = "flex-start"; // Empuja todo a la izquierda
+                div.style.textAlign = "left";            // Texto a la izquierda
+                div.style.padding = "15px";
+                div.style.gap = "15px";                  // Espacio entre foto y texto
+                div.style.borderBottom = "1px solid var(--border)";
+                div.style.cursor = "pointer";
+                div.style.width = "100%";
+                div.style.boxSizing = "border-box";
+                
+                div.innerHTML = `
+                  <div class="chat-avatar" style="width: 45px; height: 45px; border-radius: 50%; background: var(--accent); color: #082016; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; flex-shrink: 0;">
+                    ${iniciales}
+                  </div>
+                  <div class="chat-item-info" style="flex: 1; min-width: 0; text-align: left;"> 
+                    <div class="chat-item-header" style="margin-bottom: 4px; display: flex; justify-content: flex-start;">
+                        <h4 style="margin: 0; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px;">
+                          ${nombre}
+                        </h4>
+                    </div>
+                    <p class="chat-preview" style="margin: 0; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                      @${user.usuario}
+                    </p>
+                  </div>
+                `;
+                
+                div.onclick = () => {
+                    // Quitamos el fondo a todos y le ponemos al seleccionado
+                    document.querySelectorAll(".chat-item").forEach(el => el.style.background = "transparent");
+                    div.style.background = "var(--panel-soft)";
+
+                    contactoActivoId = user.id;
+                    
+                    // Actualizamos la cabecera
+                    const headerAvatar = document.querySelector(".chat-header .chat-avatar");
+                    headerAvatar.textContent = iniciales;
+                    headerAvatar.style.background = "var(--accent)";
+                    headerAvatar.style.color = "#082016";
+                    headerAvatar.style.display = "flex";
+                    headerAvatar.style.alignItems = "center";
+                    headerAvatar.style.justifyContent = "center";
+                    headerAvatar.style.fontWeight = "bold";
+
+                    document.querySelector(".chat-header .chat-user h2").textContent = nombre;
+                    document.querySelector(".chat-header .chat-user p").textContent = "En línea";
+                    
+                    cargarMensajes();
+                };
+                listaContactosDiv.appendChild(div);
+            });
+        } catch (e) {
+            console.error("Error al cargar contactos:", e);
+        }
+    }
+
+    // 📥 TRAER LOS MENSAJES
+    async function cargarMensajes() {
+      if (!contactoActivoId) return; 
+
+      try {
+        const respuesta = await fetch("obtener_mensajes.php?con_quien=" + contactoActivoId);
+        const data = await respuesta.json();
+        
+        chatBody.innerHTML = ""; 
+
+        if (data.mensajes.length === 0) {
+          chatBody.innerHTML = `
+            <div class="chat-empty-state">
+              <div class="chat-empty-icon">✉️</div>
+              <h3>No hay mensajes todavía</h3>
+              <p>¡Escríbe un mensaje!</p>
+            </div>`;
+          return;
+        }
+
+        data.mensajes.forEach(msg => {
+          const esMio = (msg.remitente_id == data.mi_id);
+          const alineacion = esMio ? "flex-end" : "flex-start";
+          const colorFondo = esMio ? "var(--accent)" : "var(--panel-soft)";
+          const colorTexto = esMio ? "#082016" : "var(--text)";
+
+          const divMensaje = document.createElement("div");
+          divMensaje.style.display = "flex";
+          divMensaje.style.flexDirection = "column";
+          divMensaje.style.alignItems = alineacion;
+          divMensaje.style.margin = "10px 20px";
+
+          divMensaje.innerHTML = `
+            <div style="background: ${colorFondo}; color: ${colorTexto}; padding: 10px 15px; border-radius: 12px; max-width: 70%; line-height: 1.4;">
+              ${msg.mensaje}
+            </div>
+          `;
+          chatBody.appendChild(divMensaje);
+        });
+
+        // Hacer scroll automático hacia abajo
+        chatBody.scrollTop = chatBody.scrollHeight;
+      } catch (error) {
+        console.error("Error al cargar mensajes:", error);
+      }
+    }
+
+    // 📤 ENVIAR UN MENSAJE
+    async function enviarMensaje() {
+      if (!contactoActivoId) {
+          alert("¡Selecciona a alguien de la lista de la izquierda primero!");
+          return;
+      }
+
+      const texto = inputMensaje.value.trim();
+      if (!texto) return;
+
+      const formData = new FormData();
+      formData.append("mensaje", texto);
+      formData.append("destinatario_id", contactoActivoId);
+
+      inputMensaje.value = ""; 
+
+      await fetch("enviar_mensaje.php", { method: "POST", body: formData });
+      cargarMensajes(); 
+    }
+
+    // EVENTOS DE LOS BOTONES
+    btnEnviar.addEventListener("click", enviarMensaje);
+    inputMensaje.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") enviarMensaje();
+    });
+
+    // INICIAR TODO
+    cargarUsuarios();
+    setInterval(cargarMensajes, 3000); 
   </script>
 </body>
 </html>

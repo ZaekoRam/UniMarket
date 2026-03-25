@@ -25,7 +25,7 @@ if (mysqli_num_rows($resultado) > 0) {
         
     } else {
         echo "<script>
-                alert('Contraseña incorrecta, twin. Intenta de nuevo.');
+                alert('Contraseña incorrecta. Intenta de nuevo.');
                 window.location='Login.html';
               </script>";
     }
