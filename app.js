@@ -229,8 +229,12 @@ function ojosCerrados() {
   if (ojos) ojos.src = "img/ojos_cerrados.png";
 }
 
-function esInputPassword(el) {
-  return el && el.type === "password";
+function esInputPassword(input) {
+  // Ahora el robot sabe que es contraseña por su ID o nombre, ¡sin importar si tiene puntitos o letras!
+  if (!input) return false;
+  const id = (input.id || "").toLowerCase();
+  const name = (input.name || "").toLowerCase();
+  return id.includes("password") || name.includes("password");
 }
 
 function programarParpadeo() {
@@ -288,20 +292,30 @@ function mirarEscritura(input) {
 
 /* 🔥 YA NO cubre automáticamente */
 function actualizarEstadoRobot() {
-  if (!robot) return;
-
   const active = document.activeElement;
-
+  
   if (!active || active.tagName !== "INPUT") {
     setRobotState("");
-    bocaNormal();
     resetOjos();
     return;
   }
 
-  setRobotState("");
-  bocaNormal();
-  mirarInput(active);
+  if (esInputPassword(active)) {
+    if (active.type === "text") {
+      setRobotState("cubrir"); // 🔥 Se queda tapado obligatoriamente
+      bocaNormal();
+      resetOjos();
+    } else {
+      setRobotState(""); // Mira normal si está en puntitos
+      bocaNormal();
+      mirarInput(active);
+    }
+  } else {
+    setRobotState("");
+    bocaNormal();
+    mirarInput(active);
+    ojosAbiertos();
+  }
 }
 
 function resetIdleTimer() {
@@ -326,8 +340,17 @@ function resetIdleTimer() {
 allInputs.forEach(input => {
   input.addEventListener("focus", () => {
     clearTimeout(typingTimer);
-    mirarInput(input);
-    actualizarEstadoRobot();
+    
+    // Si la contraseña está visible (type="text"), forzamos a que se tape
+    if (esInputPassword(input) && input.type === "text") {
+      setRobotState("cubrir");
+      bocaNormal();
+      resetOjos();
+    } else {
+      mirarInput(input);
+      actualizarEstadoRobot();
+    }
+    
     resetIdleTimer();
   });
 
@@ -335,10 +358,17 @@ allInputs.forEach(input => {
     clearTimeout(typingTimer);
 
     if (esInputPassword(input)) {
-      setRobotState(""); // 🔥 CAMBIO
-      bocaNormal();
-      resetOjos();
-      ojosAbiertos();
+      // Validamos si el ojito destapó la contraseña
+      if (input.type === "text") {
+        setRobotState("cubrir"); // 🔥 ¡Que siga tapado!
+        bocaNormal();
+        resetOjos();
+      } else {
+        setRobotState(""); 
+        bocaNormal();
+        resetOjos();
+        ojosAbiertos();
+      }
     } else {
       setRobotState("escribiendo");
       bocaNormal();
@@ -350,7 +380,12 @@ allInputs.forEach(input => {
 
     typingTimer = setTimeout(() => {
       if (document.activeElement === input) {
-        actualizarEstadoRobot();
+        // Evitamos que actualizarEstadoRobot arruine el tapado de ojos
+        if (esInputPassword(input) && input.type === "text") {
+          setRobotState("cubrir");
+        } else {
+          actualizarEstadoRobot();
+        }
       }
     }, 140);
   });
@@ -364,7 +399,6 @@ allInputs.forEach(input => {
     }, 30);
   });
 });
-
 /* =========================
    TOGGLE PASSWORD
 ========================= */
