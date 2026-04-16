@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniMarket - Mensajes</title>
+  <link rel="stylesheet" href="mensajes.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-mascot">
+        <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
+      </div>
+      <div class="sidebar-brand">UniMarket</div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <a href="menu.html" class="menu-item">
+        <span class="icon">🏠</span>
+        <span class="label">Inicio</span>
+      </a>
+
+      <a href="perfil.html" class="menu-item">
+        <span class="icon">👤</span>
+        <span class="label">Perfil</span>
+      </a>
+
+      <a href="mensajes.html" class="menu-item active">
+        <span class="icon">💬</span>
+        <span class="label">Mensajes</span>
+      </a>
+
+      <a href="notificaciones.html" class="menu-item">
+        <span class="icon">🔔</span>
+        <span class="label">Notificaciones</span>
+      </a>
+
+      <a href="configuraciones.html" class="menu-item">
+        <span class="icon">⚙️</span>
+        <span class="label">Configuración</span>
+      </a>
+
+      <a href="Login.html" class="menu-item">
+        <span class="icon">🚪</span>
+        <span class="label">Cerrar sesión</span>
+      </a>
+
+      <label class="theme-switch modern-switch" aria-label="Cambiar tema">
+        <input type="checkbox" id="themeToggleInput">
+        <span class="slider">
+          <div class="star star_1"></div>
+          <div class="star star_2"></div>
+          <div class="star star_3"></div>
+
+          <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
+            <path
+              transform="matrix(.77976 0 0 .78395-299.99-418.63)"
+              fill="#fff"
+              d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
+            </path>
+          </svg>
+        </span>
+        <span class="theme-text" id="themeText">Dark Mode</span>
+      </label>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="page-title-box">
+        <p class="mini-label">Conversaciones en UniMarket</p>
+        <h1>Mensajes</h1>
+      </div>
+    </header>
+
+    <section class="messages-layout">
+      <aside class="chat-list-panel">
+        <div class="chat-list-header">
+          <h2>Chats</h2>
+          <button class="new-chat-btn">+ Nuevo</button>
+        </div>
+
+        <div class="search-box">
+          <input type="text" placeholder="Buscar conversación...">
+        </div>
+
+        <div class="chat-list empty-state-list">
+          <div class="empty-list-box">
+            <div class="empty-list-icon">💬</div>
+            <h3>Aún no hay conversaciones</h3>
+            <p>Cuando alguien te escriba o inicies un chat, aparecerá aquí.</p>
+          </div>
+        </div>
+      </aside>
+
+      <section class="chat-panel">
+        <div class="chat-header">
+          <div class="chat-user">
+            <div class="chat-avatar large">?</div>
+            <div>
+              <h2>Sin conversación seleccionada</h2>
+              <p>Elige o crea un chat cuando el sistema esté listo</p>
+            </div>
+          </div>
+
+          <div class="chat-actions">
+            <button>⋯</button>
+          </div>
+        </div>
+
+        <div class="chat-body">
+          <div class="chat-empty-state">
+            <div class="chat-empty-icon">✉️</div>
+            <h3>No hay mensajes todavía</h3>
+            <p>Esta ventana quedará lista para cuando se conecte el sistema de mensajería.</p>
+          </div>
+        </div>
+
+        <div class="chat-input-bar">
+          <button class="input-icon">＋</button>
+          <input type="text" placeholder="Escribe un mensaje...">
+          <button class="send-btn">Enviar</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    // ==========================================
+    // 🌓 1. CÓDIGO DEL TEMA (LIGHT/DARK MODE) 
+    // ==========================================
+    const themeToggleInput = document.getElementById("themeToggleInput");
+    const themeText = document.getElementById("themeText");
+
+    function aplicarTema(modo) {
+      if (modo === "light") {
+        document.body.classList.add("light-mode");
+        themeToggleInput.checked = true;
+        themeText.textContent = "Light Mode";
+      } else {
+        document.body.classList.remove("light-mode");
+        themeToggleInput.checked = false;
+        themeText.textContent = "Dark Mode";
+      }
+    }
+
+    const temaGuardado = localStorage.getItem("theme") || "dark";
+    aplicarTema(temaGuardado);
+
+    themeToggleInput.addEventListener("change", () => {
+      const nuevoTema = themeToggleInput.checked ? "light" : "dark";
+      localStorage.setItem("theme", nuevoTema);
+      aplicarTema(nuevoTema);
+    });
+
+    // ==========================================
+    // 💬 2. MAGIA DEL CHAT 1 A 1 CON TU CSS
+    // ==========================================
+    const chatBody = document.querySelector(".chat-body");
+    const inputMensaje = document.querySelector(".chat-input-bar input");
+    const btnEnviar = document.querySelector(".send-btn");
+    
+    // 👇 ¡CORRECCIÓN AQUÍ! Ahora busca la clase exacta que tienes en tu HTML
+    const listaContactosDiv = document.querySelector(".chat-list"); 
+
+    let contactoActivoId = null; 
+
+    // 👥 CARGAR LA LISTA DE USUARIOS 
+    // 👥 CARGAR LA LISTA DE USUARIOS (ALINEADOS A LA IZQUIERDA SÍ O SÍ 🫡)
+    async function cargarUsuarios() {
+        try {
+            const res = await fetch("obtener_usuarios_chat.php");
+            const usuarios = await res.json();
+            
+            listaContactosDiv.innerHTML = ""; // Limpiamos la lista
+            
+            usuarios.forEach(user => {
+                const nombre = user.nombre_completo || user.usuario;
+                const iniciales = nombre.substring(0, 2).toUpperCase();
+
+                const div = document.createElement("div");
+                div.className = "chat-item"; 
+                
+                // 👇 FORZAMOS EL DISEÑO A LA IZQUIERDA
+                div.style.display = "flex";
+                div.style.alignItems = "center";
+                div.style.justifyContent = "flex-start"; // Empuja todo a la izquierda
+                div.style.textAlign = "left";            // Texto a la izquierda
+                div.style.padding = "15px";
+                div.style.gap = "15px";                  // Espacio entre foto y texto
+                div.style.borderBottom = "1px solid var(--border)";
+                div.style.cursor = "pointer";
+                div.style.width = "100%";
+                div.style.boxSizing = "border-box";
+                
+                div.innerHTML = `
+                  <div class="chat-avatar" style="width: 45px; height: 45px; border-radius: 50%; background: var(--accent); color: #082016; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; flex-shrink: 0;">
+                    ${iniciales}
+                  </div>
+                  <div class="chat-item-info" style="flex: 1; min-width: 0; text-align: left;"> 
+                    <div class="chat-item-header" style="margin-bottom: 4px; display: flex; justify-content: flex-start;">
+                        <h4 style="margin: 0; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px;">
+                          ${nombre}
+                        </h4>
+                    </div>
+                    <p class="chat-preview" style="margin: 0; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                      @${user.usuario}
+                    </p>
+                  </div>
+                `;
+                
+                div.onclick = () => {
+                    // Quitamos el fondo a todos y le ponemos al seleccionado
+                    document.querySelectorAll(".chat-item").forEach(el => el.style.background = "transparent");
+                    div.style.background = "var(--panel-soft)";
+
+                    contactoActivoId = user.id;
+                    
+                    // Actualizamos la cabecera
+                    const headerAvatar = document.querySelector(".chat-header .chat-avatar");
+                    headerAvatar.textContent = iniciales;
+                    headerAvatar.style.background = "var(--accent)";
+                    headerAvatar.style.color = "#082016";
+                    headerAvatar.style.display = "flex";
+                    headerAvatar.style.alignItems = "center";
+                    headerAvatar.style.justifyContent = "center";
+                    headerAvatar.style.fontWeight = "bold";
+
+                    document.querySelector(".chat-header .chat-user h2").textContent = nombre;
+                    document.querySelector(".chat-header .chat-user p").textContent = "En línea";
+                    
+                    cargarMensajes();
+                };
+                listaContactosDiv.appendChild(div);
+            });
+        } catch (e) {
+            console.error("Error al cargar contactos:", e);
+        }
+    }
+
+    // 📥 TRAER LOS MENSAJES
+    async function cargarMensajes() {
+      if (!contactoActivoId) return; 
+
+      try {
+        const respuesta = await fetch("obtener_mensajes.php?con_quien=" + contactoActivoId);
+        const data = await respuesta.json();
+        
+        chatBody.innerHTML = ""; 
+
+        if (data.mensajes.length === 0) {
+          chatBody.innerHTML = `
+            <div class="chat-empty-state">
+              <div class="chat-empty-icon">✉️</div>
+              <h3>No hay mensajes todavía</h3>
+              <p>¡Escríbe un mensaje!</p>
+            </div>`;
+          return;
+        }
+
+        data.mensajes.forEach(msg => {
+          const esMio = (msg.remitente_id == data.mi_id);
+          const alineacion = esMio ? "flex-end" : "flex-start";
+          const colorFondo = esMio ? "var(--accent)" : "var(--panel-soft)";
+          const colorTexto = esMio ? "#082016" : "var(--text)";
+
+          const divMensaje = document.createElement("div");
+          divMensaje.style.display = "flex";
+          divMensaje.style.flexDirection = "column";
+          divMensaje.style.alignItems = alineacion;
+          divMensaje.style.margin = "10px 20px";
+
+          divMensaje.innerHTML = `
+            <div style="background: ${colorFondo}; color: ${colorTexto}; padding: 10px 15px; border-radius: 12px; max-width: 70%; line-height: 1.4;">
+              ${msg.mensaje}
+            </div>
+          `;
+          chatBody.appendChild(divMensaje);
+        });
+
+        // Hacer scroll automático hacia abajo
+        chatBody.scrollTop = chatBody.scrollHeight;
+      } catch (error) {
+        console.error("Error al cargar mensajes:", error);
+      }
+    }
+
+    // 📤 ENVIAR UN MENSAJE
+    async function enviarMensaje() {
+      if (!contactoActivoId) {
+          alert("¡Selecciona a alguien de la lista de la izquierda primero!");
+          return;
+      }
+
+      const texto = inputMensaje.value.trim();
+      if (!texto) return;
+
+      const formData = new FormData();
+      formData.append("mensaje", texto);
+      formData.append("destinatario_id", contactoActivoId);
+
+      inputMensaje.value = ""; 
+
+      await fetch("enviar_mensaje.php", { method: "POST", body: formData });
+      cargarMensajes(); 
+    }
+
+    // EVENTOS DE LOS BOTONES
+    btnEnviar.addEventListener("click", enviarMensaje);
+    inputMensaje.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") enviarMensaje();
+    });
+
+    // INICIAR TODO
+    cargarUsuarios();
+    setInterval(cargarMensajes, 3000); 
+  </script>
+</body>
+</html>
