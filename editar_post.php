@@ -9,6 +9,10 @@ $conexion = mysqli_connect("localhost", "root", "", "sistema_login");
 // Recibimos los datos del JS
 $post_id = mysqli_real_escape_string($conexion, $_POST['post_id']);
 $nuevo_texto = mysqli_real_escape_string($conexion, $_POST['texto']);
+$remove_media = isset($_POST['remove_media']) ? json_decode($_POST['remove_media'], true) : [];
+if (!is_array($remove_media)) {
+    $remove_media = [];
+}
 // Si también guardas la URL, descomenta la siguiente línea:
 // $url = mysqli_real_escape_string($conexion, $_POST['url']);
 
@@ -25,9 +29,43 @@ if ($fila = mysqli_fetch_assoc($resultado)) {
     // 2. ¿Soy el dueño o soy admin?
     if ($mi_id == $autor_del_post || $mi_rol == 'admin') {
         
-        // ¡Sí! Actualizamos el post
-        // Si usas URL, cambia el SET a: SET texto = '$nuevo_texto', url = '$url'
-        $sql_update = "UPDATE publicaciones SET texto = '$nuevo_texto' WHERE id = '$post_id'";
+        $sql_actual = "SELECT imagen FROM publicaciones WHERE id = '$post_id'";
+        $res_actual = mysqli_query($conexion, $sql_actual);
+        $media_actual = [];
+        if ($fila_actual = mysqli_fetch_assoc($res_actual)) {
+            if (!empty($fila_actual['imagen'])) {
+                $media_actual = array_filter(array_map('trim', explode(',', $fila_actual['imagen'])));
+            }
+        }
+
+        if (!empty($remove_media)) {
+            foreach ($remove_media as $removido) {
+                $archivo = basename(parse_url($removido, PHP_URL_PATH));
+                $media_actual = array_filter($media_actual, fn($item) => $item !== $archivo);
+                $archivoPath = "uploads/" . $archivo;
+                if (file_exists($archivoPath)) {
+                    @unlink($archivoPath);
+                }
+            }
+            $media_actual = array_values($media_actual);
+        }
+
+        if (isset($_FILES['media']) && is_array($_FILES['media']['name'])) {
+            $ruta_carpeta = "uploads/";
+            if (!file_exists($ruta_carpeta)) { mkdir($ruta_carpeta, 0777, true); }
+
+            foreach ($_FILES['media']['name'] as $indice => $nombreArchivo) {
+                if ($_FILES['media']['error'][$indice] === 0) {
+                    $nombreSeguro = time() . "_" . basename($nombreArchivo);
+                    if (move_uploaded_file($_FILES['media']['tmp_name'][$indice], $ruta_carpeta . $nombreSeguro)) {
+                        $media_actual[] = $nombreSeguro;
+                    }
+                }
+            }
+        }
+
+        $imagen_final = !empty($media_actual) ? implode(',', $media_actual) : null;
+        $sql_update = "UPDATE publicaciones SET texto = '$nuevo_texto', imagen = " . ($imagen_final !== null ? "'$imagen_final'" : "NULL") . " WHERE id = '$post_id'";
         
         if (mysqli_query($conexion, $sql_update)) {
             echo "ok";

@@ -6,6 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniMarket - Inicio</title>
     <link rel="stylesheet" href="style_home.css">
+    <style>
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.96);
+            z-index: 9999;
+            padding: 0;
+        }
+        .lightbox-overlay.active {
+            display: flex;
+        }
+        .lightbox-overlay img {
+            max-width: 98vw;
+            max-height: 98vh;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+            position: relative;
+            z-index: 1;
+        }
+        .lightbox-overlay::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            cursor: zoom-out;
+        }
+    </style>
 </head>
 
 <body>
@@ -104,8 +135,8 @@
                     <div id="previewContainer" class="post-images-grid preview-grid"></div>
 
                     <label class="custom-file">
-                        <input type="file" id="archivoImagen" name="imagen" accept="image/*">
-                        <span id="labelImagen">📷 Agregar imagen</span>
+                        <input type="file" id="archivoImagen" name="media[]" accept="image/*,video/*" multiple>
+                        <span id="labelImagen">📷 Agregar imagen, GIF o video</span>
                     </label>
 
                     <input type="url" id="urlEnlace" name="link" placeholder="Enlace externo (https://...)">
@@ -117,6 +148,10 @@
             <div id="resultado"></div>
         </section>
     </main>
+
+    <div id="lightboxOverlay" class="lightbox-overlay" onclick="cerrarLightbox()">
+        <img id="lightboxImage" src="" alt="Vista ampliada">
+    </div>
 
     <script>
         const body = document.body;
@@ -138,7 +173,7 @@
                 saludoInvitado: "Hola, Invitado",
                 saludoUsuario: "Hola, {nombre}",
                 placeholderTexto: "¿Qué vamos a emprender hoy?",
-                agregarImagen: "📷 Agregar imagen",
+                agregarImagen: "📷 Agregar imagen o video",
                 placeholderEnlace: "Enlace externo (https://...)",
                 anonimo: "Anón",
                 responder: "↳ Responder",
@@ -147,6 +182,11 @@
                 escribeComentario: "Escribe un comentario...",
                 escribeRespuesta: "Escribe tu respuesta...",
                 editar: "Editar",
+                editarPublicacion: "Editar publicación",
+                modificarContenido: "Modifica el texto o el archivo antes de guardar.",
+                seleccionarArchivo: "Seleccionar archivo",
+                archivoActual: "Archivo actual",
+                cancelar: "Cancelar",
                 eliminar: "Eliminar",
                 editarEnlace: "Editar enlace",
                 guardar: "Guardar",
@@ -169,7 +209,7 @@
                 saludoInvitado: "Hello, Guest",
                 saludoUsuario: "Hello, {nombre}",
                 placeholderTexto: "What are we building today?",
-                agregarImagen: "📷 Add image",
+                agregarImagen: "📷 Add image or video",
                 placeholderEnlace: "External link (https://...)",
                 anonimo: "Anon",
                 responder: "↳ Reply",
@@ -178,6 +218,11 @@
                 escribeComentario: "Write a comment...",
                 escribeRespuesta: "Write your reply...",
                 editar: "Edit",
+                editarPublicacion: "Edit post",
+                modificarContenido: "Change the text or file before saving.",
+                seleccionarArchivo: "Select file",
+                archivoActual: "Current file",
+                cancelar: "Cancel",
                 eliminar: "Delete",
                 editarEnlace: "Edit link",
                 guardar: "Save",
@@ -325,9 +370,22 @@
             Array.from(e.target.files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    const img = document.createElement("img");
-                    img.src = ev.target.result;
-                    previewContainer.appendChild(img);
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "preview-thumb";
+
+                    if (file.type.startsWith("video/")) {
+                        const video = document.createElement("video");
+                        video.src = ev.target.result;
+                        video.controls = true;
+                        wrapper.appendChild(video);
+                    } else {
+                        const img = document.createElement("img");
+                        img.src = ev.target.result;
+                        img.addEventListener("click", () => abrirLightbox(img.src));
+                        wrapper.appendChild(img);
+                    }
+
+                    previewContainer.appendChild(wrapper);
                 };
                 reader.readAsDataURL(file);
             });
@@ -409,15 +467,71 @@
             const post = btn.closest(".post-card");
             const texto = post.querySelector(".post-text")?.innerText || "";
             const url = post.querySelector(".link-preview-card")?.href || "";
+            const mediaContainer = post.querySelector(".post-images-grid");
+            let mediaPreviewHTML = "";
+
+            if (mediaContainer) {
+                const mediaElements = mediaContainer.querySelectorAll("img, video");
+                if (mediaElements.length > 0) {
+                    mediaPreviewHTML = `<div class="edit-media-list"><span class="edit-media-label">${t("archivoActual")}</span>`;
+                    mediaElements.forEach((mediaElement, index) => {
+                        const src = mediaElement.src;
+                        const tag = mediaElement.tagName.toLowerCase();
+                        mediaPreviewHTML += `
+                            <div class="edit-media-thumb" data-src="${src}">
+                                <button type="button" class="remove-media-btn" onclick="quitarMedia(this)">&times;</button>
+                                ${tag === 'video'
+                                    ? '<video src="' + src + '" muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>'
+                                    : '<img src="' + src + '" alt="' + t("archivoActual") + '" style="width:100%; height:100%; object-fit:cover;" />'}
+                            </div>
+                        `;
+                    });
+                    mediaPreviewHTML += `</div>`;
+                }
+            }
 
             post.innerHTML = `
                 <div class="edit-post-box">
+                    <div class="edit-post-header">
+                        <strong>${t("editar")} publicación</strong>
+                        <span>${t("modificarContenido")}</span>
+                    </div>
+                    ${mediaPreviewHTML}
                     <textarea class="edit-text">${texto}</textarea>
                     <input type="url" class="edit-url" value="${url}" placeholder="${t("editarEnlace")}">
-                    <input type="file" class="edit-files">
-                    <button onclick="finalizarEdicion(this)">${t("guardar")}</button>
+                    <label class="edit-file-label">${t("seleccionarArchivo")}
+                        <input type="file" class="edit-files" name="media[]" multiple>
+                    </label>
+                    <input type="hidden" class="remove-media-input" name="remove_media" value="[]">
+                    <div class="edit-actions">
+                        <button type="button" class="btn-cancel" onclick="cancelarEdicion(this)">${t("cancelar")}</button>
+                        <button type="button" class="btn-save" onclick="finalizarEdicion(this)">${t("guardar")}</button>
+                    </div>
                 </div>
             `;
+        }
+
+        function cancelarEdicion(btn) {
+            window.location.reload();
+        }
+
+        function quitarMedia(btn) {
+            const thumb = btn.closest('.edit-media-thumb');
+            if (!thumb) return;
+            const hidden = thumb.closest('.edit-post-box').querySelector('.remove-media-input');
+            if (hidden) {
+                const current = JSON.parse(hidden.value || '[]');
+                const src = thumb.dataset.src;
+                if (src && !current.includes(src)) {
+                    current.push(src);
+                }
+                hidden.value = JSON.stringify(current);
+            }
+            thumb.style.display = 'none';
+        }
+
+        function cancelarEdicion(btn) {
+            window.location.reload();
         }
 
         function eliminarPost(btn) {
@@ -464,11 +578,16 @@
     }
 
     const texto = post.querySelector(".edit-text").value;
-    // const url = post.querySelector(".edit-url").value; // Descomenta si usas URL
+    const removeMediaValue = post.querySelector('.remove-media-input')?.value || '[]';
+    const fileInput = post.querySelector('.edit-files');
     
     const datos = new FormData();
     datos.append("post_id", postId);
     datos.append("texto", texto);
+    datos.append("remove_media", removeMediaValue);
+    if (fileInput && fileInput.files.length) {
+        Array.from(fileInput.files).forEach(file => datos.append("media[]", file));
+    }
     // datos.append("url", url); // Descomenta si usas URL
 
     // Le mandamos la info a PHP
@@ -497,7 +616,21 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
             const post = document.createElement("div");
             post.className = "post-card";
 
-            let mediaHTML = imgs.map(src => `<img src="${src}" class="post-img" style="border-radius:14px; margin-top:10px; width:100%;">`).join('');
+            const mediaCount = imgs.length;
+            const visibleMedia = mediaCount > 4 ? imgs.slice(0, 4) : imgs;
+            const gridClass = `post-images-grid media-count-${Math.min(mediaCount, 4)}${mediaCount > 4 ? " media-count-more" : ""}`;
+
+            let mediaHTML = visibleMedia.map((src, idx) => {
+                const extension = src.split('.').pop().toLowerCase();
+                const esVideo = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'].includes(extension);
+                const mediaTag = esVideo
+                    ? `<video src="${src}" controls class="post-video"></video>`
+                    : `<img src="${src}" class="post-img" onclick="abrirLightbox(this.src)">`;
+                const overlay = (mediaCount > 4 && idx === 3)
+                    ? `<div class="more-overlay">+${mediaCount - 4}</div>`
+                    : "";
+                return `<div class="media-item">${mediaTag}${overlay}</div>`;
+            }).join('');
 
             const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
             const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
@@ -566,7 +699,7 @@ if (palabras.length > 1) {
 
                 <div class="post-content" style="margin-top:15px;">
                     <p class="post-text">${texto}</p>
-                    <div class="post-images-grid">${mediaHTML}</div>
+                    <div class="${gridClass}">${mediaHTML}</div>
                 </div>
 
                 <div class="post-actions" style="margin-top:15px; display:flex; gap:10px;">
@@ -649,6 +782,20 @@ if (palabras.length > 1) {
                 .then(() => location.reload());
         }
 
+        function abrirLightbox(src) {
+            const overlay = document.getElementById('lightboxOverlay');
+            const img = document.getElementById('lightboxImage');
+            img.src = src;
+            overlay.classList.add('active');
+        }
+
+        function cerrarLightbox() {
+            const overlay = document.getElementById('lightboxOverlay');
+            const img = document.getElementById('lightboxImage');
+            overlay.classList.remove('active');
+            img.src = '';
+        }
+
         window.onload = async () => {
             let miUsuarioId = null;
             let miRol = null;
@@ -714,7 +861,7 @@ if (palabras.length > 1) {
 
             resultado.innerHTML = "";
             data.forEach(post => {
-                const imgArray = post.imagen ? ["uploads/" + post.imagen] : [];
+                const imgArray = post.imagen ? post.imagen.split(",").map(src => src.trim()).filter(Boolean).map(src => "uploads/" + src) : [];
 
                 // 🚨 LE MANDAMOS 3 DATOS NUEVOS A crearPost al final 🚨
                 const nuevoPost = crearPost(
