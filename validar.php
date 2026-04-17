@@ -14,11 +14,24 @@ if (mysqli_num_rows($resultado) > 0) {
     // Verificamos la contraseña
     if (password_verify($password_ingresada, $datos['PASSWORD'])) {
         
-        // ¡Metemos todo a la mochila de la sesión!
+        // ==========================================
+        // 🛑 CANDADO FINAL: ¿Ya verificó su correo?
+        // ==========================================
+        if ($datos['verificado'] == 0) {
+            $correo = $datos['cuenta']; // Sacamos el correo para mandarlo por la URL
+            echo "<script>
+                    alert('¡Tu cuenta aún no está activa! Por favor, ingresa el código que enviamos a tu correo.');
+                    window.location='Login.html?verificar=$correo';
+                  </script>";
+            exit(); // 🚫 ¡Detenemos el login aquí para que no pase!
+        }
+        // ==========================================
+
+        // ✅ Si pasó el candado, ¡Metemos todo a la mochila de la sesión!
         $_SESSION['usuario_id'] = $datos['id'];
         $_SESSION['usuario'] = $datos['usuario'];
         $_SESSION['rol'] = $datos['rol'];
-        $_SESSION['nombre_completo'] = $datos['nombre_completo']; // 👈 ¡Aquí guardamos el nombre completo!
+        $_SESSION['nombre_completo'] = $datos['nombre_completo']; 
     
         header("location:menu.html");
         exit();
