@@ -460,3 +460,43 @@ robotToggle?.addEventListener("click", () => {
   console.log("CLICK ROBOT 😎");
   sideTools.classList.toggle("open");
 });
+
+/* =========================
+   🔥 LÓGICA DEL POP-UP (VERSIÓN ROBUSTA)
+========================= */
+function mostrarPopUpVerificacion() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const correoVerificar = urlParams.get('verificar');
+    
+    if (correoVerificar) {
+        console.log("Intentando mostrar pop-up para:", correoVerificar);
+        
+        const modal = document.getElementById('modalVerificacion');
+        const inputCorreo = document.getElementById('correoModal');
+
+        if (modal && inputCorreo) {
+            inputCorreo.value = correoVerificar;
+            modal.style.display = 'flex';
+            
+            // Forzamos a que se vea el lado del Login
+            if (typeof setLogin === "function") {
+                setLogin();
+            }
+        } else {
+            console.error("❌ Error: No se encontraron los elementos 'modalVerificacion' o 'correoModal' en el HTML.");
+        }
+    }
+}
+
+// Ejecutar cuando el HTML esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mostrarPopUpVerificacion);
+} else {
+    mostrarPopUpVerificacion();
+}
+
+function cerrarModal() {
+    const modal = document.getElementById('modalVerificacion');
+    if (modal) modal.style.display = 'none';
+    window.history.replaceState({}, document.title, window.location.pathname);
+}
