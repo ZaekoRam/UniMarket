@@ -505,13 +505,13 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
             let comentariosHTML = principales.map(c => {
                 const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
                     <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid var(--accent-2, #42d79a); padding-left:10px; margin-top:5px;">
-                        <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">${t("anonimo")}:</strong> ${r.comentario}</div>
+                        <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">${r.nombre_autor || "Usuario"}:</strong> ${r.comentario}</div>
                     </div>
                 `).join('');
 
                 return `
                     <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
-                        <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">${t("anonimo")}:</strong> ${c.comentario}</div>
+                        <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">${c.nombre_autor || "Usuario"}:</strong> ${c.comentario}</div>
                         <div class="comment-actions" style="margin-top:8px;">
                             <span onclick="prepararRespuesta(this)" style="color:var(--muted, #9dc7b8); cursor:pointer; font-size:12px; font-weight:600;">${t("responder")}</span>
                         </div>

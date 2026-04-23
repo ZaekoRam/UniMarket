@@ -5,7 +5,7 @@ $conexion = mysqli_connect("localhost", "root", "", "sistema_login");
 // Obtenemos el ID del usuario actual
 $usuario_id = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : 0;
 
-// 👇 EL CAMBIO ESTÁ AQUÍ: Cambiamos u.usuario por u.nombre_completo
+// Traemos los posts y su autor
 $sql = "SELECT p.*, u.nombre_completo AS nombre_autor,
         (SELECT COUNT(*) FROM reacciones r WHERE r.publicacion_id = p.id AND r.tipo = 'like') as total_likes,
         (SELECT COUNT(*) FROM reacciones r WHERE r.publicacion_id = p.id AND r.tipo = 'dislike') as total_dislikes,
@@ -20,7 +20,14 @@ $posts = [];
 while($row = mysqli_fetch_assoc($res)) {
     $post_id = $row['id'];
     
-    $com_res = mysqli_query($conexion, "SELECT id, comentario, padre_id FROM comentarios WHERE publicacion_id = '$post_id' ORDER BY id ASC");
+    // 👇 LA MAGIA: Ahora juntamos la tabla comentarios con usuarios para sacar el nombre del autor del comentario
+    $sql_comentarios = "SELECT c.id, c.comentario, c.padre_id, u.nombre_completo AS nombre_autor 
+                        FROM comentarios c 
+                        LEFT JOIN usuarios u ON c.usuario_id = u.id 
+                        WHERE c.publicacion_id = '$post_id' 
+                        ORDER BY c.id ASC";
+                        
+    $com_res = mysqli_query($conexion, $sql_comentarios);
     $lista_comentarios = [];
     while($com = mysqli_fetch_assoc($com_res)) {
         $lista_comentarios[] = $com;
