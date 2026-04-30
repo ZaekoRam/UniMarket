@@ -1148,10 +1148,9 @@ if (palabras.length > 1) {
         }
 
         window.onload = async () => {
-            //let miUsuarioId = null;
-           // let miRol = null;
-    let miUsuarioId = 1;   // ← Forzado para pruebas
-    let miRol = 'admin';    // ← Forzado para pruebas
+            let miUsuarioId = null;
+            let miRol = null;
+  
 
             // 1. Cargamos la sesión
             try {
@@ -1201,23 +1200,7 @@ if (palabras.length > 1) {
             }
 
             // 2. Ahora sí, traemos los posts (ESTO SE QUEDA IGUAL)
-            //fetch("obtener_posts.php")
-            Promise.resolve({
-    json: () => Promise.resolve([
-        {
-            id: 1,
-            texto: "🎉 Publicación de prueba",
-            imagen: null,
-            total_likes: 3,
-            total_dislikes: 0,
-            comentarios_data: [],
-            mi_reaccion: null,
-            nombre_autor: "Tú",
-            usuario_id: 1,  // ← ESTE
-            fecha: new Date().toISOString()
-        }
-    ])
-})
+        fetch("obtener_posts.php")
         .then(response => response.json())
         .then(data => {
             let resultado = document.getElementById("resultado");
