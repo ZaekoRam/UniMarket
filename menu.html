@@ -75,7 +75,7 @@
                 <span class="label" data-i18n="configuraciones">Configuraciones</span>
             </a>
 
-            <a href="./Login.html" class="menu-item">
+            <a href="./index.html" class="menu-item">
                 <span class="icon">🚪</span>
                 <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
             </a>
@@ -612,13 +612,22 @@
 }
 
         // 👇 Le agregamos los 3 IDs al final de esta línea para saber de quién es el post
-function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null) {
+function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null) {
             const post = document.createElement("div");
             post.className = "post-card";
 
             const mediaCount = imgs.length;
             const visibleMedia = mediaCount > 4 ? imgs.slice(0, 4) : imgs;
             const gridClass = `post-images-grid media-count-${Math.min(mediaCount, 4)}${mediaCount > 4 ? " media-count-more" : ""}`;
+            // Dentro de crearPost, antes del post.innerHTML
+let fechaFormateada = t("haceUnMomento"); // Default por si no hay fecha
+
+if (fechaStr) {
+    const d = new Date(fechaStr);
+    // Formato: "24 Abr, 14:30"
+    fechaFormateada = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ", " + 
+                      d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
 
             let mediaHTML = visibleMedia.map((src, idx) => {
                 const extension = src.split('.').pop().toLowerCase();
@@ -689,7 +698,7 @@ if (palabras.length > 1) {
                         </div>
                         <div>
                             <h4 style="margin:0; color:var(--text, #fff); font-size:15px;">${nombreFinal}</h4>
-                            <span style="font-size:12px; color:var(--muted, #9dc7b8);">${t("haceUnMomento")}</span>
+                            <span style="font-size:12px; color:var(--muted, #9dc7b8);">${fechaFormateada}</span>
                         </div>
                     </div>
 
@@ -864,18 +873,20 @@ if (palabras.length > 1) {
                 const imgArray = post.imagen ? post.imagen.split(",").map(src => src.trim()).filter(Boolean).map(src => "uploads/" + src) : [];
 
                 // 🚨 LE MANDAMOS 3 DATOS NUEVOS A crearPost al final 🚨
-                const nuevoPost = crearPost(
-                    post.texto || "",
-                    imgArray,
-                    post.total_likes || 0,
-                    post.total_dislikes || 0,
-                    post.comentarios_data || [],
-                    post.mi_reaccion || null,
-                    post.nombre_autor,
-                    post.usuario_id, // El ID del dueño del post
-                    miUsuarioId,     // Tu ID
-                    miRol            // Tu rol (para saber si eres admin)
-                );
+                // Dentro del .then(data => { data.forEach(post => { ...
+const nuevoPost = crearPost(
+    post.texto || "",
+    imgArray,
+    post.total_likes || 0,
+    post.total_dislikes || 0,
+    post.comentarios_data || [],
+    post.mi_reaccion || null,
+    post.nombre_autor,
+    post.usuario_id,
+    miUsuarioId,
+    miRol,
+    post.fecha // <--- ¡AQUÍ PASAMOS LA FECHA!
+);
 
                 nuevoPost.dataset.id = post.id;
                 resultado.appendChild(nuevoPost);

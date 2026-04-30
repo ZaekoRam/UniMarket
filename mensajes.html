@@ -18,32 +18,32 @@
     <nav class="sidebar-menu">
       <a href="menu.html" class="menu-item">
         <span class="icon">🏠</span>
-        <span class="label">Inicio</span>
+        <span class="label" data-i18n="inicio">Inicio</span>
       </a>
 
       <a href="perfil.html" class="menu-item">
         <span class="icon">👤</span>
-        <span class="label">Perfil</span>
+        <span class="label" data-i18n="perfil">Perfil</span>
       </a>
 
       <a href="mensajes.html" class="menu-item active">
         <span class="icon">💬</span>
-        <span class="label">Mensajes</span>
+        <span class="label" data-i18n="mensajes">Mensajes</span>
       </a>
 
       <a href="notificaciones.html" class="menu-item">
         <span class="icon">🔔</span>
-        <span class="label">Notificaciones</span>
+        <span class="label" data-i18n="notificaciones">Notificaciones</span>
       </a>
 
       <a href="configuraciones.html" class="menu-item">
         <span class="icon">⚙️</span>
-        <span class="label">Configuración</span>
+        <span class="label" data-i18n="configuracion">Configuración</span>
       </a>
 
-      <a href="Login.html" class="menu-item">
+      <a href="index.html" class="menu-item">
         <span class="icon">🚪</span>
-        <span class="label">Cerrar sesión</span>
+        <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
       </a>
 
       <label class="theme-switch modern-switch" aria-label="Cambiar tema">
@@ -69,27 +69,27 @@
   <main class="main-content">
     <header class="topbar">
       <div class="page-title-box">
-        <p class="mini-label">Conversaciones en UniMarket</p>
-        <h1>Mensajes</h1>
+        <p class="mini-label" data-i18n="conversaciones">Conversaciones en UniMarket</p>
+        <h1 data-i18n="tituloMensajes">Mensajes</h1>
       </div>
     </header>
 
     <section class="messages-layout">
       <aside class="chat-list-panel">
         <div class="chat-list-header">
-          <h2>Chats</h2>
-          <button class="new-chat-btn">+ Nuevo</button>
+          <h2 data-i18n="chats">Chats</h2>
+          <button class="new-chat-btn" data-i18n="nuevoChat">+ Nuevo</button>
         </div>
 
         <div class="search-box">
-          <input type="text" placeholder="Buscar conversación...">
+          <input type="text" placeholder="Buscar conversación..." data-i18n-placeholder="buscarConversacion">
         </div>
 
         <div class="chat-list empty-state-list">
           <div class="empty-list-box">
             <div class="empty-list-icon">💬</div>
-            <h3>Aún no hay conversaciones</h3>
-            <p>Cuando alguien te escriba o inicies un chat, aparecerá aquí.</p>
+            <h3 data-i18n="sinConversaciones">Aún no hay conversaciones</h3>
+            <p data-i18n="cuandoEscriban">Cuando alguien te escriba o inicies un chat, aparecerá aquí.</p>
           </div>
         </div>
       </aside>
@@ -99,8 +99,8 @@
           <div class="chat-user">
             <div class="chat-avatar large">?</div>
             <div>
-              <h2>Sin conversación seleccionada</h2>
-              <p>Elige o crea un chat cuando el sistema esté listo</p>
+              <h2 data-i18n="sinSeleccion">Sin conversación seleccionada</h2>
+              <p data-i18n="eligeChat">Elige o crea un chat cuando el sistema esté listo</p>
             </div>
           </div>
 
@@ -112,15 +112,15 @@
         <div class="chat-body">
           <div class="chat-empty-state">
             <div class="chat-empty-icon">✉️</div>
-            <h3>No hay mensajes todavía</h3>
-            <p>Esta ventana quedará lista para cuando se conecte el sistema de mensajería.</p>
+            <h3 data-i18n="noHayMensajes">No hay mensajes todavía</h3>
+            <p data-i18n="ventanaLista">Esta ventana quedará lista para cuando se conecte el sistema de mensajería.</p>
           </div>
         </div>
 
         <div class="chat-input-bar">
           <button class="input-icon">＋</button>
-          <input type="text" placeholder="Escribe un mensaje...">
-          <button class="send-btn">Enviar</button>
+          <input type="text" placeholder="Escribe un mensaje..." data-i18n-placeholder="escribeMensaje">
+          <button class="send-btn" data-i18n="enviar">Enviar</button>
         </div>
       </section>
     </section>
@@ -128,21 +128,132 @@
 
   <script>
     // ==========================================
+    // 🌐 SISTEMA DE TRADUCCIÓN
+    // ==========================================
+    const translationsMsj = {
+      es: {
+        // Sidebar
+        inicio: "Inicio",
+        perfil: "Perfil",
+        mensajes: "Mensajes",
+        notificaciones: "Notificaciones",
+        configuracion: "Configuración",
+        cerrarSesion: "Cerrar sesión",
+        darkMode: "Dark Mode",
+        lightMode: "Light Mode",
+        
+        // Títulos
+        conversaciones: "Conversaciones en UniMarket",
+        tituloMensajes: "Mensajes",
+        chats: "Chats",
+        nuevoChat: "+ Nuevo",
+        buscarConversacion: "Buscar conversación...",
+        
+        // Estados vacíos
+        sinConversaciones: "Aún no hay conversaciones",
+        cuandoEscriban: "Cuando alguien te escriba o inicies un chat, aparecerá aquí.",
+        sinSeleccion: "Sin conversación seleccionada",
+        eligeChat: "Elige o crea un chat cuando el sistema esté listo",
+        noHayMensajes: "No hay mensajes todavía",
+        ventanaLista: "Esta ventana quedará lista para cuando se conecte el sistema de mensajería.",
+        
+        // Chat
+        escribeMensaje: "Escribe un mensaje...",
+        enviar: "Enviar",
+        enLinea: "En línea",
+        escribeUnMensaje: "¡Escríbe un mensaje!",
+        seleccionaAlguien: "¡Selecciona a alguien de la lista de la izquierda primero!"
+      },
+      en: {
+        // Sidebar
+        inicio: "Home",
+        perfil: "Profile",
+        mensajes: "Messages",
+        notificaciones: "Notifications",
+        configuracion: "Settings",
+        cerrarSesion: "Log out",
+        darkMode: "Dark Mode",
+        lightMode: "Light Mode",
+        
+        // Títulos
+        conversaciones: "UniMarket Conversations",
+        tituloMensajes: "Messages",
+        chats: "Chats",
+        nuevoChat: "+ New",
+        buscarConversacion: "Search conversation...",
+        
+        // Estados vacíos
+        sinConversaciones: "No conversations yet",
+        cuandoEscriban: "When someone writes to you or you start a chat, it will appear here.",
+        sinSeleccion: "No conversation selected",
+        eligeChat: "Choose or create a chat when the system is ready",
+        noHayMensajes: "No messages yet",
+        ventanaLista: "This window will be ready when the messaging system is connected.",
+        
+        // Chat
+        escribeMensaje: "Write a message...",
+        enviar: "Send",
+        enLinea: "Online",
+        escribeUnMensaje: "Write a message!",
+        seleccionaAlguien: "Select someone from the list on the left first!"
+      }
+    };
+
+    function getLang() {
+      return localStorage.getItem("lang") || "es";
+    }
+
+    function tMsj(key) {
+      const lang = getLang();
+      return translationsMsj[lang] && translationsMsj[lang][key] ? translationsMsj[lang][key] : key;
+    }
+
+    function aplicarIdiomaMensajes() {
+      const lang = getLang();
+      
+      // Elementos con data-i18n (texto)
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        if (translationsMsj[lang] && translationsMsj[lang][key]) {
+          el.textContent = translationsMsj[lang][key];
+        }
+      });
+
+      // Elementos con data-i18n-placeholder (placeholders)
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        if (translationsMsj[lang] && translationsMsj[lang][key]) {
+          el.placeholder = translationsMsj[lang][key];
+        }
+      });
+
+      // Actualizar texto del tema
+      actualizarTextoTema();
+      
+      // Si hay un chat activo, actualizar el texto "En línea"
+      const estadoEl = document.querySelector(".chat-header .chat-user p");
+      if (estadoEl && estadoEl.textContent !== "Sin conversación seleccionada" && estadoEl.textContent !== "No conversation selected") {
+        // Solo actualizar si muestra un estado de conexión
+      }
+    }
+
+    function actualizarTextoTema() {
+      if (themeText) {
+        const isLight = document.body.classList.contains("light-mode");
+        themeText.textContent = isLight ? tMsj("lightMode") : tMsj("darkMode");
+      }
+    }
+    // ==========================================
     // 🌓 1. CÓDIGO DEL TEMA (LIGHT/DARK MODE) 
     // ==========================================
     const themeToggleInput = document.getElementById("themeToggleInput");
     const themeText = document.getElementById("themeText");
 
     function aplicarTema(modo) {
-      if (modo === "light") {
-        document.body.classList.add("light-mode");
-        themeToggleInput.checked = true;
-        themeText.textContent = "Light Mode";
-      } else {
-        document.body.classList.remove("light-mode");
-        themeToggleInput.checked = false;
-        themeText.textContent = "Dark Mode";
-      }
+      const isLight = modo === "light";
+      document.body.classList.toggle("light-mode", isLight);
+      themeToggleInput.checked = isLight;
+      themeText.textContent = isLight ? tMsj("lightMode") : tMsj("darkMode");
     }
 
     const temaGuardado = localStorage.getItem("theme") || "dark";
@@ -228,7 +339,7 @@
                     headerAvatar.style.fontWeight = "bold";
 
                     document.querySelector(".chat-header .chat-user h2").textContent = nombre;
-                    document.querySelector(".chat-header .chat-user p").textContent = "En línea";
+                    document.querySelector(".chat-header .chat-user p").textContent = tMsj("enLinea");
                     
                     cargarMensajes();
                 };
@@ -253,8 +364,8 @@
           chatBody.innerHTML = `
             <div class="chat-empty-state">
               <div class="chat-empty-icon">✉️</div>
-              <h3>No hay mensajes todavía</h3>
-              <p>¡Escríbe un mensaje!</p>
+              <h3>${tMsj("noHayMensajes")}</h3>
+              <p>${tMsj("escribeUnMensaje")}</p>
             </div>`;
           return;
         }
@@ -289,7 +400,7 @@
     // 📤 ENVIAR UN MENSAJE
     async function enviarMensaje() {
       if (!contactoActivoId) {
-          alert("¡Selecciona a alguien de la lista de la izquierda primero!");
+          alert(tMsj("seleccionaAlguien"));
           return;
       }
 
@@ -311,6 +422,13 @@
     inputMensaje.addEventListener("keypress", (e) => {
       if (e.key === "Enter") enviarMensaje();
     });
+
+    // ==========================================
+    // 🚀 INICIALIZACIÓN
+    // ==========================================
+    
+    // Aplicar idioma antes de cargar todo
+    aplicarIdiomaMensajes();
 
     // INICIAR TODO
     cargarUsuarios();

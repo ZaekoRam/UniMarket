@@ -18,32 +18,32 @@
     <nav class="sidebar-menu">
       <a href="menu.html" class="menu-item">
         <span class="icon">🏠</span>
-        <span class="label">Inicio</span>
+        <span class="label" data-i18n="inicio">Inicio</span>
       </a>
 
       <a href="perfil.html" class="menu-item active">
         <span class="icon">👤</span>
-        <span class="label">Perfil</span>
+        <span class="label" data-i18n="perfil">Perfil</span>
       </a>
 
       <a href="mensajes.html" class="menu-item">
         <span class="icon">💬</span>
-        <span class="label">Mensajes</span>
+        <span class="label" data-i18n="mensajes">Mensajes</span>
       </a>
 
       <a href="notificaciones.html" class="menu-item">
         <span class="icon">🔔</span>
-        <span class="label">Notificaciones</span>
+        <span class="label" data-i18n="notificaciones">Notificaciones</span>
       </a>
 
       <a href="configuraciones.html" class="menu-item">
         <span class="icon">⚙️</span>
-        <span class="label">Configuración</span>
+        <span class="label" data-i18n="configuracion">Configuración</span>
       </a>
 
-      <a href="Login.html" class="menu-item">
+      <a href="index.html" class="menu-item">
         <span class="icon">🚪</span>
-        <span class="label">Cerrar sesión</span>
+        <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
       </a>
 
       <label class="theme-switch modern-switch" aria-label="Cambiar tema">
@@ -69,8 +69,8 @@
   <main class="main-content">
     <header class="topbar">
       <div class="retro-title-box">
-        <p class="retro-mini">Mi rincón en UniMarket</p>
-        <h1>Perfil</h1>
+        <p class="retro-mini" data-i18n="miRincon">Mi rincón en UniMarket</p>
+        <h1 data-i18n="perfilTitulo">Perfil</h1>
       </div>
     </header>
 
@@ -89,25 +89,25 @@
             </div>
 
             <div class="profile-actions">
-              <button class="edit-btn" id="editBtn">Editar perfil</button>
-              <button class="save-btn hidden" id="saveBtn">Guardar</button>
-              <button class="cancel-btn hidden" id="cancelBtn">Cancelar</button>
+              <button class="edit-btn" id="editBtn" data-i18n="editarPerfil">Editar perfil</button>
+              <button class="save-btn hidden" id="saveBtn" data-i18n="guardar">Guardar</button>
+              <button class="cancel-btn hidden" id="cancelBtn" data-i18n="cancelar">Cancelar</button>
             </div>
           </div>
 
           <div class="edit-grid hidden" id="editFieldsTop">
             <div class="field-group">
-              <label>Nombre</label>
+              <label data-i18n="nombre">Nombre</label>
               <input type="text" id="inputNombre">
             </div>
 
             <div class="field-group">
-              <label>@usuario</label>
+              <label data-i18n="usuario">@usuario</label>
               <input type="text" id="inputUsuario">
             </div>
 
             <div class="field-group full">
-              <label>Bio corta</label>
+              <label data-i18n="bioCorta">Bio corta</label>
               <textarea id="inputBio" rows="3"></textarea>
             </div>
           </div>
@@ -115,52 +115,52 @@
           <div class="retro-badges" id="viewTags"></div>
 
           <div class="field-group full hidden" id="editTagsWrap">
-            <label>Tags separados por coma</label>
-            <input type="text" id="inputTags" placeholder="retro web, uni vibes, creative">
+            <label data-i18n="tagsSeparados">Tags separados por coma</label>
+            <input type="text" id="inputTags" placeholder="retro web, uni vibes, creative" data-i18n-placeholder="placeholderTags">
           </div>
 
           <p class="profile-bio" id="viewBio"></p>
 
           <div class="profile-details" id="viewDetails">
             <div class="detail-box">
-              <span class="detail-label">Carrera</span>
+              <span class="detail-label" data-i18n="carrera">Carrera</span>
               <strong id="viewCarrera">Tecnologías de la Información</strong>
             </div>
 
             <div class="detail-box">
-              <span class="detail-label">Campus</span>
+              <span class="detail-label" data-i18n="campus">Campus</span>
               <strong id="viewCampus">Universidad de Colima</strong>
             </div>
 
             <div class="detail-box">
-              <span class="detail-label">Emprendimientos</span>
+              <span class="detail-label" data-i18n="emprendimientos">Emprendimientos</span>
               <strong id="viewEmprendimientos">4 publicaciones</strong>
             </div>
 
             <div class="detail-box">
-              <span class="detail-label">Estado</span>
+              <span class="detail-label" data-i18n="estado">Estado</span>
               <strong id="viewEstado">Disponible</strong>
             </div>
           </div>
 
           <div class="edit-grid hidden" id="editDetails">
             <div class="field-group">
-              <label>Carrera</label>
+              <label data-i18n="carrera">Carrera</label>
               <input type="text" id="inputCarrera">
             </div>
 
             <div class="field-group">
-              <label>Campus</label>
+              <label data-i18n="campus">Campus</label>
               <input type="text" id="inputCampus">
             </div>
 
             <div class="field-group">
-              <label>Emprendimientos</label>
+              <label data-i18n="emprendimientos">Emprendimientos</label>
               <input type="text" id="inputEmprendimientos">
             </div>
 
             <div class="field-group">
-              <label>Estado</label>
+              <label data-i18n="estado">Estado</label>
               <input type="text" id="inputEstado">
             </div>
           </div>
@@ -173,13 +173,13 @@
             <span class="dot pink"></span>
             <span class="dot yellow"></span>
             <span class="dot green"></span>
-            <h3>Sobre mí</h3>
+            <h3 data-i18n="sobreMi">Sobre mí</h3>
           </div>
           <div class="panel-body">
             <p id="viewSobreMi"></p>
 
             <div class="field-group full hidden" id="editSobreMiWrap">
-              <label>Sobre mí</label>
+              <label data-i18n="sobreMi">Sobre mí</label>
               <textarea id="inputSobreMi" rows="6"></textarea>
             </div>
           </div>
@@ -190,13 +190,13 @@
             <span class="dot pink"></span>
             <span class="dot yellow"></span>
             <span class="dot green"></span>
-            <h3>Mis gustos</h3>
+            <h3 data-i18n="misGustos">Mis gustos</h3>
           </div>
           <div class="panel-body">
             <ul class="retro-list" id="viewGustos"></ul>
 
             <div class="field-group full hidden" id="editGustosWrap">
-              <label>Gustos separados por coma</label>
+              <label data-i18n="gustosSeparados">Gustos separados por coma</label>
               <textarea id="inputGustos" rows="5"></textarea>
             </div>
           </div>
@@ -205,47 +205,47 @@
 
       <section class="guestbook-card">
         <div class="guestbook-header">
-          <h3>Libro de perfil</h3>
-          <p>Una zona estilo retro para presentarte</p>
+          <h3 data-i18n="libroPerfil">Libro de perfil</h3>
+          <p data-i18n="presentate">Una zona estilo retro para presentarte</p>
         </div>
 
         <div class="guestbook-box">
           <div class="guestbook-line">
-            <span class="gb-label">Mood:</span>
+            <span class="gb-label" data-i18n="moodLabel">Mood:</span>
             <span class="gb-value" id="viewMood"></span>
           </div>
           <div class="guestbook-line">
-            <span class="gb-label">Color favorito:</span>
+            <span class="gb-label" data-i18n="colorFavoritoLabel">Color favorito:</span>
             <span class="gb-value" id="viewColor"></span>
           </div>
           <div class="guestbook-line">
-            <span class="gb-label">Meta actual:</span>
+            <span class="gb-label" data-i18n="metaActualLabel">Meta actual:</span>
             <span class="gb-value" id="viewMeta"></span>
           </div>
           <div class="guestbook-line">
-            <span class="gb-label">Estilo:</span>
+            <span class="gb-label" data-i18n="estiloLabel">Estilo:</span>
             <span class="gb-value" id="viewEstilo"></span>
           </div>
         </div>
 
         <div class="edit-grid hidden" id="editGuestbook">
           <div class="field-group">
-            <label>Mood</label>
+            <label data-i18n="mood">Mood</label>
             <input type="text" id="inputMood">
           </div>
 
           <div class="field-group">
-            <label>Color favorito</label>
+            <label data-i18n="colorFavorito">Color favorito</label>
             <input type="text" id="inputColor">
           </div>
 
           <div class="field-group">
-            <label>Meta actual</label>
+            <label data-i18n="metaActual">Meta actual</label>
             <input type="text" id="inputMeta">
           </div>
 
           <div class="field-group">
-            <label>Estilo</label>
+            <label data-i18n="estilo">Estilo</label>
             <input type="text" id="inputEstilo">
           </div>
         </div>

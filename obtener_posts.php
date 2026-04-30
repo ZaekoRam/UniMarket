@@ -1,6 +1,7 @@
 <?php
 session_start();
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 
 // Obtenemos el ID del usuario actual
 $usuario_id = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : 0;

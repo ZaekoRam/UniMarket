@@ -1,6 +1,6 @@
 <?php
 require 'credenciales.php';
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 
 // 1. Recoger los datos
 $nombre_completo = mysqli_real_escape_string($conexion, $_POST['nombre_completo']); 
@@ -67,7 +67,7 @@ $check_result = mysqli_query($conexion, $check_query);
 if (mysqli_num_rows($check_result) > 0) {
     echo "<script>
             alert('¡Aguanta! El usuario, correo o número de cuenta ya existen.');
-            window.location='Login.html';
+            window.location='index.html';
           </script>";
     exit();
 }
@@ -132,7 +132,7 @@ if (mysqli_query($conexion, $sql)) {
         // Si el correo se envía, lo mandamos a la pantalla para meter el código
         echo "<script>
             alert('¡Registro casi listo! Te hemos enviado un código de 6 dígitos a tu correo.');
-            window.location='Login.html?verificar=' + encodeURIComponent('$cuenta');
+            window.location='index.html?verificar=' + encodeURIComponent('$cuenta');
         </script>";
 
     } catch (Exception $e) {

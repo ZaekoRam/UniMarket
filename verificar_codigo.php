@@ -1,5 +1,6 @@
 <?php
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 
 // Recibimos los datos del Pop-Up
 $correo = mysqli_real_escape_string($conexion, $_POST['correo']);
@@ -17,19 +18,19 @@ if (mysqli_num_rows($resultado) > 0) {
     if (mysqli_query($conexion, $actualizar)) {
         echo "<script>
                 alert('¡Cuenta activada con éxito! Ya puedes iniciar sesión con Unibot. 🤖✨');
-                window.location='Login.html';
+                window.location='index.html';
               </script>";
     } else {
         echo "<script>
                 alert('Hubo un error al guardar la activación. Contacta al administrador.');
-                window.location='Login.html?verificar=" . urlencode($correo) . "';
+                window.location='index.html?verificar=" . urlencode($correo) . "';
               </script>";
     }
 } else {
     // El código no coincide
     echo "<script>
             alert('❌ El código es incorrecto. Por favor, revisa bien el correo de UniMarket.');
-            window.location='Login.html?verificar=" . urlencode($correo) . "';
+            window.location='index.html?verificar=" . urlencode($correo) . "';
           </script>";
 }
 

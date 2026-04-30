@@ -1,16 +1,149 @@
 const themeToggleInput = document.getElementById("themeToggleInput");
 const themeText = document.getElementById("themeText");
 
-function aplicarTema(modo) {
-  if (modo === "light") {
-    document.body.classList.add("light-mode");
-    themeToggleInput.checked = true;
-    themeText.textContent = "Light Mode";
-  } else {
-    document.body.classList.remove("light-mode");
-    themeToggleInput.checked = false;
-    themeText.textContent = "Dark Mode";
+// ==========================================
+// 🌐 SISTEMA DE TRADUCCIÓN PARA PERFIL
+// ==========================================
+const translationsPerfil = {
+  es: {
+    // Sidebar
+    inicio: "Inicio",
+    perfil: "Perfil",
+    mensajes: "Mensajes",
+    notificaciones: "Notificaciones",
+    configuracion: "Configuración",
+    cerrarSesion: "Cerrar sesión",
+    darkMode: "Dark Mode",
+    lightMode: "Light Mode",
+    
+    // Títulos y encabezados
+    miRincon: "Mi rincón en UniMarket",
+    perfilTitulo: "Perfil",
+    editarPerfil: "Editar perfil",
+    guardar: "Guardar",
+    cancelar: "Cancelar",
+    sobreMi: "Sobre mí",
+    misGustos: "Mis gustos",
+    libroPerfil: "Libro de perfil",
+    presentate: "Una zona estilo retro para presentarte",
+    perfilGuardado: "¡Perfil guardado y subido a la base de datos! 🚀",
+    errorGuardar: "Error al guardar: ",
+    
+    // Etiquetas de perfil
+    nombre: "Nombre",
+    usuario: "@usuario",
+    bioCorta: "Bio corta",
+    tagsSeparados: "Tags separados por coma",
+    carrera: "Carrera",
+    campus: "Campus",
+    emprendimientos: "Emprendimientos",
+    estado: "Estado",
+    mood: "Mood",
+    moodLabel: "Mood:",
+    colorFavorito: "Color favorito",
+    colorFavoritoLabel: "Color favorito:",
+    metaActual: "Meta actual",
+    metaActualLabel: "Meta actual:",
+    estilo: "Estilo",
+    estiloLabel: "Estilo:",
+    gustosSeparados: "Gustos separados por coma",
+    
+    // Placeholders
+    placeholderTags: "retro web, uni vibes, creative",
+  },
+  en: {
+    // Sidebar
+    inicio: "Home",
+    perfil: "Profile",
+    mensajes: "Messages",
+    notificaciones: "Notifications",
+    configuracion: "Settings",
+    cerrarSesion: "Log out",
+    darkMode: "Dark Mode",
+    lightMode: "Light Mode",
+    
+    // Títulos y encabezados
+    miRincon: "My corner in UniMarket",
+    perfilTitulo: "Profile",
+    editarPerfil: "Edit profile",
+    guardar: "Save",
+    cancelar: "Cancel",
+    sobreMi: "About me",
+    misGustos: "My likes",
+    libroPerfil: "Profile book",
+    presentate: "A retro-style zone to introduce yourself",
+    perfilGuardado: "Profile saved and uploaded to the database! 🚀",
+    errorGuardar: "Error saving: ",
+    
+    // Etiquetas de perfil
+    nombre: "Name",
+    usuario: "@username",
+    bioCorta: "Short bio",
+    tagsSeparados: "Tags separated by comma",
+    carrera: "Major",
+    campus: "Campus",
+    emprendimientos: "Entrepreneurships",
+    estado: "Status",
+    mood: "Mood",
+    moodLabel: "Mood:",
+    colorFavorito: "Favorite color",
+    colorFavoritoLabel: "Favorite color:",
+    metaActual: "Current goal",
+    metaActualLabel: "Current goal:",
+    estilo: "Style",
+    estiloLabel: "Style:",
+    gustosSeparados: "Likes separated by comma",
+    
+    // Placeholders
+    placeholderTags: "retro web, uni vibes, creative",
   }
+};
+
+function getLang() {
+  return localStorage.getItem("lang") || "es";
+}
+
+function tPerfil(key) {
+  const lang = getLang();
+  return translationsPerfil[lang] && translationsPerfil[lang][key] ? translationsPerfil[lang][key] : key;
+}
+
+// Aplicar idioma a los elementos con data-i18n y data-i18n-placeholder
+function aplicarIdiomaPerfil() {
+  const lang = getLang();
+  
+  // Elementos con data-i18n (texto)
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.dataset.i18n;
+    if (translationsPerfil[lang] && translationsPerfil[lang][key]) {
+      el.textContent = translationsPerfil[lang][key];
+    }
+  });
+
+  // Elementos con data-i18n-placeholder (placeholders)
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (translationsPerfil[lang] && translationsPerfil[lang][key]) {
+      el.placeholder = translationsPerfil[lang][key];
+    }
+  });
+
+  // Actualizar texto del tema
+  actualizarTextoTema();
+}
+
+function actualizarTextoTema() {
+  if (themeText) {
+    const isLight = document.body.classList.contains("light-mode");
+    themeText.textContent = isLight ? tPerfil("lightMode") : tPerfil("darkMode");
+  }
+}
+
+function aplicarTema(modo) {
+  const isLight = modo === "light";
+  document.body.classList.toggle("light-mode", isLight);
+  themeToggleInput.checked = isLight;
+  themeText.textContent = isLight ? tPerfil("lightMode") : tPerfil("darkMode");
 }
 
 const temaGuardado = localStorage.getItem("theme") || "dark";
@@ -234,6 +367,13 @@ async function iniciarPerfil() {
     const profile = await getProfile();
     renderProfile(profile);
 }
+
+// ==========================================
+// 🚀 INICIALIZACIÓN
+// ==========================================
+
+// Aplicar idioma antes de cargar el perfil
+aplicarIdiomaPerfil();
 
 // Arrancamos el motor
 iniciarPerfil();

@@ -18,32 +18,32 @@
     <nav class="sidebar-menu">
       <a href="menu.html" class="menu-item">
         <span class="icon">🏠</span>
-        <span class="label">Inicio</span>
+        <span class="label" data-i18n="inicio">Inicio</span>
       </a>
 
       <a href="perfil.html" class="menu-item">
         <span class="icon">👤</span>
-        <span class="label">Perfil</span>
+        <span class="label" data-i18n="perfil">Perfil</span>
       </a>
 
       <a href="mensajes.html" class="menu-item">
         <span class="icon">💬</span>
-        <span class="label">Mensajes</span>
+        <span class="label" data-i18n="mensajes">Mensajes</span>
       </a>
 
       <a href="notificaciones.html" class="menu-item active">
         <span class="icon">🔔</span>
-        <span class="label">Notificaciones</span>
+        <span class="label" data-i18n="notificaciones">Notificaciones</span>
       </a>
 
       <a href="configuraciones.html" class="menu-item">
         <span class="icon">⚙️</span>
-        <span class="label">Configuración</span>
+        <span class="label" data-i18n="configuracion">Configuración</span>
       </a>
 
-      <a href="Login.html" class="menu-item">
+      <a href="index.html" class="menu-item">
         <span class="icon">🚪</span>
-        <span class="label">Cerrar sesión</span>
+        <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
       </a>
 
       <label class="theme-switch modern-switch" aria-label="Cambiar tema">
@@ -69,20 +69,20 @@
   <main class="main-content">
     <header class="topbar">
       <div class="page-title-box">
-        <p class="mini-label">Actividad reciente en UniMarket</p>
-        <h1>Notificaciones</h1>
+        <p class="mini-label" data-i18n="actividadReciente">Actividad reciente en UniMarket</p>
+        <h1 data-i18n="tituloNotif">Notificaciones</h1>
       </div>
 
-      <button class="ghost-btn">Marcar todo como leído</button>
+      <button class="ghost-btn" data-i18n="marcarLeido">Marcar todo como leído</button>
     </header>
 
     <section class="notifications-wrapper">
       <div class="notifications-toolbar">
-        <button class="filter-chip active">Todas</button>
-        <button class="filter-chip">No leídas</button>
-        <button class="filter-chip">Comentarios</button>
-        <button class="filter-chip">Reacciones</button>
-        <button class="filter-chip">Mensajes</button>
+        <button class="filter-chip active" data-i18n="todas">Todas</button>
+        <button class="filter-chip" data-i18n="noLeidas">No leídas</button>
+        <button class="filter-chip" data-i18n="comentarios">Comentarios</button>
+        <button class="filter-chip" data-i18n="reacciones">Reacciones</button>
+        <button class="filter-chip" data-i18n="mensajes">Mensajes</button>
       </div>
 
       <section class="notifications-feed">
@@ -90,10 +90,10 @@
           <div class="notification-avatar">💬</div>
           <div class="notification-content">
             <div class="notification-top">
-              <h3>Comentarios</h3>
-              <span>Ahora</span>
+              <h3 data-i18n="comentarios">Comentarios</h3>
+              <span data-i18n="ahora">Ahora</span>
             </div>
-            <p>Cuando alguien comente una publicación, aparecerá aquí.</p>
+            <p data-i18n="descripcionComentarios">Cuando alguien comente una publicación, aparecerá aquí.</p>
           </div>
           <div class="notification-dot"></div>
         </article>
@@ -102,10 +102,10 @@
           <div class="notification-avatar">❤️</div>
           <div class="notification-content">
             <div class="notification-top">
-              <h3>Reacciones</h3>
-              <span>Hace poco</span>
+              <h3 data-i18n="reacciones">Reacciones</h3>
+              <span data-i18n="hacePoco">Hace poco</span>
             </div>
-            <p>Los likes y respuestas futuras se mostrarán en esta sección.</p>
+            <p data-i18n="descripcionReacciones">Los likes y respuestas futuras se mostrarán en esta sección.</p>
           </div>
         </article>
 
@@ -113,10 +113,10 @@
           <div class="notification-avatar">📩</div>
           <div class="notification-content">
             <div class="notification-top">
-              <h3>Mensajes</h3>
-              <span>Próximamente</span>
+              <h3 data-i18n="mensajes">Mensajes</h3>
+              <span data-i18n="proximamente">Próximamente</span>
             </div>
-            <p>También podrás ver avisos cuando recibas un mensaje nuevo.</p>
+            <p data-i18n="descripcionMensajes">También podrás ver avisos cuando recibas un mensaje nuevo.</p>
           </div>
         </article>
 
@@ -124,18 +124,18 @@
           <div class="notification-avatar">🔔</div>
           <div class="notification-content">
             <div class="notification-top">
-              <h3>Sistema</h3>
-              <span>Sin actividad</span>
+              <h3 data-i18n="sistema">Sistema</h3>
+              <span data-i18n="sinActividad">Sin actividad</span>
             </div>
-            <p>Aquí aparecerán novedades o avisos importantes de UniMarket.</p>
+            <p data-i18n="descripcionSistema">Aquí aparecerán novedades o avisos importantes de UniMarket.</p>
           </div>
         </article>
       </section>
 
       <section class="notifications-empty-box">
         <div class="empty-icon">✨</div>
-        <h2>Centro de notificaciones listo</h2>
-        <p>
+        <h2 data-i18n="centroListo">Centro de notificaciones listo</h2>
+        <p data-i18n="baseVisual">
           Esta sección ya tiene la base visual. Cuando conecten el sistema,
           aquí se mostrará toda la actividad real del usuario.
         </p>
@@ -144,19 +144,128 @@
   </main>
 
   <script>
+    // ==========================================
+    // 🌐 SISTEMA DE TRADUCCIÓN
+    // ==========================================
+    const translationsNotif = {
+      es: {
+        // Sidebar
+        inicio: "Inicio",
+        perfil: "Perfil",
+        mensajes: "Mensajes",
+        notificaciones: "Notificaciones",
+        configuracion: "Configuración",
+        cerrarSesion: "Cerrar sesión",
+        darkMode: "Dark Mode",
+        lightMode: "Light Mode",
+        
+        // Títulos y botones
+        actividadReciente: "Actividad reciente en UniMarket",
+        tituloNotif: "Notificaciones",
+        marcarLeido: "Marcar todo como leído",
+        
+        // Filtros
+        todas: "Todas",
+        noLeidas: "No leídas",
+        comentarios: "Comentarios",
+        reacciones: "Reacciones",
+        
+        // Estados y tiempos
+        ahora: "Ahora",
+        hacePoco: "Hace poco",
+        proximamente: "Próximamente",
+        sistema: "Sistema",
+        sinActividad: "Sin actividad",
+        
+        // Descripciones
+        descripcionComentarios: "Cuando alguien comente una publicación, aparecerá aquí.",
+        descripcionReacciones: "Los likes y respuestas futuras se mostrarán en esta sección.",
+        descripcionMensajes: "También podrás ver avisos cuando recibas un mensaje nuevo.",
+        descripcionSistema: "Aquí aparecerán novedades o avisos importantes de UniMarket.",
+        
+        // Sección inferior
+        centroListo: "Centro de notificaciones listo",
+        baseVisual: "Esta sección ya tiene la base visual. Cuando conecten el sistema, aquí se mostrará toda la actividad real del usuario."
+      },
+      en: {
+        // Sidebar
+        inicio: "Home",
+        perfil: "Profile",
+        mensajes: "Messages",
+        notificaciones: "Notifications",
+        configuracion: "Settings",
+        cerrarSesion: "Log out",
+        darkMode: "Dark Mode",
+        lightMode: "Light Mode",
+        
+        // Títulos y botones
+        actividadReciente: "Recent activity in UniMarket",
+        tituloNotif: "Notifications",
+        marcarLeido: "Mark all as read",
+        
+        // Filtros
+        todas: "All",
+        noLeidas: "Unread",
+        comentarios: "Comments",
+        reacciones: "Reactions",
+        
+        // Estados y tiempos
+        ahora: "Now",
+        hacePoco: "Recently",
+        proximamente: "Coming soon",
+        sistema: "System",
+        sinActividad: "No activity",
+        
+        // Descripciones
+        descripcionComentarios: "When someone comments on a post, it will appear here.",
+        descripcionReacciones: "Future likes and replies will be shown in this section.",
+        descripcionMensajes: "You will also see alerts when you receive a new message.",
+        descripcionSistema: "News or important UniMarket alerts will appear here.",
+        
+        // Sección inferior
+        centroListo: "Notification center ready",
+        baseVisual: "This section already has the visual base. When the system is connected, all real user activity will be displayed here."
+      }
+    };
+
+    function getLang() {
+      return localStorage.getItem("lang") || "es";
+    }
+
+    function tNotif(key) {
+      const lang = getLang();
+      return translationsNotif[lang] && translationsNotif[lang][key] ? translationsNotif[lang][key] : key;
+    }
+
+    function aplicarIdiomaNotif() {
+      const lang = getLang();
+      
+      // Elementos con data-i18n (texto)
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        if (translationsNotif[lang] && translationsNotif[lang][key]) {
+          el.textContent = translationsNotif[lang][key];
+        }
+      });
+
+      // Actualizar texto del tema
+      actualizarTextoTema();
+    }
+
+    function actualizarTextoTema() {
+      if (themeText) {
+        const isLight = document.body.classList.contains("light-mode");
+        themeText.textContent = isLight ? tNotif("lightMode") : tNotif("darkMode");
+      }
+    }
     const themeToggleInput = document.getElementById("themeToggleInput");
     const themeText = document.getElementById("themeText");
 
     function aplicarTema(modo) {
-      if (modo === "light") {
-        document.body.classList.add("light-mode");
-        themeToggleInput.checked = true;
-        themeText.textContent = "Light Mode";
-      } else {
-        document.body.classList.remove("light-mode");
-        themeToggleInput.checked = false;
-        themeText.textContent = "Dark Mode";
-      }
+      const isLight = modo === "light";
+      document.body.classList.toggle("light-mode", isLight);
+      themeToggleInput.checked = isLight;
+      themeText.textContent = isLight ? tNotif("lightMode") : tNotif("darkMode");
     }
 
     const temaGuardado = localStorage.getItem("theme") || "dark";
@@ -167,6 +276,21 @@
       localStorage.setItem("theme", nuevoTema);
       aplicarTema(nuevoTema);
     });
+
+    // Observar cambios de tema
+    const observer = new MutationObserver(() => {
+      actualizarTextoTema();
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    // ==========================================
+    // 🚀 INICIALIZACIÓN
+    // ==========================================
+    aplicarIdiomaNotif();
   </script>
 </body>
 </html>

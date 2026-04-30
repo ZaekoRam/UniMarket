@@ -1,10 +1,11 @@
 <?php
+require_once 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
 session_start();
 if (!isset($_SESSION['usuario_id'])) {
     die("Error: No autenticado");
 }
 
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 
 // Recibimos los datos del JS
 $post_id = mysqli_real_escape_string($conexion, $_POST['post_id']);

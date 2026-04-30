@@ -1,11 +1,12 @@
 <?php
 session_start();
+require credenciales.php; // Incluimos las credenciales desde un archivo separado
 // Si no hay sesión, lo botamos
 if (!isset($_SESSION['usuario_id'])) {
     die("Error: No autenticado");
 }
 
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 $post_id = mysqli_real_escape_string($conexion, $_POST['post_id']);
 $mi_id = $_SESSION['usuario_id'];
 $mi_rol = $_SESSION['rol'];
