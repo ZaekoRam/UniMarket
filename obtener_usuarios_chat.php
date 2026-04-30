@@ -1,8 +1,9 @@
 <?php
 session_start();
+require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
 if (!isset($_SESSION['usuario_id'])) exit();
 
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 $mi_id = $_SESSION['usuario_id'];
 
 $sql = "SELECT id, usuario, nombre_completo FROM usuarios WHERE id != '$mi_id'";

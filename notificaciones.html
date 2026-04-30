@@ -41,7 +41,7 @@
         <span class="label" data-i18n="configuracion">Configuración</span>
       </a>
 
-      <a href="Login.html" class="menu-item">
+      <a href="index.html" class="menu-item">
         <span class="icon">🚪</span>
         <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
       </a>
@@ -258,22 +258,14 @@
         themeText.textContent = isLight ? tNotif("lightMode") : tNotif("darkMode");
       }
     }
-
-    // ==========================================
-    // 🌓 TEMA CLARO/OSCURO
-    // ==========================================
     const themeToggleInput = document.getElementById("themeToggleInput");
     const themeText = document.getElementById("themeText");
 
     function aplicarTema(modo) {
-      if (modo === "light") {
-        document.body.classList.add("light-mode");
-        themeToggleInput.checked = true;
-      } else {
-        document.body.classList.remove("light-mode");
-        themeToggleInput.checked = false;
-      }
-      actualizarTextoTema();
+      const isLight = modo === "light";
+      document.body.classList.toggle("light-mode", isLight);
+      themeToggleInput.checked = isLight;
+      themeText.textContent = isLight ? tNotif("lightMode") : tNotif("darkMode");
     }
 
     const temaGuardado = localStorage.getItem("theme") || "dark";

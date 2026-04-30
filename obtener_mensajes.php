@@ -1,8 +1,9 @@
 <?php
 session_start();
+require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
 if (!isset($_SESSION['usuario_id']) || !isset($_GET['con_quien'])) exit();
 
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 $mi_id = $_SESSION['usuario_id'];
 $con_quien = (int)$_GET['con_quien']; // El ID del amigo que seleccionaste
 

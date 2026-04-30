@@ -41,7 +41,7 @@
         <span class="label" data-i18n="configuracion">Configuración</span>
       </a>
 
-      <a href="Login.html" class="menu-item">
+      <a href="index.html" class="menu-item">
         <span class="icon">🚪</span>
         <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
       </a>
@@ -82,7 +82,7 @@
         </div>
 
         <div class="search-box">
-          <input type="text" data-i18n-placeholder="buscarConversacion" placeholder="Buscar conversación...">
+          <input type="text" placeholder="Buscar conversación..." data-i18n-placeholder="buscarConversacion">
         </div>
 
         <div class="chat-list empty-state-list">
@@ -119,7 +119,7 @@
 
         <div class="chat-input-bar">
           <button class="input-icon">＋</button>
-          <input type="text" data-i18n-placeholder="escribeMensaje" placeholder="Escribe un mensaje...">
+          <input type="text" placeholder="Escribe un mensaje..." data-i18n-placeholder="escribeMensaje">
           <button class="send-btn" data-i18n="enviar">Enviar</button>
         </div>
       </section>
@@ -243,7 +243,6 @@
         themeText.textContent = isLight ? tMsj("lightMode") : tMsj("darkMode");
       }
     }
-
     // ==========================================
     // 🌓 1. CÓDIGO DEL TEMA (LIGHT/DARK MODE) 
     // ==========================================
@@ -251,14 +250,10 @@
     const themeText = document.getElementById("themeText");
 
     function aplicarTema(modo) {
-      if (modo === "light") {
-        document.body.classList.add("light-mode");
-        themeToggleInput.checked = true;
-      } else {
-        document.body.classList.remove("light-mode");
-        themeToggleInput.checked = false;
-      }
-      actualizarTextoTema();
+      const isLight = modo === "light";
+      document.body.classList.toggle("light-mode", isLight);
+      themeToggleInput.checked = isLight;
+      themeText.textContent = isLight ? tMsj("lightMode") : tMsj("darkMode");
     }
 
     const temaGuardado = localStorage.getItem("theme") || "dark";
@@ -270,16 +265,6 @@
       aplicarTema(nuevoTema);
     });
 
-    // Observar cambios de tema
-    const observer = new MutationObserver(() => {
-      actualizarTextoTema();
-    });
-
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
     // ==========================================
     // 💬 2. MAGIA DEL CHAT 1 A 1 CON TU CSS
     // ==========================================
@@ -287,17 +272,19 @@
     const inputMensaje = document.querySelector(".chat-input-bar input");
     const btnEnviar = document.querySelector(".send-btn");
     
+    // 👇 ¡CORRECCIÓN AQUÍ! Ahora busca la clase exacta que tienes en tu HTML
     const listaContactosDiv = document.querySelector(".chat-list"); 
 
     let contactoActivoId = null; 
 
     // 👥 CARGAR LA LISTA DE USUARIOS 
+    // 👥 CARGAR LA LISTA DE USUARIOS (ALINEADOS A LA IZQUIERDA SÍ O SÍ 🫡)
     async function cargarUsuarios() {
         try {
             const res = await fetch("obtener_usuarios_chat.php");
             const usuarios = await res.json();
             
-            listaContactosDiv.innerHTML = "";
+            listaContactosDiv.innerHTML = ""; // Limpiamos la lista
             
             usuarios.forEach(user => {
                 const nombre = user.nombre_completo || user.usuario;
@@ -306,12 +293,13 @@
                 const div = document.createElement("div");
                 div.className = "chat-item"; 
                 
+                // 👇 FORZAMOS EL DISEÑO A LA IZQUIERDA
                 div.style.display = "flex";
                 div.style.alignItems = "center";
-                div.style.justifyContent = "flex-start";
-                div.style.textAlign = "left";
+                div.style.justifyContent = "flex-start"; // Empuja todo a la izquierda
+                div.style.textAlign = "left";            // Texto a la izquierda
                 div.style.padding = "15px";
-                div.style.gap = "15px";
+                div.style.gap = "15px";                  // Espacio entre foto y texto
                 div.style.borderBottom = "1px solid var(--border)";
                 div.style.cursor = "pointer";
                 div.style.width = "100%";
@@ -334,11 +322,13 @@
                 `;
                 
                 div.onclick = () => {
+                    // Quitamos el fondo a todos y le ponemos al seleccionado
                     document.querySelectorAll(".chat-item").forEach(el => el.style.background = "transparent");
                     div.style.background = "var(--panel-soft)";
 
                     contactoActivoId = user.id;
                     
+                    // Actualizamos la cabecera
                     const headerAvatar = document.querySelector(".chat-header .chat-avatar");
                     headerAvatar.textContent = iniciales;
                     headerAvatar.style.background = "var(--accent)";
@@ -349,7 +339,7 @@
                     headerAvatar.style.fontWeight = "bold";
 
                     document.querySelector(".chat-header .chat-user h2").textContent = nombre;
-                    document.querySelector(".chat-header .chat-user p").textContent = tMsj("enLinea"); // ✅ Traducido
+                    document.querySelector(".chat-header .chat-user p").textContent = tMsj("enLinea");
                     
                     cargarMensajes();
                 };
@@ -374,8 +364,8 @@
           chatBody.innerHTML = `
             <div class="chat-empty-state">
               <div class="chat-empty-icon">✉️</div>
-              <h3>${tMsj("noHayMensajes")}</h3> <!-- ✅ Traducido -->
-              <p>${tMsj("escribeUnMensaje")}</p> <!-- ✅ Traducido -->
+              <h3>${tMsj("noHayMensajes")}</h3>
+              <p>${tMsj("escribeUnMensaje")}</p>
             </div>`;
           return;
         }
@@ -400,6 +390,7 @@
           chatBody.appendChild(divMensaje);
         });
 
+        // Hacer scroll automático hacia abajo
         chatBody.scrollTop = chatBody.scrollHeight;
       } catch (error) {
         console.error("Error al cargar mensajes:", error);
@@ -409,7 +400,7 @@
     // 📤 ENVIAR UN MENSAJE
     async function enviarMensaje() {
       if (!contactoActivoId) {
-          alert(tMsj("seleccionaAlguien")); // ✅ Traducido
+          alert(tMsj("seleccionaAlguien"));
           return;
       }
 
@@ -438,7 +429,7 @@
     
     // Aplicar idioma antes de cargar todo
     aplicarIdiomaMensajes();
-    
+
     // INICIAR TODO
     cargarUsuarios();
     setInterval(cargarMensajes, 3000); 

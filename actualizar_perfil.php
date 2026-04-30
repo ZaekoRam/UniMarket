@@ -1,11 +1,12 @@
 <?php
+require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
 session_start();
 if (!isset($_SESSION['usuario_id'])) {
     echo json_encode(['success' => false, 'error' => 'No autenticado']);
     exit();
 }
 
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 $id = $_SESSION['usuario_id'];
 
 // Recibimos el JSON que nos manda Javascript

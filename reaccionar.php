@@ -1,6 +1,7 @@
 <?php
 session_start();
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 
 if (!isset($_SESSION['usuario_id'])) die("0");
 

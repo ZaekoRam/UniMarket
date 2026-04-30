@@ -139,19 +139,11 @@ function actualizarTextoTema() {
   }
 }
 
-// ==========================================
-// 🌓 TEMA CLARO/OSCURO (ACTUALIZADO)
-// ==========================================
-
 function aplicarTema(modo) {
-  if (modo === "light") {
-    document.body.classList.add("light-mode");
-    themeToggleInput.checked = true;
-  } else {
-    document.body.classList.remove("light-mode");
-    themeToggleInput.checked = false;
-  }
-  actualizarTextoTema(); // Usar la función centralizada
+  const isLight = modo === "light";
+  document.body.classList.toggle("light-mode", isLight);
+  themeToggleInput.checked = isLight;
+  themeText.textContent = isLight ? tPerfil("lightMode") : tPerfil("darkMode");
 }
 
 const temaGuardado = localStorage.getItem("theme") || "dark";
@@ -162,20 +154,6 @@ themeToggleInput.addEventListener("change", () => {
   localStorage.setItem("theme", nuevoTema);
   aplicarTema(nuevoTema);
 });
-
-// Observar cambios de tema para actualizar el texto
-const observer = new MutationObserver(() => {
-  actualizarTextoTema();
-});
-
-observer.observe(document.body, {
-  attributes: true,
-  attributeFilter: ['class']
-});
-
-// ==========================================
-// 👤 LÓGICA DEL PERFIL
-// ==========================================
 
 const defaultProfile = {
   nombre: "Invitado",
@@ -229,15 +207,14 @@ async function saveProfile(profile) {
     const resultado = await respuesta.json();
     
     if (resultado.success) {
-      alert(tPerfil("perfilGuardado")); // ✅ Usar traducción
+      alert("¡Perfil guardado y subido a la base de datos! 🚀");
     } else {
-      alert(tPerfil("errorGuardar") + resultado.error); // ✅ Usar traducción
+      alert("Error al guardar: " + resultado.error);
     }
   } catch (error) {
     console.error("Error al conectar con el servidor:", error);
   }
 }
-
 // Le decimos que reciba el "profile" ya cargado
 function renderProfile(profile) {
   document.getElementById("viewNombre").textContent = profile.nombre;
@@ -348,6 +325,10 @@ document.getElementById("cancelBtn").addEventListener("click", () => {
 // El botón de guardar también debe ser asíncrono
 document.getElementById("saveBtn").addEventListener("click", async () => {
   const nuevoPerfil = {
+    // Nota: Como no te dejan editar nombre ni usuario, los mantenemos ocultos en el HTML y no los sobreescribimos aquí,
+    // pero si tienes inputs para ellos, descomenta las dos líneas de abajo.
+    // nombre: document.getElementById("inputNombre").value.trim() || defaultProfile.nombre,
+    // usuario: document.getElementById("inputUsuario").value.trim() || defaultProfile.usuario,
     bio: document.getElementById("inputBio").value.trim() || defaultProfile.bio,
     tags: document.getElementById("inputTags").value
       .split(",")

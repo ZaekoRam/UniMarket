@@ -1,12 +1,13 @@
 <?php
 session_start();
+require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
 // Si no hay sesión, no mandamos nada
 if (!isset($_SESSION['usuario_id'])) {
     echo json_encode(['error' => 'No autenticado']);
     exit();
 }
 
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 $id = $_SESSION['usuario_id'];
 
 // Buscamos los datos. 'nombre_completo' lo mandamos como 'nombre' para que tu JS lo entienda igual.

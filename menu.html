@@ -6,6 +6,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniMarket - Inicio</title>
     <link rel="stylesheet" href="style_home.css">
+    <style>
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.96);
+            z-index: 9999;
+            padding: 0;
+        }
+        .lightbox-overlay.active {
+            display: flex;
+        }
+        .lightbox-overlay img {
+            max-width: 98vw;
+            max-height: 98vh;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+            position: relative;
+            z-index: 1;
+        }
+        .lightbox-overlay::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            cursor: zoom-out;
+        }
+
+        /* ========== NUEVAS MEJORAS VISUALES ========== */
+
+        /* Fondo animado */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(57, 197, 187, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(102, 255, 240, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(57, 197, 187, 0.05) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+
+        /* Caja de publicar con efecto hover */
+        .publish-box {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .publish-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(57, 197, 187, 0.03), transparent);
+            transition: left 0.7s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .publish-box:hover::before {
+            left: 100%;
+        }
+
+        .publish-box:hover {
+            border-color: rgba(57, 197, 187, 0.25);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(57, 197, 187, 0.1);
+            transform: translateY(-2px);
+        }
+
+
+        .profile-circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(57, 197, 187, 0.3);
+        }
+
+        /* Botón publicar animado */
+        .btn-publicar {
+            background: linear-gradient(135deg, var(--accent-2), var(--accent), #2dd4bf) !important;
+            background-size: 200% 200% !important;
+            animation: gradientMove 3s ease infinite !important;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-publicar:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(57, 197, 187, 0.4) !important;
+        }
+
+        /* Separador decorativo */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 820px;
+            margin: 24px auto 28px;
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+
+        .section-divider:hover {
+            opacity: 0.7;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .divider-icon {
+            color: var(--accent);
+            font-size: 14px;
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Post cards con hover */
+        .post-card {
+            transition: all 0.3s ease;
+        }
+
+        .post-card:hover {
+            border-color: rgba(57, 197, 187, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animación del saludo */
+        .welcome-text h1 {
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 
 <body>
@@ -44,7 +207,7 @@
                 <span class="label" data-i18n="configuraciones">Configuraciones</span>
             </a>
 
-            <a href="./Login.html" class="menu-item">
+            <a href="./index.html" class="menu-item">
                 <span class="icon">🚪</span>
                 <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
             </a>
@@ -69,20 +232,27 @@
 
     <main class="main-content">
         <header class="topbar">
-            <div class="welcome-box">
-                <div class="profile-circle" id="profileCircle">
-                    <img id="profileImage" src="" alt="Foto de perfil" style="display: none;">
-                    <span id="profileInitial">U</span>
-                </div>
+    <div class="welcome-box">
+        <div class="profile-circle" id="profileCircle">
+            <img id="profileImage" src="" alt="Foto de perfil" style="display: none;">
+            <span id="profileInitial">U</span>
+        </div>
 
-                <div class="welcome-text">
-                    <p class="small-text" data-i18n="fraseInicio">Todo comienza por un 0</p>
-                    <h1 id="saludoUsuario">Hola, Invitado</h1>
-                </div>
-            </div>
+        <div class="welcome-text">
+            <p class="small-text" data-i18n="fraseInicio">Todo comienza por un 0</p>
+            <h1 id="saludoUsuario">Hola, Invitado</h1>
+        </div>
+    </div>
 
-            <div class="topbar-logo">UniMarket</div>
-        </header>
+    <span class="neon-title">UniMarket</span>
+</header>
+
+        <!-- NUEVO: Separador decorativo -->
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <span class="divider-icon">✦</span>
+            <span class="divider-line"></span>
+        </div>
 
         <section class="feed-container">
             <div class="publish-box">
@@ -99,24 +269,29 @@
                 </div>
 
                 <form id="contenidoForm" action="menu.php" method="POST" enctype="multipart/form-data">
-                    <textarea id="texto" name="texto" placeholder="¿Qué vamos a emprender hoy?" rows="3"></textarea>
+    <div class="textarea-wrapper">
+        <textarea id="texto" name="texto" placeholder="¿Qué vamos a emprender hoy?"></textarea>
+        
+        <!-- Botón de cámara estilo WhatsApp -->
+        <label class="camera-btn" title="Agregar imagen o video">
+            <input type="file" id="archivoImagen" name="media[]" accept="image/*,video/*" multiple>
+            📷
+        </label>
+    </div>
 
-                    <div id="previewContainer" class="post-images-grid preview-grid"></div>
+    <div id="previewContainer" class="post-images-grid preview-grid"></div>
 
-                    <label class="custom-file">
-                        <input type="file" id="archivoImagen" name="imagen" accept="image/*">
-                        <span id="labelImagen">📷 Agregar imagen</span>
-                    </label>
-
-                    <input type="url" id="urlEnlace" name="link" placeholder="Enlace externo (https://...)">
-
-                    <button type="submit" class="btn-publicar" data-i18n="publicar">Publicar</button>
-                </form>
+    <button type="submit" class="btn-publicar" data-i18n="publicar">Publicar</button>
+</form>
             </div>
 
             <div id="resultado"></div>
         </section>
     </main>
+
+    <div id="lightboxOverlay" class="lightbox-overlay" onclick="cerrarLightbox()">
+        <img id="lightboxImage" src="" alt="Vista ampliada">
+    </div>
 
     <script>
         const body = document.body;
@@ -138,7 +313,7 @@
                 saludoInvitado: "Hola, Invitado",
                 saludoUsuario: "Hola, {nombre}",
                 placeholderTexto: "¿Qué vamos a emprender hoy?",
-                agregarImagen: "📷 Agregar imagen",
+                agregarImagen: "📷 Agregar imagen o video",
                 placeholderEnlace: "Enlace externo (https://...)",
                 anonimo: "Anón",
                 responder: "↳ Responder",
@@ -147,6 +322,11 @@
                 escribeComentario: "Escribe un comentario...",
                 escribeRespuesta: "Escribe tu respuesta...",
                 editar: "Editar",
+                editarPublicacion: "Editar publicación",
+                modificarContenido: "Modifica el texto o el archivo antes de guardar.",
+                seleccionarArchivo: "Seleccionar archivo",
+                archivoActual: "Archivo actual",
+                cancelar: "Cancelar",
                 eliminar: "Eliminar",
                 editarEnlace: "Editar enlace",
                 guardar: "Guardar",
@@ -169,7 +349,7 @@
                 saludoInvitado: "Hello, Guest",
                 saludoUsuario: "Hello, {nombre}",
                 placeholderTexto: "What are we building today?",
-                agregarImagen: "📷 Add image",
+                agregarImagen: "📷 Add image or video",
                 placeholderEnlace: "External link (https://...)",
                 anonimo: "Anon",
                 responder: "↳ Reply",
@@ -178,6 +358,11 @@
                 escribeComentario: "Write a comment...",
                 escribeRespuesta: "Write your reply...",
                 editar: "Edit",
+                editarPublicacion: "Edit post",
+                modificarContenido: "Change the text or file before saving.",
+                seleccionarArchivo: "Select file",
+                archivoActual: "Current file",
+                cancelar: "Cancel",
                 eliminar: "Delete",
                 editarEnlace: "Edit link",
                 guardar: "Save",
@@ -208,9 +393,12 @@
                 }
             });
 
-            document.getElementById("texto").placeholder = translations[lang].placeholderTexto;
-            document.getElementById("labelImagen").textContent = translations[lang].agregarImagen;
-            document.getElementById("urlEnlace").placeholder = translations[lang].placeholderEnlace;
+            const textoEl = document.getElementById("texto");
+if (textoEl) textoEl.placeholder = translations[lang].placeholderTexto;
+
+// Estos elementos ya no existen, los quitamos
+// document.getElementById("labelImagen")...
+// document.getElementById("urlEnlace")...
 
             const saludoActual = document.getElementById("saludoUsuario");
         const nombreActual = saludoActual.dataset.nombreActual || "";
@@ -319,15 +507,43 @@
         const inputArchivo = document.getElementById("archivoImagen");
         const previewContainer = document.getElementById("previewContainer");
 
+       
+const textarea = document.getElementById('texto');
+
+textarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+    
+    if (this.scrollHeight > 400) {
+        this.style.height = '400px';
+        this.style.overflowY = 'auto';
+    } else {
+        this.style.overflowY = 'hidden';
+    }
+});
+
         inputArchivo.addEventListener("change", (e) => {
             previewContainer.innerHTML = "";
 
             Array.from(e.target.files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    const img = document.createElement("img");
-                    img.src = ev.target.result;
-                    previewContainer.appendChild(img);
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "preview-thumb";
+
+                    if (file.type.startsWith("video/")) {
+                        const video = document.createElement("video");
+                        video.src = ev.target.result;
+                        video.controls = true;
+                        wrapper.appendChild(video);
+                    } else {
+                        const img = document.createElement("img");
+                        img.src = ev.target.result;
+                        img.addEventListener("click", () => abrirLightbox(img.src));
+                        wrapper.appendChild(img);
+                    }
+
+                    previewContainer.appendChild(wrapper);
                 };
                 reader.readAsDataURL(file);
             });
@@ -409,15 +625,67 @@
             const post = btn.closest(".post-card");
             const texto = post.querySelector(".post-text")?.innerText || "";
             const url = post.querySelector(".link-preview-card")?.href || "";
+            const mediaContainer = post.querySelector(".post-images-grid");
+            let mediaPreviewHTML = "";
+
+            if (mediaContainer) {
+                const mediaElements = mediaContainer.querySelectorAll("img, video");
+                if (mediaElements.length > 0) {
+                    mediaPreviewHTML = `<div class="edit-media-list"><span class="edit-media-label">${t("archivoActual")}</span>`;
+                    mediaElements.forEach((mediaElement, index) => {
+                        const src = mediaElement.src;
+                        const tag = mediaElement.tagName.toLowerCase();
+                        mediaPreviewHTML += `
+                            <div class="edit-media-thumb" data-src="${src}">
+                                <button type="button" class="remove-media-btn" onclick="quitarMedia(this)">&times;</button>
+                                ${tag === 'video'
+                                    ? '<video src="' + src + '" muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>'
+                                    : '<img src="' + src + '" alt="' + t("archivoActual") + '" style="width:100%; height:100%; object-fit:cover;" />'}
+                            </div>
+                        `;
+                    });
+                    mediaPreviewHTML += `</div>`;
+                }
+            }
 
             post.innerHTML = `
                 <div class="edit-post-box">
+                    <div class="edit-post-header">
+                        <strong>${t("editar")} publicación</strong>
+                        <span>${t("modificarContenido")}</span>
+                    </div>
+                    ${mediaPreviewHTML}
                     <textarea class="edit-text">${texto}</textarea>
                     <input type="url" class="edit-url" value="${url}" placeholder="${t("editarEnlace")}">
-                    <input type="file" class="edit-files">
-                    <button onclick="finalizarEdicion(this)">${t("guardar")}</button>
+                    <label class="edit-file-label">${t("seleccionarArchivo")}
+                        <input type="file" class="edit-files" name="media[]" multiple>
+                    </label>
+                    <input type="hidden" class="remove-media-input" name="remove_media" value="[]">
+                    <div class="edit-actions">
+                        <button type="button" class="btn-cancel" onclick="cancelarEdicion(this)">${t("cancelar")}</button>
+                        <button type="button" class="btn-save" onclick="finalizarEdicion(this)">${t("guardar")}</button>
+                    </div>
                 </div>
             `;
+        }
+
+        function cancelarEdicion(btn) {
+            window.location.reload();
+        }
+
+        function quitarMedia(btn) {
+            const thumb = btn.closest('.edit-media-thumb');
+            if (!thumb) return;
+            const hidden = thumb.closest('.edit-post-box').querySelector('.remove-media-input');
+            if (hidden) {
+                const current = JSON.parse(hidden.value || '[]');
+                const src = thumb.dataset.src;
+                if (src && !current.includes(src)) {
+                    current.push(src);
+                }
+                hidden.value = JSON.stringify(current);
+            }
+            thumb.style.display = 'none';
         }
 
         function eliminarPost(btn) {
@@ -456,7 +724,7 @@
 
         function finalizarEdicion(btn) {
     const post = btn.closest(".post-card");
-    const postId = post.dataset.id; // Asegúrate de que tu <div class="post-card"> tenga el data-id="${post.id}"
+    const postId = post.dataset.id;
     
     if (!postId) {
         alert("Error: No se encontró el ID del post.");
@@ -464,14 +732,17 @@
     }
 
     const texto = post.querySelector(".edit-text").value;
-    // const url = post.querySelector(".edit-url").value; // Descomenta si usas URL
+    const removeMediaValue = post.querySelector('.remove-media-input')?.value || '[]';
+    const fileInput = post.querySelector('.edit-files');
     
     const datos = new FormData();
     datos.append("post_id", postId);
     datos.append("texto", texto);
-    // datos.append("url", url); // Descomenta si usas URL
+    datos.append("remove_media", removeMediaValue);
+    if (fileInput && fileInput.files.length) {
+        Array.from(fileInput.files).forEach(file => datos.append("media[]", file));
+    }
 
-    // Le mandamos la info a PHP
     fetch("editar_post.php", {
         method: "POST",
         body: datos
@@ -479,11 +750,9 @@
     .then(res => res.text())
     .then(respuesta => {
         if (respuesta.trim() === "ok") {
-            // ¡Éxito! Recargamos la página para que se vean los cambios fresquecitos desde la BD
-            // (O si tienes una función como cargarPosts(), puedes llamarla en lugar de reload)
             window.location.reload(); 
         } else {
-            alert(respuesta); // Muestra el error de PHP (ej. "No tienes permiso")
+            alert(respuesta);
         }
     })
     .catch(err => {
@@ -492,12 +761,33 @@
     });
 }
 
-        // 👇 Le agregamos los 3 IDs al final de esta línea para saber de quién es el post
-function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null) {
+function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null) {
             const post = document.createElement("div");
             post.className = "post-card";
 
-            let mediaHTML = imgs.map(src => `<img src="${src}" class="post-img" style="border-radius:14px; margin-top:10px; width:100%;">`).join('');
+            const mediaCount = imgs.length;
+            const visibleMedia = mediaCount > 4 ? imgs.slice(0, 4) : imgs;
+            const gridClass = `post-images-grid media-count-${Math.min(mediaCount, 4)}${mediaCount > 4 ? " media-count-more" : ""}`;
+
+let fechaFormateada = t("haceUnMomento");
+
+if (fechaStr) {
+    const d = new Date(fechaStr);
+    fechaFormateada = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ", " + 
+                      d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
+
+            let mediaHTML = visibleMedia.map((src, idx) => {
+                const extension = src.split('.').pop().toLowerCase();
+                const esVideo = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'].includes(extension);
+                const mediaTag = esVideo
+                    ? `<video src="${src}" controls class="post-video"></video>`
+                    : `<img src="${src}" class="post-img" onclick="abrirLightbox(this.src)">`;
+                const overlay = (mediaCount > 4 && idx === 3)
+                    ? `<div class="more-overlay">+${mediaCount - 4}</div>`
+                    : "";
+                return `<div class="media-item">${mediaTag}${overlay}</div>`;
+            }).join('');
 
             const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
             const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
@@ -523,19 +813,14 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
 
            const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
 
-// Sacamos las palabras del nombre completo
 const palabras = nombreFinal.trim().split(" ");
-// Agarramos la primera letra de la primera palabra
 let inicial = palabras[0].charAt(0).toUpperCase();
-// Si hay más de una palabra (ej. tiene apellido), agarramos la primera letra de la segunda palabra también
 if (palabras.length > 1) {
     inicial += palabras[1].charAt(0).toUpperCase();
 }
 
-            // 🔒 AQUÍ ESTÁ LA MAGIA: Guardamos tu menú en una variable
             let opcionesHTML = "";
             
-            // Y SOLO lo dibujamos si el post es tuyo o si eres admin
             if (autorId == miId || miRol === 'admin') {
                 opcionesHTML = `
                     <div class="post-options-container">
@@ -556,7 +841,7 @@ if (palabras.length > 1) {
                         </div>
                         <div>
                             <h4 style="margin:0; color:var(--text, #fff); font-size:15px;">${nombreFinal}</h4>
-                            <span style="font-size:12px; color:var(--muted, #9dc7b8);">${t("haceUnMomento")}</span>
+                            <span style="font-size:12px; color:var(--muted, #9dc7b8);">${fechaFormateada}</span>
                         </div>
                     </div>
 
@@ -566,11 +851,12 @@ if (palabras.length > 1) {
 
                 <div class="post-content" style="margin-top:15px;">
                     <p class="post-text">${texto}</p>
-                    <div class="post-images-grid">${mediaHTML}</div>
+                    <div class="${gridClass}">${mediaHTML}</div>
                 </div>
 
                 <div class="post-actions" style="margin-top:15px; display:flex; gap:10px;">
-                    <button class="action-btn like-btn ${miReaccion === 'like' ? 'active' : ''}" onclick="manejarReaccion(this, 'like')">
+                    <button class="action-btn like-btn ${miReaccion === 'like' ?
+                    'active' : ''}" onclick="manejarReaccion(this, 'like')">
                         ${t("meGusta")} <span class="count-number">${likes}</span>
                     </button>
                     <button class="action-btn dislike-btn ${miReaccion === 'dislike' ? 'active' : ''}" onclick="manejarReaccion(this, 'dislike')">
@@ -649,6 +935,20 @@ if (palabras.length > 1) {
                 .then(() => location.reload());
         }
 
+        function abrirLightbox(src) {
+            const overlay = document.getElementById('lightboxOverlay');
+            const img = document.getElementById('lightboxImage');
+            img.src = src;
+            overlay.classList.add('active');
+        }
+
+        function cerrarLightbox() {
+            const overlay = document.getElementById('lightboxOverlay');
+            const img = document.getElementById('lightboxImage');
+            overlay.classList.remove('active');
+            img.src = '';
+        }
+
         window.onload = async () => {
             let miUsuarioId = null;
             let miRol = null;
@@ -702,7 +1002,6 @@ if (palabras.length > 1) {
 
             // 2. Ahora sí, traemos los posts (ESTO SE QUEDA IGUAL)
             fetch("obtener_posts.php")
-            // ... (aquí sigue el resto de tu código normal) ...
         .then(response => response.json())
         .then(data => {
             let resultado = document.getElementById("resultado");
@@ -714,21 +1013,21 @@ if (palabras.length > 1) {
 
             resultado.innerHTML = "";
             data.forEach(post => {
-                const imgArray = post.imagen ? ["uploads/" + post.imagen] : [];
+                const imgArray = post.imagen ? post.imagen.split(",").map(src => src.trim()).filter(Boolean).map(src => "uploads/" + src) : [];
 
-                // 🚨 LE MANDAMOS 3 DATOS NUEVOS A crearPost al final 🚨
-                const nuevoPost = crearPost(
-                    post.texto || "",
-                    imgArray,
-                    post.total_likes || 0,
-                    post.total_dislikes || 0,
-                    post.comentarios_data || [],
-                    post.mi_reaccion || null,
-                    post.nombre_autor,
-                    post.usuario_id, // El ID del dueño del post
-                    miUsuarioId,     // Tu ID
-                    miRol            // Tu rol (para saber si eres admin)
-                );
+const nuevoPost = crearPost(
+    post.texto || "",
+    imgArray,
+    post.total_likes || 0,
+    post.total_dislikes || 0,
+    post.comentarios_data || [],
+    post.mi_reaccion || null,
+    post.nombre_autor,
+    post.usuario_id,
+    miUsuarioId,
+    miRol,
+    post.fecha
+);
 
                 nuevoPost.dataset.id = post.id;
                 resultado.appendChild(nuevoPost);

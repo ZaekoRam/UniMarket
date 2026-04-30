@@ -1,10 +1,11 @@
 <?php
 session_start();
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
+require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 
 // Verificación robusta de sesión
 if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol'])) {
-    die("Error: Sesión no iniciada. Por favor ve a Login.html e inicia sesión.");
+    die("Error: Sesión no iniciada. Por favor ve a index.html e inicia sesión.");
 }
 
 if (!in_array($_SESSION['rol'], ['admin', 'creador'])) {
@@ -16,17 +17,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $texto = trim(mysqli_real_escape_string($conexion, $_POST['texto']));
     $usuario_id = $_SESSION['usuario_id'];
 
-    $nombre_imagen = null;
+    $nombres_media = [];
     $tiene_imagen = false;
 
-    // Verificamos si subió una imagen
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === 0) {
-        $tiene_imagen = true;
+    // Verificamos si subió archivos de media
+    if (isset($_FILES['media']) && is_array($_FILES['media']['name'])) {
         $ruta_carpeta = "uploads/";
         if (!file_exists($ruta_carpeta)) { mkdir($ruta_carpeta, 0777, true); }
-        $nombre_imagen = time() . "_" . $_FILES['imagen']['name'];
-        move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_carpeta . $nombre_imagen);
+
+        foreach ($_FILES['media']['name'] as $indice => $nombreArchivo) {
+            if ($_FILES['media']['error'][$indice] === 0) {
+                $nombreSeguro = time() . "_" . basename($nombreArchivo);
+                if (move_uploaded_file($_FILES['media']['tmp_name'][$indice], $ruta_carpeta . $nombreSeguro)) {
+                    $nombres_media[] = $nombreSeguro;
+                }
+            }
+        }
     }
+
+    if (!empty($nombres_media)) {
+        $tiene_imagen = true;
+    }
+
+    $nombre_imagen = $tiene_imagen ? implode(',', $nombres_media) : null;
 
     // 🛑 AQUÍ ESTÁ EL CANDADO ANTI-POSTS VACÍOS 🛑
     // Si el texto está completamente vacío Y además no subió ninguna imagen...
