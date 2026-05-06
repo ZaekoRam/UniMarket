@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Interactivo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button class="menu-toggle" id="menuToggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="container">
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <h2><i class="fas fa-sliders-h"></i> AdminPanel</h2>
+            </div>
+            <ul>
+                <li><a href="#" class="nav-link active" data-target="inicio"><i class="fas fa-chart-pie"></i> Inicio</a></li>
+                <li><a href="#" class="nav-link" data-target="usuarios"><i class="fas fa-users"></i> Usuarios</a></li>
+                <li><a href="#" class="nav-link" data-target="peticiones"><i class="fas fa-envelope-open-text"></i> Peticiones <span class="badge" id="req-badge">1</span></a></li>
+                <li><a href="#" class="nav-link" data-target="peticion-publicacion"><i class="fas fa-file-upload"></i> Petición de Publicación <span class="badge" id="pub-badge">1</span></a></li>
+                <li><a href="#" class="nav-link" data-target="configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header>
+                <h1 id="page-title">Panel de Control</h1>
+                <div class="quick-actions">
+                    <button class="btn btn-primary" id="openAddUserModal"><i class="fas fa-user-plus"></i> Nuevo Usuario</button>
+                    <button class="btn btn-secondary" id="btnExport"><i class="fas fa-download"></i> Exportar Datos</button>
+                    <a href="cerrar_sesion.php" class="btn btn-danger" style="background-color: #dc3545; border-color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+                </div>
+            </header>
+
+            <div id="inicio" class="tab-content active">
+                <section class="cards">
+                    <div class="card">
+                        <div class="card-icon blue"><i class="fas fa-users"></i></div>
+                        <div class="card-info">
+                            <h3>Usuarios Conectados</h3>
+                            <p>150</p>
+                            <span class="trend positive"><i class="fas fa-arrow-up"></i> +12% vs ayer</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon green"><i class="fas fa-user-check"></i></div>
+                        <div class="card-info">
+                            <h3>Usuarios Totales</h3>
+                            <p id="total-users-count">340</p>
+                            <span class="trend positive"><i class="fas fa-arrow-up"></i> +5% este mes</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon orange"><i class="fas fa-eye"></i></div>
+                        <div class="card-info">
+                            <h3>Visitas Hoy</h3>
+                            <p>1,500</p>
+                            <span class="trend negative"><i class="fas fa-arrow-down"></i> -2% vs ayer</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="dashboard-grid">
+                    <section class="card table-section">
+                        <h3><i class="fas fa-chart-line"></i> Gráfico de Usuarios</h3>
+                        <p class="section-desc">Monitoreo de tráfico activo de las últimas 24 horas.</p>
+                        <div class="chart-container">
+                            <span class="chart-placeholder">[Gráfico Dinámico: 150 Conectados / 340 Totales]</span>
+                        </div>
+                    </section>
+
+                    <section class="card stats-sidebar">
+                        <h3><i class="fas fa-server"></i> Estado del Servidor</h3>
+                        <div class="server-status">
+                            <div class="status-item">
+                                <span>Uso de CPU</span>
+                                <div class="progress-bar"><div class="progress" style="width: 42%;"></div></div>
+                                <span class="val">42%</span>
+                            </div>
+                            <div class="status-item">
+                                <span>Memoria RAM</span>
+                                <div class="progress-bar"><div class="progress orange-bg" style="width: 78%;"></div></div>
+                                <span class="val">78%</span>
+                            </div>
+                            <div class="status-item">
+                                <span>Espacio en Disco</span>
+                                <div class="progress-bar"><div class="progress green-bg" style="width: 15%;"></div></div>
+                                <span class="val">15%</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div id="usuarios" class="tab-content">
+                <section class="table-section">
+                    <div class="table-header">
+                        <div>
+                            <h3>Gestión de Usuarios</h3>
+                            <p class="section-desc">Administra los miembros de la plataforma, busca por nombre y edita sus roles de acceso.</p>
+                        </div>
+                        <div class="table-controls">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="userSearch" placeholder="Buscar usuario...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Rol Actual</th>
+                                <th>Cambiar Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </section>
+            </div>
+
+            <div id="peticiones" class="tab-content">
+                <section class="table-section">
+                    <h3>Peticiones de Cambio de Rol</h3>
+                    <p class="section-desc">Solicitudes enviadas por usuarios que requieren actualizar sus privilegios.</p>
+                    
+                    <table id="requestsTable">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Rol Solicitado</th>
+                                <th>Motivo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="req-row-1">
+                                <td>Aria</td>
+                                <td><span class="badge-role creator">Creador</span></td>
+                                <td>Necesito subir contenido al blog principal sin depender de aprobación.</td>
+                                <td class="actions-cell">
+                                    <button class="btn btn-sm btn-success" onclick="approveRequest('Aria', 'Creador', 'req-row-1')"><i class="fas fa-check"></i> Aprobar</button>
+                                    <button class="btn btn-sm btn-danger" onclick="rejectRequest('req-row-1')"><i class="fas fa-times"></i> Rechazar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+
+            <div id="peticion-publicacion" class="tab-content">
+    <section class="table-section">
+        <h3>Peticiones de Publicación</h3>
+        <p class="section-desc">Solicitudes de usuarios para publicar posts. Revisa el contenido y decide si es aceptable.</p>
+
+        <table id="pubRequestsTable">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Contenido</th>
+                    <th>Archivos</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="pubRequestsBody">
+                <tr><td colspan="5">Cargando publicaciones pendientes...</td></tr>
+            </tbody>
+        </table>
+    </section>
+</div>
+
+            <div id="configuracion" class="tab-content">
+                <section class="card" style="text-align: left;">
+                    <h3><i class="fas fa-cogs"></i> Ajustes Generales del Sitio</h3>
+                    <p class="section-desc">Define los parámetros operativos y técnicos globales de tu sitio web.</p>
+                    
+                    <form class="config-form" id="configForm">
+                        <div class="form-group">
+                            <label for="siteName">Nombre del Sitio Web</label>
+                            <input type="text" id="siteName" value="Mi Plataforma Web" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="siteLang">Idioma Predeterminado</label>
+                            <select id="siteLang">
+                                <option value="es" selected>Español (ES)</option>
+                                <option value="en">English (EN)</option>
+                            </select>
+                        </div>
+                        <div class="form-group-checkbox">
+                            <input type="checkbox" id="maintenanceMode">
+                            <label for="maintenanceMode"><strong>Modo Mantenimiento:</strong> Bloquea el acceso público y muestra pantalla temporal.</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar Cambios</button>
+                    </form>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Añadir Nuevo Usuario</h3>
+                <span class="close-modal" id="closeModal">&times;</span>
+            </div>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label for="newUserName">Nombre de Usuario</label>
+                    <input type="text" id="newUserName" placeholder="Ej: Juan Pérez" required>
+                </div>
+                <div class="form-group">
+                    <label for="newUserRole">Rol</label>
+                    <select id="newUserRole">
+                        <option value="Administrador">Administrador</option>
+                        <option value="Creador">Creador</option>
+                        <option value="Lector" selected>Lector</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelModal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

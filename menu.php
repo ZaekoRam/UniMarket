@@ -1,29 +1,32 @@
 <?php
 session_start();
-require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
+require 'credenciales.php';
+
+// Conexión a la base de datos
 $conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 
-// Verificación robusta de sesión
+// Verificar que la sesión esté iniciada
 if (!isset($_SESSION['usuario_id']) || !isset($_SESSION['rol'])) {
     die("Error: Sesión no iniciada. Por favor ve a index.html e inicia sesión.");
 }
 
+// Solo administradores y creadores pueden publicar
 if (!in_array($_SESSION['rol'], ['admin', 'creador'])) {
     die("Error: Tu rol [" . $_SESSION['rol'] . "] no tiene permiso para publicar.");
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Usamos trim() para borrar espacios en blanco por si el usuario solo puso barras espaciadoras
-    $texto = trim(mysqli_real_escape_string($conexion, $_POST['texto']));
+    $texto = trim(mysqli_real_escape_string($conexion, $_POST['texto'] ?? ''));
     $usuario_id = $_SESSION['usuario_id'];
-
     $nombres_media = [];
-    $tiene_imagen = false;
+    $tiene_archivo = false;
 
-    // Verificamos si subió archivos de media
+    // Procesar archivos subidos (imágenes o videos)
     if (isset($_FILES['media']) && is_array($_FILES['media']['name'])) {
         $ruta_carpeta = "uploads/";
-        if (!file_exists($ruta_carpeta)) { mkdir($ruta_carpeta, 0777, true); }
+        if (!file_exists($ruta_carpeta)) {
+            mkdir($ruta_carpeta, 0777, true);
+        }
 
         foreach ($_FILES['media']['name'] as $indice => $nombreArchivo) {
             if ($_FILES['media']['error'][$indice] === 0) {
@@ -36,35 +39,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!empty($nombres_media)) {
-        $tiene_imagen = true;
+        $tiene_archivo = true;
     }
 
-    $nombre_imagen = $tiene_imagen ? implode(',', $nombres_media) : null;
+    $nombre_imagen = $tiene_archivo ? implode(',', $nombres_media) : null;
 
-    // 🛑 AQUÍ ESTÁ EL CANDADO ANTI-POSTS VACÍOS 🛑
-    // Si el texto está completamente vacío Y además no subió ninguna imagen...
-    if (empty($texto) && !$tiene_imagen) {
+    // Validar que no sea un post vacío (sin texto y sin archivos)
+    if (empty($texto) && !$tiene_archivo) {
         echo "<script>
-                alert('¡No puedes publicar un post vacío! Escribe algo o sube una imagen.');
+                alert('¡No puedes publicar un post vacío! Escribe algo o sube una imagen/video.');
                 window.location.href = 'menu.html';
               </script>";
-        exit(); // Detenemos el código aquí para que no se guarde en la BD
+        exit();
     }
 
-    /* NOTA: Si quieres que el texto sea OBLIGATORIO siempre (incluso si sube imagen), 
-    solo cambia el if de arriba por este:
-    if (empty($texto)) { ... }
-    */
-
-    // Si pasó la prueba, guardamos en la base de datos
-    $sql = "INSERT INTO publicaciones (usuario_id, texto, imagen, fecha) 
-            VALUES ('$usuario_id', '$texto', '$nombre_imagen', NOW())";
+    // Insertar el post con estado 'pendiente' (esperando aprobación)
+    $sql = "INSERT INTO publicaciones (usuario_id, texto, imagen, estado, fecha) 
+            VALUES ('$usuario_id', '$texto', '$nombre_imagen', 'pendiente', NOW())";
 
     if (mysqli_query($conexion, $sql)) {
-        header("location:menu.html");
+        // Redirigir al feed (los posts pendientes aún no se ven, pero se avisa al usuario)
+        echo "<script>
+                alert('Publicación enviada para revisión. Será visible una vez aprobada por el administrador.');
+                window.location.href = 'menu.html';
+              </script>";
         exit();
     } else {
-        echo "Error: " . mysqli_error($conexion);
-    } 
+        echo "Error al guardar la publicación: " . mysqli_error($conexion);
+    }
 }
+
+mysqli_close($conexion);
 ?>
