@@ -466,17 +466,20 @@ body.light-mode .sidebar:not(:hover) .modern-switch .slider {
 
 .publish-box textarea {
     width: 100%;
-    min-height: 120px;
-    resize: vertical;
+    min-height: 50px;
+    max-height: 400px;
+    resize: none;
+    overflow-y: hidden;
     border: 1px solid rgba(255, 255, 255, 0.06);
     outline: none;
     border-radius: 18px;
     background: var(--panel-soft);
     color: var(--text);
     font-size: 16px;
-    padding: 18px;
-    margin-bottom: 14px;
-    transition: 0.35s ease;
+    padding: 14px 44px 14px 16px;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
 }
 
 body.light-mode .publish-box textarea,
@@ -546,8 +549,8 @@ body.light-mode .link-preview-card {
 }
 
 .edit-post-box {
-    background: rgba(56, 204, 161, 0.08);
-    border: 1px solid rgba(57, 197, 187, 0.18);
+    background: linear-gradient(145deg, rgba(10, 30, 28, 0.98), rgba(15, 40, 38, 0.95));
+    border: 1px solid rgba(57, 197, 187, 0.2);
     border-radius: 24px;
     padding: 20px;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 24px 60px rgba(0, 0, 0, 0.15);
@@ -661,8 +664,8 @@ body.light-mode .link-preview-card {
 
 .edit-post-header {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
+    align-items: center;
+    gap: 12px;
     margin-bottom: 16px;
     color: var(--text);
 }
@@ -1179,4 +1182,286 @@ body.light-mode .comments-section {
   border: none !important;
   border-radius: 0 !important;
   padding: 0 !important;
+}
+/* ========== EFECTO UNIMARKET NEÓN (LIMPIO) ========== */
+.neon-title {
+  font-size: 1.8em;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-decoration: none;
+  font-family: "Inter", "Arial", sans-serif;
+  text-transform: uppercase;
+  color: var(--accent, #39c5bb);
+  display: inline-block;
+  margin: 0;
+  transition: all 0.4s ease;
+  cursor: default;
+}
+
+/* Brillo al pasar el mouse */
+.neon-title:hover {
+  color: #66fff0;
+  text-shadow: 
+    0 0 10px rgba(102, 255, 240, 0.8),
+    0 0 30px rgba(57, 197, 187, 0.5),
+    0 0 50px rgba(57, 197, 187, 0.3);
+  transform: scale(1.05);
+}
+
+/* Modo claro */
+body.light-mode .neon-title {
+  color: #0f8f87;
+}
+
+body.light-mode .neon-title:hover {
+  color: #0f8f87;
+  text-shadow: 
+    0 0 10px rgba(15, 143, 135, 0.6),
+    0 0 30px rgba(15, 143, 135, 0.4);
+}
+/* ========== ESTILO WHATSAPP ========== */
+
+/* ========== BOTÓN CÁMARA WHATSAPP (CORREGIDO) ========== */
+
+/* Contenedor del textarea + botón cámara */
+.textarea-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+}
+
+
+
+.textarea-wrapper textarea:focus {
+    border-color: rgba(57, 197, 187, 0.4);
+    box-shadow: 0 0 0 4px rgba(57, 197, 187, 0.08);
+}
+
+/* Botón de cámara circular */
+.camera-btn {
+    position: absolute;
+    bottom: 1px;
+    right: 2px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent, #39c5bb);
+    color: #082016;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    padding: 0;
+    text-align: center;
+}
+
+.camera-btn:hover {
+    background: var(--accent-2, #66fff0);
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(57, 197, 187, 0.3);
+}
+
+.camera-btn input {
+    display: none;
+}
+/* ========== BOTONES LIKE/DISLIKE CON IMAGEN ========== */
+.action-btn.like-btn,
+.action-btn.dislike-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 14px;
+    background: transparent !important;
+}
+
+.action-btn.like-btn::before,
+.action-btn.dislike-btn::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.2s ease;
+}
+
+.action-btn.like-btn::before {
+    background-image: url('img/like.png');
+}
+
+.action-btn.dislike-btn::before {
+    background-image: url('img/dislike.png');
+}
+
+.action-btn.like-btn:hover::before,
+.action-btn.dislike-btn:hover::before {
+    transform: scale(1.2);
+}
+
+.action-btn.like-btn.active {
+    background: rgba(57, 197, 187, 0.1) !important;
+    border-radius: 14px;
+}
+
+.action-btn.dislike-btn.active {
+    background: rgba(255, 125, 146, 0.1) !important;
+    border-radius: 14px;
+}
+/* ========== BOTONES LIKE/DISLIKE CON UNIBOT ========== */
+/* Contador de caracteres */
+.edit-char-count {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+/* ========== BOTONES LIKE/DISLIKE CON UNIBOT ========== */
+.like-btn-unibot, .dislike-btn-unibot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  border: none;
+  background: transparent;
+  padding: 8px 12px;
+  gap: 6px;
+  border-radius: 14px;
+  transition: background 0.2s ease;
+}
+
+.like-btn-unibot input, .dislike-btn-unibot input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.like-btn-unibot .unibot-icon, .dislike-btn-unibot .unibot-icon {
+  width: 32px;
+  height: 32px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.like-btn-unibot .unibot-icon {
+  background-image: url('img/like.png');
+  filter: grayscale(100%);
+}
+
+.dislike-btn-unibot .unibot-icon {
+  background-image: url('img/dislike.png');
+  filter: grayscale(100%);
+}
+
+/* Activo - Like */
+.like-btn-unibot.active .unibot-icon {
+  filter: grayscale(0%);
+  animation: unibot-pop 0.5s ease;
+}
+
+.like-btn-unibot.active {
+  background: rgba(57, 197, 187, 0.1);
+}
+
+/* Activo - Dislike */
+.dislike-btn-unibot.active .unibot-icon {
+  filter: grayscale(0%);
+  animation: unibot-pop 0.5s ease;
+}
+
+.dislike-btn-unibot.active {
+  background: rgba(255, 125, 146, 0.1);
+}
+
+/* Hover */
+.like-btn-unibot:hover .unibot-icon,
+.dislike-btn-unibot:hover .unibot-icon {
+  transform: scale(1.15);
+}
+
+/* Animación */
+@keyframes unibot-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.3) rotate(-5deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Fuegos artificiales */
+.fireworks-unibot {
+  position: absolute;
+  pointer-events: none;
+}
+
+.fireworks-unibot .fx-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: fx-bang 0.6s ease-out forwards, fx-gravity 0.6s ease-in forwards;
+}
+
+@keyframes fx-bang {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.5); }
+  100% { transform: scale(0); }
+}
+
+@keyframes fx-gravity {
+  to { transform: translateY(30px); opacity: 0; }
+}
+/* ========== SOBRESCRIBIR ESTILOS DE EDICIÓN ========== */
+.edit-post-box {
+    background: linear-gradient(145deg, rgba(10, 30, 28, 0.98), rgba(15, 40, 38, 0.95)) !important;
+    border: 1px solid rgba(57, 197, 187, 0.2) !important;
+    border-radius: 20px !important;
+    padding: 24px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+    animation: slideIn 0.3s ease !important;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.edit-post-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-direction: row !important;
+}
+
+.edit-file-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 10px 16px !important;
+    background: rgba(57,197,187,0.05) !important;
+    border: 1px dashed rgba(57,197,187,0.3) !important;
+    border-radius: 12px !important;
+    width: auto !important;
+}
+
+.edit-actions {
+    margin-left: auto !important;
+}
+
+.btn-save, .btn-cancel {
+    padding: 10px 20px !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
 }
