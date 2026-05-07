@@ -692,3 +692,9 @@ body.light-mode .chat-input-bar {
     width: 100%;
   }
 }
+.menu-item .icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}

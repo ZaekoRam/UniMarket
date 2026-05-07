@@ -1465,3 +1465,10 @@ body.light-mode .neon-title:hover {
     border-radius: 12px !important;
     font-size: 14px !important;
 }
+
+.menu-item .icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}

@@ -573,3 +573,9 @@ body.light-mode .notifications-empty-box {
     display: none;
   }
 }
+.menu-item .icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}
