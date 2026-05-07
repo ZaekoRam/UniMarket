@@ -768,3 +768,9 @@ body.light-mode .field-group textarea {
     font-size: 10px;
   }
 }
+.menu-item .icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}

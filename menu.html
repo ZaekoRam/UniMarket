@@ -335,7 +335,7 @@
 
 <body>
 
-    <aside class="sidebar">
+        <aside class="sidebar">
         <div class="sidebar-top">
             <div class="sidebar-mascot">
                 <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
@@ -345,32 +345,32 @@
 
         <nav class="sidebar-menu">
             <a href="#" class="menu-item active">
-                <span class="icon">🏠</span>
+                <span class="icon"><img src="img/Icon_inicio.png" alt="Inicio" style="width:28px;height:28px;"></span>
                 <span class="label" data-i18n="inicio">Inicio</span>
             </a>
 
             <a href="perfil.html" class="menu-item">
-                <span class="icon">👤</span>
+                <span class="icon"><img src="img/Icon_perfil.png" alt="Perfil" style="width:28px;height:28px;"></span>
                 <span class="label" data-i18n="perfil">Perfil</span>
             </a>
 
             <a href="mensajes.html" class="menu-item">
-                <span class="icon">💬</span>
+                <span class="icon"><img src="img/Icon_mensajes.png" alt="Mensajes" style="width:28px;height:28px;"></span>
                 <span class="label" data-i18n="mensajes">Mensajes</span>
             </a>
 
             <a href="notificaciones.html" class="menu-item">
-                <span class="icon">🔔</span>
+                <span class="icon"><img src="img/Icon_notificaciones.png" alt="Notificaciones" style="width:28px;height:28px;"></span>
                 <span class="label" data-i18n="notificaciones">Notificaciones</span>
             </a>
 
             <a href="configuraciones.html" class="menu-item">
-                <span class="icon">⚙️</span>
+                <span class="icon"><img src="img/Icon_ajustes.png" alt="Configuraciones" style="width:28px;height:28px;"></span>
                 <span class="label" data-i18n="configuraciones">Configuraciones</span>
             </a>
 
-            <a href="cerrar_sesion.php" class="menu-item">
-                <span class="icon">🚪</span>
+            <a href="./index.html" class="menu-item">
+                <span class="icon"><img src="img/Icon_cerrar_sesion.png" alt="Cerrar sesión" style="width:28px;height:28px;"></span>
                 <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
             </a>
 
@@ -928,42 +928,33 @@ textarea.addEventListener('input', function() {
     });
 }
 
-function crearPost(texto, archivos, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null) {
-    const post = document.createElement("div");
-    post.className = "post-card";
+function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null) {
+            const post = document.createElement("div");
+            post.className = "post-card";
 
-    // 🔥 NUEVO: Aseguramos que cada archivo tenga la ruta 'uploads/' delante
-    const archivosConRuta = archivos.map(file => {
-        // Si ya contiene 'uploads/' no lo duplicamos
-        if (file.startsWith("uploads/")) return file;
-        return "uploads/" + file;
-    });
+            const mediaCount = imgs.length;
+            const visibleMedia = mediaCount > 4 ? imgs.slice(0, 4) : imgs;
+            const gridClass = `post-images-grid media-count-${Math.min(mediaCount, 4)}${mediaCount > 4 ? " media-count-more" : ""}`;
 
-    const mediaCount = archivosConRuta.length;
-    const visibleMedia = mediaCount > 4 ? archivosConRuta.slice(0, 4) : archivosConRuta;
-    const gridClass = `post-images-grid media-count-${Math.min(mediaCount, 4)}${mediaCount > 4 ? " media-count-more" : ""}`;
+let fechaFormateada = t("haceUnMomento");
 
-    let fechaFormateada = t("haceUnMomento");
-    if (fechaStr) {
-        const d = new Date(fechaStr);
-        fechaFormateada = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ", " +
-                          d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-    }
+if (fechaStr) {
+    const d = new Date(fechaStr);
+    fechaFormateada = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ", " + 
+                      d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+}
 
-    let mediaHTML = visibleMedia.map((src, idx) => {
-        // Detectar si es video por extensión (ampliamos lista)
-        const extension = src.split('.').pop().toLowerCase();
-        const esVideo = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv', 'm4v', 'mpg', 'mpeg'].includes(extension);
-        
-        const mediaTag = esVideo
-            ? `<video src="${src}" controls class="post-video" preload="metadata"></video>`
-            : `<img src="${src}" class="post-img" onclick="abrirLightbox(this.src)" loading="lazy">`;
-        
-        const overlay = (mediaCount > 4 && idx === 3)
-            ? `<div class="more-overlay">+${mediaCount - 4}</div>`
-            : "";
-        return `<div class="media-item">${mediaTag}${overlay}</div>`;
-    }).join('');
+            let mediaHTML = visibleMedia.map((src, idx) => {
+                const extension = src.split('.').pop().toLowerCase();
+                const esVideo = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'].includes(extension);
+                const mediaTag = esVideo
+                    ? `<video src="${src}" controls class="post-video"></video>`
+                    : `<img src="${src}" class="post-img" onclick="abrirLightbox(this.src)">`;
+                const overlay = (mediaCount > 4 && idx === 3)
+                    ? `<div class="more-overlay">+${mediaCount - 4}</div>`
+                    : "";
+                return `<div class="media-item">${mediaTag}${overlay}</div>`;
+            }).join('');
 
             const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
             const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
@@ -1175,72 +1166,91 @@ if (palabras.length > 1) {
         }
 
         window.onload = async () => {
-    let miUsuarioId = null;
-    let miRol = null;
-    let miNombre = "";
+            let miUsuarioId = null;
+            let miRol = null;
+  
 
-    // 1. Obtener sesión real del usuario
-    try {
-        const resSesion = await fetch("obtener_sesion.php");
-        const sesion = await resSesion.json();
-        miUsuarioId = sesion.usuario_id;
-        miRol = sesion.rol;
-        miNombre = sesion.nombre_completo || sesion.usuario || "";
+            // 1. Cargamos la sesión
+            try {
+                const peticionSesion = await fetch("obtener_sesion.php");
+                const sesion = await peticionSesion.json();
+                miUsuarioId = sesion.usuario_id;
+                miRol = sesion.rol;
 
-        // Actualizar saludo e iniciales
-        const saludoH1 = document.getElementById("saludoUsuario");
-        const lang = localStorage.getItem("lang") || "es";
-        if (miNombre) {
-            saludoH1.textContent = translations[lang].saludoUsuario.replace("{nombre}", miNombre);
-            // Iniciales dobles
-            const palabras = miNombre.trim().split(" ");
-            let iniciales = palabras[0].charAt(0).toUpperCase();
-            if (palabras.length > 1) iniciales += palabras[1].charAt(0).toUpperCase();
-            document.getElementById("profileInitial").textContent = iniciales;
-            document.getElementById("publishInitial").textContent = iniciales;
-        } else {
-            saludoH1.textContent = translations[lang].saludoInvitado;
-            const inicialInvitado = lang === "en" ? "G" : "I";
-            document.getElementById("profileInitial").textContent = inicialInvitado;
-            document.getElementById("publishInitial").textContent = inicialInvitado;
-        }
-    } catch (e) {
-        console.error("Error al obtener sesión:", e);
-    }
+                // 👇 AQUÍ RECIBIMOS EL NOMBRE COMPLETO
+                const saludoActual = document.getElementById("saludoUsuario");
+                
+                if (sesion.nombre_completo) {
+                    saludoActual.dataset.nombreActual = sesion.nombre_completo;
+                } else if (sesion.usuario) {
+                    saludoActual.dataset.nombreActual = sesion.usuario;
+                }
 
-    // 2. Cargar posts REALES desde el servidor
-    try {
-        const response = await fetch("obtener_posts.php");
-        const posts = await response.json();
-        const resultadoDiv = document.getElementById("resultado");
-        resultadoDiv.innerHTML = "";
+                // 👇 APLICAMOS EL SALUDO Y LA MAGIA DE LAS INICIALES
+                const nombreActual = saludoActual.dataset.nombreActual || "";
+                
+                // Asegurarnos de que tenemos el idioma actual (si no, por defecto "es")
+                const lang = localStorage.getItem("lang") || "es";
 
-        posts.forEach(post => {
-    let archivos = [];
-    if (post.imagen) {
-        archivos = post.imagen.split(",").map(s => s.trim()).filter(Boolean);
-        // No agregues 'uploads/' aquí porque ya lo hará crearPost
-    }
-    const postElement = crearPost(
-        post.texto || "",
-        archivos,  // ← pasas solo los nombres de archivo
-        post.total_likes || 0,
-        post.total_dislikes || 0,
-        post.comentarios_data || [],
-        post.mi_reaccion || null,
-        post.nombre_autor || "Usuario",
-        post.usuario_id,
-        miUsuarioId,
-        miRol,
-        post.fecha
-    );
-            postElement.dataset.id = post.id;
-            resultadoDiv.appendChild(postElement);
-        });
-    } catch (error) {
-        console.error("Error al cargar posts:", error);
-        document.getElementById("resultado").innerHTML = "<p style='color:#ff7d92; text-align:center;'>❌ No se pudieron cargar las publicaciones. Intenta más tarde.</p>";
-    }
+                if (nombreActual) {
+                    saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
+                    
+                    // Sacamos las dos iniciales
+                    const palabras = nombreActual.trim().split(" ");
+                    let iniciales = palabras[0].charAt(0).toUpperCase();
+                    if (palabras.length > 1) {
+                        iniciales += palabras[1].charAt(0).toUpperCase();
+                    }
+                    
+                    // Se las ponemos a los iconos
+                    document.getElementById("profileInitial").textContent = iniciales;
+                    document.getElementById("publishInitial").textContent = iniciales;
+                } else {
+                    // Si es invitado
+                    saludoActual.textContent = translations[lang].saludoInvitado;
+                    const inicialInvitado = lang === "en" ? "G" : "I";
+                    document.getElementById("profileInitial").textContent = inicialInvitado;
+                    document.getElementById("publishInitial").textContent = inicialInvitado;
+                }
+
+            } catch (e) {
+                console.error("No se pudo cargar la sesión", e);
+            }
+
+            // 2. Ahora sí, traemos los posts (ESTO SE QUEDA IGUAL)
+        fetch("obtener_posts.php")
+        .then(response => response.json())
+        .then(data => {
+            let resultado = document.getElementById("resultado");
+            if (!resultado) {
+                resultado = document.createElement("div");
+                resultado.id = "resultado";
+                document.querySelector(".main-content").appendChild(resultado);
+            }
+
+            resultado.innerHTML = "";
+            data.forEach(post => {
+                const imgArray = post.imagen ? post.imagen.split(",").map(src => src.trim()).filter(Boolean).map(src => "uploads/" + src) : [];
+
+const nuevoPost = crearPost(
+    post.texto || "",
+    imgArray,
+    post.total_likes || 0,
+    post.total_dislikes || 0,
+    post.comentarios_data || [],
+    post.mi_reaccion || null,
+    post.nombre_autor,
+    post.usuario_id,
+    miUsuarioId,
+    miRol,
+    post.fecha
+);
+
+                nuevoPost.dataset.id = post.id;
+                resultado.appendChild(nuevoPost);
+            });
+        })
+        .catch(err => console.error("Error al cargar posts:", err));
 };
     </script>
 </body>
