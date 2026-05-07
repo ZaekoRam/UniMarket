@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniMarket - Perfil</title>
+  <link rel="stylesheet" href="perfil.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Partículas de fondo mejoradas -->
+  <div class="particles-bg" id="particlesBg"></div>
+  
+  <!-- Efecto de gradiente animado en el fondo -->
+  <div class="bg-gradient-animation"></div>
+
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-mascot">
+        <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
+      </div>
+      <div class="sidebar-brand">UniMarket</div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <a href="menu.html" class="menu-item">
+        <span class="icon">🏠</span>
+        <span class="label" data-i18n="inicio">Inicio</span>
+      </a>
+
+      <a href="perfil.html" class="menu-item active">
+        <span class="icon">👤</span>
+        <span class="label" data-i18n="perfil">Perfil</span>
+      </a>
+
+      <a href="mensajes.html" class="menu-item">
+        <span class="icon">💬</span>
+        <span class="label" data-i18n="mensajes">Mensajes</span>
+      </a>
+
+      <a href="notificaciones.html" class="menu-item">
+        <span class="icon">🔔</span>
+        <span class="label" data-i18n="notificaciones">Notificaciones</span>
+      </a>
+
+      <a href="configuraciones.html" class="menu-item">
+        <span class="icon">⚙️</span>
+        <span class="label" data-i18n="configuracion">Configuración</span>
+      </a>
+
+      <a href="cerrar_sesion.php" class="menu-item">
+        <span class="icon">🚪</span>
+        <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
+      </a>
+
+      <label class="theme-switch modern-switch" aria-label="Cambiar tema">
+        <input type="checkbox" id="themeToggleInput">
+        <span class="slider">
+          <div class="star star_1"></div>
+          <div class="star star_2"></div>
+          <div class="star star_3"></div>
+
+          <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
+            <path
+              transform="matrix(.77976 0 0 .78395-299.99-418.63)"
+              fill="#fff"
+              d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
+            </path>
+          </svg>
+        </span>
+        <span class="theme-text" id="themeText">Dark Mode</span>
+      </label>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <!-- Hero Section Rediseñada -->
+    <div class="profile-hero">
+      <div class="hero-backdrop">
+        <div class="hero-particles"></div>
+      </div>
+      
+      <div class="hero-content">
+        <!-- Avatar con efectos -->
+        <div class="profile-avatar-wrapper">
+  <!-- 🔥 NUEVO: Rectángulo de base detrás de la foto -->
+  <div class="profile-avatar-base"></div>
+  
+  <!-- Avatar principal -->
+  <div class="profile-avatar-main" id="profileAvatarMain">
+    <span id="avatarInitial">U</span>
+  </div>
+  
+  <!-- Badge de estado -->
+  <div class="status-badge" id="statusBadge">
+    <span class="status-dot"></span>
+    <span data-i18n="enLinea">En línea</span>
+  </div>
+</div>
+
+        <!-- Info del perfil -->
+        <div class="hero-info">
+          <h1 class="profile-name-display" id="displayName">
+            <span class="name-gradient">Invitado</span>
+          </h1>
+          <p class="profile-username-display" id="displayUsername">@invitado</p>
+          
+          <div class="hero-badges" id="heroBadges">
+            <!-- Tags dinámicos aquí -->
+          </div>
+          
+          <p class="profile-bio-display" id="displayBio">
+            <span class="bio-icon"></span>
+            <span>Sin biografía.</span>
+          </p>
+        </div>
+
+        <!-- Acciones -->
+        <div class="hero-actions">
+          <button class="btn-edit-profile" id="editBtn">
+            <i class="fas fa-pen"></i>
+            <span data-i18n="editarPerfil">Editar perfil</span>
+          </button>
+          <button class="btn-share-profile" title="Compartir perfil">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido Principal en Grid -->
+    <div class="profile-content">
+      <!-- Columna Izquierda -->
+      <div class="profile-left">
+        <!-- Sobre mí -->
+        <div class="glass-card about-card reveal-card">
+          <div class="card-header">
+            <div class="card-icon-wrapper">
+  <i class="fas fa-star"></i>
+</div>
+            <h2 data-i18n="sobreMi">Sobre mí</h2>
+          </div>
+          <div class="card-body">
+            <div class="about-content" id="viewSobreMi">
+              <p>Sin descripción.</p>
+            </div>
+            <div class="field-group hidden" id="editSobreMiWrap">
+              <textarea id="inputSobreMi" rows="5" placeholder="Cuéntanos sobre ti..."></textarea>
+              <span class="char-counter">0/500</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detalles -->
+        <div class="glass-card details-card reveal-card">
+  <div class="card-header">
+      <div class="card-icon-wrapper list-icon">
+  <i class="fas fa-list-ul"></i>
+</div>
+    <h2 data-i18n="detalles">Detalles</h2>
+  </div>
+          
+          <!-- Vista de detalles -->
+          <div class="card-body" id="viewDetails">
+            <div class="detail-item">
+              <div class="detail-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <div class="detail-info">
+                <span class="detail-label" data-i18n="carrera">Carrera</span>
+                <strong id="viewCarrera">Sin carrera.</strong>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-icon pin-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="detail-info">
+                <span class="detail-label" data-i18n="campus">Campus</span>
+                <strong id="viewCampus">Sin campus.</strong>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-icon rocket-icon">
+                <i class="fas fa-rocket"></i>
+              </div>
+              <div class="detail-info">
+                <span class="detail-label" data-i18n="emprendimientos">Emprendimientos</span>
+                <strong id="viewEmprendimientos">Sin emprendimientos.</strong>
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-icon heart-icon"><i class="fas fa-heart"></i></div>
+              <div class="detail-info">
+                <span class="detail-label" data-i18n="estado">Estado</span>
+                <strong id="viewEstado">Sin estado.</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edición de detalles -->
+          <div class="edit-grid hidden" id="editDetails">
+            <div class="field-group">
+              <label><i class="fas fa-book"></i> <span data-i18n="carrera">Carrera</span></label>
+              <input type="text" id="inputCarrera" placeholder="Ej: Ingeniería en Software">
+            </div>
+            <div class="field-group">
+              <label><i class="fas fa-map-marker-alt"></i> <span data-i18n="campus">Campus</span></label>
+              <input type="text" id="inputCampus" placeholder="Ej: Campus Central">
+            </div>
+            <div class="field-group">
+              <label><i class="fas fa-rocket"></i> <span data-i18n="emprendimientos">Emprendimientos</span></label>
+              <input type="text" id="inputEmprendimientos" placeholder="Ej: Mi Startup">
+            </div>
+            <div class="field-group">
+              <label><i class="fas fa-heart"></i> <span data-i18n="estado">Estado</span></label>
+              <input type="text" id="inputEstado" placeholder="Ej: Emprendiendo">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha -->
+      <div class="profile-right">
+        <!-- Gustos -->
+        <div class="glass-card likes-card reveal-card">
+          <div class="card-header">
+            <div class="card-icon-wrapper star-icon ">
+              <i class="fas fa-star"></i>
+            </div>
+            <h2 data-i18n="misGustos">Mis gustos</h2>
+          </div>
+          <div class="card-body">
+            <div class="tags-cloud" id="viewGustos">
+              <span class="tag-item empty-tag">Sin gustos.</span>
+            </div>
+            <div class="field-group hidden" id="editGustosWrap">
+              <textarea id="inputGustos" rows="3" placeholder="Gustos separados por coma..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vibra actual -->
+        <div class="glass-card mood-card reveal-card">
+          <div class="card-header">
+            <div class="card-icon-wrapper">
+              <i class="fas fa-smile"></i>
+            </div>
+            <h2 data-i18n="vibraActual">Vibra actual</h2>
+          </div>
+          <div class="card-body">
+            <div class="mood-grid" id="viewMoodGrid">
+              <div class="mood-item">
+                <span class="mood-emoji">🌙</span>
+                <div class="mood-info">
+                  <span class="mood-label" data-i18n="mood">Mood</span>
+                  <span class="mood-value" id="viewMood">Sin mood.</span>
+                </div>
+              </div>
+              <div class="mood-item">
+                <span class="mood-emoji">🎨</span>
+                <div class="mood-info">
+                  <span class="mood-label" data-i18n="colorFavorito">Color favorito</span>
+                  <span class="mood-value" id="viewColor">Sin color.</span>
+                </div>
+              </div>
+              <div class="mood-item">
+                <span class="mood-emoji">🎯</span>
+                <div class="mood-info">
+                  <span class="mood-label" data-i18n="metaActual">Meta actual</span>
+                  <span class="mood-value" id="viewMeta">Sin meta.</span>
+                </div>
+              </div>
+              <div class="mood-item">
+                <span class="mood-emoji">✨</span>
+                <div class="mood-info">
+                  <span class="mood-label" data-i18n="estilo">Estilo</span>
+                  <span class="mood-value" id="viewEstilo">Sin estilo.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Edición de vibra -->
+            <div class="edit-grid hidden" id="editMoodGrid">
+              <div class="field-group">
+                <label><span class="mood-emoji">🌙</span> <span data-i18n="mood">Mood</span></label>
+                <input type="text" id="inputMood" placeholder="Ej: Creativo">
+              </div>
+              <div class="field-group">
+                <label><span class="mood-emoji">🎨</span> <span data-i18n="colorFavorito">Color favorito</span></label>
+                <input type="text" id="inputColor" placeholder="Ej: Azul eléctrico">
+              </div>
+              <div class="field-group">
+                <label><span class="mood-emoji">🎯</span> <span data-i18n="metaActual">Meta actual</span></label>
+                <input type="text" id="inputMeta" placeholder="Ej: Lanzar mi app">
+              </div>
+              <div class="field-group">
+                <label><span class="mood-emoji">✨</span> <span data-i18n="estilo">Estilo</span></label>
+                <input type="text" id="inputEstilo" placeholder="Ej: Minimalista">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel de Edición Global -->
+    <div class="edit-panel hidden" id="editPanel">
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-icon-wrapper">
+            <i class="fas fa-edit"></i>
+          </div>
+          <h2 data-i18n="editandoPerfil">Editando perfil</h2>
+        </div>
+        <div class="card-body">
+          <div class="edit-grid">
+            <div class="field-group">
+              <label><i class="fas fa-pencil-alt"></i> <span data-i18n="bioCorta">Bio corta</span></label>
+              <textarea id="inputBio" rows="3" placeholder="Una breve descripción sobre ti..."></textarea>
+            </div>
+            <div class="field-group">
+              <label><i class="fas fa-tags"></i> <span data-i18n="tags">Tags</span></label>
+              <input type="text" id="inputTags" placeholder="retro web, uni vibes, creative">
+              <small data-i18n="tagsHelp">Separados por coma</small>
+            </div>
+          </div>
+          <div class="edit-actions">
+            <button class="btn-cancel" id="cancelBtn">
+              <i class="fas fa-times"></i> <span data-i18n="cancelar">Cancelar</span>
+            </button>
+            <button class="btn-save" id="saveBtn">
+              <i class="fas fa-save"></i> <span data-i18n="guardar">Guardar cambios</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast de notificación mejorado -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="perfil.js"></script>
+</body>
+</html>

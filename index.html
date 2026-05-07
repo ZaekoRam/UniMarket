@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso al Sistema</title>
+  <link rel="stylesheet" href="style_login.css">
+</head>
+<style>
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(6, 27, 26, 0.85); /* Fondo oscuro transparente */
+      display: flex; justify-content: center; align-items: center;
+      z-index: 9999; backdrop-filter: blur(6px);
+    }
+    .modal-content {
+      background: #081f1d; border: 2px solid #39c5bb;
+      border-radius: 20px; padding: 30px; width: 90%; max-width: 400px;
+      text-align: center; box-shadow: 0 0 40px rgba(57, 197, 187, 0.3);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .code-input {
+      background: rgba(255, 255, 255, 0.05); border: 2px solid #39c5bb;
+      border-radius: 12px; padding: 15px; font-size: 28px;
+      color: #39c5bb; text-align: center; letter-spacing: 12px;
+      width: 100%; margin: 20px 0; outline: none; font-weight: bold;
+    }
+    .code-input:focus { border-color: #66fff0; background: rgba(255,255,255,0.1); }
+    .btn-verificar {
+      background: linear-gradient(90deg, #39c5bb, #66fff0); border: none; 
+      padding: 14px 30px; border-radius: 20px; color: #061b1a; 
+      font-weight: 800; cursor: pointer; width: 100%; font-size: 16px; 
+      margin-bottom: 15px; transition: transform 0.2s;
+    }
+    .btn-verificar:hover { transform: translateY(-2px); }
+    .close-modal {
+      background: transparent; border: none; color: #9bded7;
+      text-decoration: underline; cursor: pointer; font-size: 14px;
+    }
+  </style>
+
+
+<body>
+  <div class="bg-effect"></div>
+
+  <a href="./menu.html" class="home-chip home-chip-glitch">
+    <span class="glitch-home-wrap">
+      <span class="home-chip-text" data-i18n="back">Inicio</span>
+      <span class="glitch-home-glitch" aria-hidden="true">Inicio</span>
+    </span>
+  </a>
+
+  <aside class="side-tools collapsed" id="sideTools">
+    <div class="side-toggle-wrap">
+      <button class="side-toggle" id="robotToggle" type="button" aria-label="Herramientas">
+        <img src="img/UNI_EMOTE_CONFIG.png" alt="Configuración" class="side-toggle-img">
+      </button>
+    </div>
+
+    <ul class="example-2" id="toolsMenu">
+      <li class="icon-content">
+        <button class="tool-btn action-btn" id="langBtn" type="button" aria-label="Idioma" data-social="language">
+          <div class="filled"></div>
+          <img id="langFlag" src="img/es.png" alt="Español">
+        </button>
+      </li>
+
+      <li class="icon-content">
+        <button class="tool-btn action-btn" id="themeBtn" type="button" aria-label="Tema" data-social="theme">
+          <div class="filled"></div>
+          <span class="tool-emoji" id="themeEmoji">🌙</span>
+        </button>
+      </li>
+
+      <li class="icon-content">
+        <a href="https://www.ucol.mx/" target="_blank" aria-label="UdeC" data-social="udec">
+          <div class="filled"></div>
+          <img src="img/udc.png" alt="UdeC">
+        </a>
+      </li>
+
+      <li class="icon-content">
+        <a href="https://www.facebook.com/UdeC.oficial?locale=es_LA" target="_blank" aria-label="Facebook" data-social="facebook">
+          <div class="filled"></div>
+          <img src="img/facebook.png" alt="Facebook">
+        </a>
+      </li>
+
+      <li class="icon-content">
+        <a href="https://github.com/ZaekoRam/UniMarket" target="_blank" aria-label="GitHub" data-social="github">
+          <div class="filled"></div>
+          <img src="img/github.png" alt="GitHub">
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <div class="container login-active" id="container">
+    <div class="brand">
+      <h1 class="logo">UniMarket</h1>
+      <div class="logo-line"></div>
+      <div class="logo-line thin"></div>
+
+      <div class="mascot-wrap">
+        <div class="robot" id="loginRobot">
+          <div class="cabeza">
+           <img class="ojos" id="ojosRobot" src="img/ojos_abiertos.png">
+           <img class="boca" id="bocaRobot" src="img/boca_normal.png">
+          </div>
+          <div class="brazo izq">
+            <div class="mano izq"></div>
+          </div>
+
+          <div class="torso"></div>
+
+          <div class="brazo der">
+            <div class="mano der"></div>
+          </div>
+
+          <div class="cadera"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="form-container sign-in-container">
+        <form class="full-login" action="validar.php" method="post" novalidate>
+          <h1 data-i18n="loginTitle">Inicio de sesión</h1>
+          <p data-i18n="loginSubtitle">Entra con tus datos</p>
+
+          <div class="input-container">
+            <input type="text" id="loginUsuario" name="usuario" placeholder=" " required>
+            <label for="loginUsuario" class="label" data-i18n="username">Nombre de usuario</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container password-box">
+            <input type="password" id="passwordLogin" name="password" placeholder=" " required>
+            <label for="passwordLogin" class="label" data-i18n="password">Contraseña</label>
+            <div class="underline"></div>
+            <img src="img/contrasena-de-ojo.png" class="toggle-pass" data-target="passwordLogin" alt="Mostrar contraseña">
+          </div>
+
+          <div class="recordar" data-i18n="forgot">¿Olvidó su contraseña?</div>
+
+          <button type="submit" data-i18n="loginButton">Iniciar</button>
+        </form>
+
+        <div class="mini-login">
+          <h1 data-i18n="miniLoginTitle">Inicio de sesión</h1>
+          <button type="button" class="ghost" id="signInMini" data-i18n="miniLogin">Inicia sesión</button>
+        </div>
+      </div>
+
+      <div class="form-container sign-up-container">
+        <div class="mini-register">
+          <h1 data-i18n="miniRegisterTitle">Registro</h1>
+          <button type="button" class="ghost" id="signUpMini" data-i18n="miniRegister">Quiero registrarme</button>
+        </div>
+
+        <form class="full-register" action="registrar.php" method="post" novalidate>
+          <h1 data-i18n="registerTitle">Registro</h1>
+          <p data-i18n="registerSubtitle">Crea tu cuenta</p>
+
+          <div class="input-container">
+            <input type="text" id="registerNombreCompleto" name="nombre_completo" placeholder=" " required>
+            <label for="registerNombreCompleto" class="label" data-i18n="fullname">Nombre completo</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container">
+            <input type="text" id="registerUsuario" name="usuario" placeholder=" " required>
+            <label for="registerUsuario" class="label" data-i18n="username">Nombre de usuario</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container">
+            <input type="text" id="registerNum" name="num" placeholder=" " required>
+            <label for="registerNum" class="label" data-i18n="account">Número de cuenta</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container">
+            <input type="email" id="registerCorreo" name="cuenta" placeholder=" " required>
+            <label for="registerCorreo" class="label" data-i18n="email">Correo institucional</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container password-box">
+            <input type="password" id="passwordRegister" name="password" placeholder=" " required>
+            <label for="passwordRegister" class="label" data-i18n="password">Contraseña</label>
+            <div class="underline"></div>
+            <img src="img/contrasena-de-ojo.png" class="toggle-pass" data-target="passwordRegister" alt="Mostrar contraseña">
+          </div>
+
+          <button type="submit" data-i18n="registerButton">Registrarse</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="modalVerificacion" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <img src="img/unibot_verificacion.png" alt="Unibot" style="width: 120px; margin-bottom: 10px;">
+      <h2 style="color: #39c5bb; margin: 0 0 10px 0;">Verifica tu cuenta</h2>
+      <p style="color: #eafffb; font-size: 14px; margin: 0 0 20px 0; opacity: 0.8;">
+        Ingresa el código de 6 dígitos que Unibot te envió.
+      </p>
+      
+      <form action="verificar_codigo.php" method="POST">
+        <input type="hidden" name="correo" id="correoModal">
+        <input type="text" name="codigo" class="code-input" placeholder="000000" maxlength="6" required 
+               style="padding: 10px; border-radius: 5px; border: 1px solid #39c5bb; text-align: center; letter-spacing: 5px; font-size: 20px; width: 80%; margin-bottom: 15px;">
+        <button type="submit" style="background: #39c5bb; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 85%;">Activar Cuenta</button>
+      </form>
+      
+      <button onclick="cerrarModal()" style="background: none; border: none; color: #777; margin-top: 15px; cursor: pointer; text-decoration: underline;">Cerrar</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
