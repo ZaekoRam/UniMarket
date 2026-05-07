@@ -2,7 +2,6 @@
 session_start();
 require 'credenciales.php';
 
-// Verificar sesión y rol 'admin'
 if (!isset($_SESSION['usuario_id']) || $_SESSION['rol'] !== 'admin') {
     http_response_code(403);
     echo json_encode(['status' => 'error', 'msg' => 'Acceso denegado']);
@@ -59,40 +58,70 @@ switch ($accion) {
             echo json_encode(['status' => 'error', 'msg' => 'No puedes eliminarte a ti mismo']);
             break;
         }
-        $stmt = mysqli_prepare($conexion, "DELETE FROM usuarios WHERE id = ?");
-        mysqli_stmt_bind_param($stmt, "i", $id);
-        $ok = mysqli_stmt_execute($stmt);
-        echo json_encode(['status' => $ok ? 'ok' : 'error']);
-        mysqli_stmt_close($stmt);
+        mysqli_begin_transaction($conexion);
+        try {
+            mysqli_query($conexion, "DELETE FROM comentarios WHERE usuario_id = $id");
+            mysqli_query($conexion, "DELETE FROM reacciones WHERE usuario_id = $id");
+            mysqli_query($conexion, "DELETE FROM publicaciones WHERE usuario_id = $id");
+            mysqli_query($conexion, "DELETE FROM mensajes WHERE remitente_id = $id OR destinatario_id = $id");
+            $stmt = mysqli_prepare($conexion, "DELETE FROM usuarios WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "i", $id);
+            mysqli_stmt_execute($stmt);
+            mysqli_commit($conexion);
+            echo json_encode(['status' => 'ok']);
+        } catch (Exception $e) {
+            mysqli_rollback($conexion);
+            echo json_encode(['status' => 'error', 'msg' => $e->getMessage()]);
+        }
         break;
 
-    // ========== NUEVAS ACCIONES PARA GESTIÓN DE PUBLICACIONES ==========
-    case 'listar_posts_pendientes':
-        $res = mysqli_query($conexion, "SELECT p.id, p.texto, p.imagen, p.fecha, u.usuario, u.nombre_completo 
+    case 'listar_todos_posts':
+        $res = mysqli_query($conexion, "SELECT p.id, p.texto, p.imagen, p.fecha, u.id as usuario_id, u.usuario, u.nombre_completo, u.rol
                                         FROM publicaciones p 
                                         LEFT JOIN usuarios u ON p.usuario_id = u.id 
-                                        WHERE p.estado = 'pendiente' 
                                         ORDER BY p.fecha DESC");
-        $pendientes = mysqli_fetch_all($res, MYSQLI_ASSOC);
-        echo json_encode($pendientes);
+        $posts = mysqli_fetch_all($res, MYSQLI_ASSOC);
+        echo json_encode($posts);
         break;
 
-    case 'aprobar_post':
-        $post_id = intval($_POST['post_id']);
-        $stmt = mysqli_prepare($conexion, "UPDATE publicaciones SET estado = 'aprobado' WHERE id = ?");
-        mysqli_stmt_bind_param($stmt, "i", $post_id);
-        $ok = mysqli_stmt_execute($stmt);
-        echo json_encode(['status' => $ok ? 'ok' : 'error']);
-        mysqli_stmt_close($stmt);
+    case 'banear_usuario':
+        $id = intval($_POST['id']);
+        if ($id == $_SESSION['usuario_id']) {
+            echo json_encode(['status' => 'error', 'msg' => 'No puedes banearte a ti mismo']);
+            break;
+        }
+        mysqli_begin_transaction($conexion);
+        try {
+            mysqli_query($conexion, "UPDATE usuarios SET rol = 'lector' WHERE id = $id");
+            mysqli_query($conexion, "DELETE FROM publicaciones WHERE usuario_id = $id");
+            mysqli_query($conexion, "DELETE FROM comentarios WHERE usuario_id = $id");
+            mysqli_query($conexion, "DELETE FROM reacciones WHERE usuario_id = $id");
+            mysqli_query($conexion, "DELETE FROM mensajes WHERE remitente_id = $id OR destinatario_id = $id");
+            mysqli_commit($conexion);
+            echo json_encode(['status' => 'ok']);
+        } catch (Exception $e) {
+            mysqli_rollback($conexion);
+            echo json_encode(['status' => 'error', 'msg' => $e->getMessage()]);
+        }
         break;
 
-    case 'rechazar_post':
+    // ========== NUEVA ACCIÓN: ELIMINAR PUBLICACIÓN INDIVIDUAL ==========
+    case 'eliminar_publicacion':
         $post_id = intval($_POST['post_id']);
-        $stmt = mysqli_prepare($conexion, "UPDATE publicaciones SET estado = 'rechazado' WHERE id = ?");
-        mysqli_stmt_bind_param($stmt, "i", $post_id);
-        $ok = mysqli_stmt_execute($stmt);
-        echo json_encode(['status' => $ok ? 'ok' : 'error']);
-        mysqli_stmt_close($stmt);
+        mysqli_begin_transaction($conexion);
+        try {
+            // Borrar comentarios de esa publicación
+            mysqli_query($conexion, "DELETE FROM comentarios WHERE publicacion_id = $post_id");
+            // Borrar reacciones de esa publicación
+            mysqli_query($conexion, "DELETE FROM reacciones WHERE publicacion_id = $post_id");
+            // Borrar la publicación
+            mysqli_query($conexion, "DELETE FROM publicaciones WHERE id = $post_id");
+            mysqli_commit($conexion);
+            echo json_encode(['status' => 'ok']);
+        } catch (Exception $e) {
+            mysqli_rollback($conexion);
+            echo json_encode(['status' => 'error', 'msg' => $e->getMessage()]);
+        }
         break;
 
     default:

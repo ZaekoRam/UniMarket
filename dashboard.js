@@ -32,7 +32,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3500);
     }
 
-    // === Gestión de usuarios (igual que antes) ===
+    // ==================== USUARIOS ====================
+
     async function cargarUsuarios() {
         try {
             const resp = await fetch('admin_operaciones.php?accion=listar_usuarios');
@@ -116,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function eliminarUsuario(userId) {
-        if (!confirm("¿Eliminar este usuario permanentemente?")) return;
+        if (!confirm("¿Eliminar este usuario permanentemente? Se borrarán todos sus datos.")) return;
         const formData = new FormData();
         formData.append('accion', 'eliminar_usuario');
         formData.append('id', userId);
@@ -134,11 +135,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Crear usuario (los campos extra deben existir en el modal, pero si no, adapta)
+    // Crear usuario (adaptado a tu modal actual)
     addUserForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const usuario = document.getElementById("newUserName").value.trim();
-        // Si no tienes estos campos en el modal, ajusta o comenta
         const nombre_completo = document.getElementById("newUserFullName")?.value.trim() || usuario;
         const num = document.getElementById("newUserNum")?.value.trim() || "00000";
         const cuenta = document.getElementById("newUserEmail")?.value.trim() || "correo@ejemplo.com";
@@ -176,14 +176,12 @@ document.addEventListener("DOMContentLoaded", () => {
     openAddUserBtn.addEventListener("click", () => addUserModal.classList.add("active"));
     closeModalElements.forEach(el => el.addEventListener("click", closeModal));
 
-    // Búsqueda local
     userSearch.addEventListener("input", (e) => {
         const term = e.target.value.toLowerCase();
         const filtered = users.filter(u => u.usuario.toLowerCase().includes(term) || (u.nombre_completo && u.nombre_completo.toLowerCase().includes(term)));
         renderUsersTable(filtered);
     });
 
-    // Configuración (simulada)
     configForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const maintenance = document.getElementById("maintenanceMode").checked;
@@ -195,127 +193,126 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => showToast("Exportado (simulado)", "success"), 1000);
     });
 
-    // === NUEVAS FUNCIONES PARA PUBLICACIONES PENDIENTES ===
-    let postsPendientes = [];
+    // ==================== MODERACIÓN DE PUBLICACIONES (BANEAR USUARIO) ====================
 
-    async function cargarPostsPendientes() {
-        try {
-            const resp = await fetch('admin_operaciones.php?accion=listar_posts_pendientes');
-            const data = await resp.json();
-            if (Array.isArray(data)) {
-                postsPendientes = data;
-                renderPostsPendientesTable(postsPendientes);
-                actualizarBadgePublicaciones(postsPendientes.length);
-            } else {
-                renderPostsPendientesTable([]);
-                actualizarBadgePublicaciones(0);
-                if (data.msg) showToast(data.msg, "danger");
-            }
-        } catch (error) {
-            console.error("Error cargando posts pendientes:", error);
-            renderPostsPendientesTable([]);
-            actualizarBadgePublicaciones(0);
-            showToast("Error al cargar publicaciones pendientes", "danger");
-        }
-    }
+    // Cargar todos los posts (sin aprobación)
+    // ==================== MODERACIÓN DE PUBLICACIONES ====================
 
-    function renderPostsPendientesTable(posts) {
-        const tbody = document.getElementById("pubRequestsBody");
-        if (!tbody) return;
-        if (posts.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5">No hay publicaciones pendientes de revisión</td></tr>`;
+async function cargarTodosLosPosts() {
+    const tbody = document.getElementById("allPostsBody");
+    if (!tbody) return;
+    try {
+        const resp = await fetch('admin_operaciones.php?accion=listar_todos_posts');
+        const data = await resp.json();
+        if (data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6">No hay publicaciones</td></tr>`;
             return;
         }
         tbody.innerHTML = "";
-        posts.forEach(post => {
-            const row = document.createElement("tr");
-            // Previsualización de archivos
+        data.forEach(post => {
             let archivosHtml = "Sin archivos";
             if (post.imagen) {
                 const archivos = post.imagen.split(",").slice(0, 2);
                 archivosHtml = archivos.map(a => `<span style="font-size:12px">📎 ${a}</span>`).join(" ");
                 if (post.imagen.split(",").length > 2) archivosHtml += " …";
             }
+            const roleClass = post.rol === "admin" ? "admin" : (post.rol === "creador" ? "creator" : "reader");
+            const row = document.createElement("tr");
             row.innerHTML = `
-                <td><strong>${escapeHtml(post.usuario)}</strong><br><small>${escapeHtml(post.nombre_completo || '')}</small></td>
-                <td>${escapeHtml(post.texto ? post.texto.substring(0, 120) : '')}${post.texto && post.texto.length > 120 ? '…' : ''}</td>
+                <td>${post.id}</td>
+                <td>
+                    <strong>${escapeHtml(post.usuario)}</strong><br>
+                    <small>${escapeHtml(post.nombre_completo || '')}</small><br>
+                    <span class="badge-role ${roleClass}">${post.rol}</span>
+                </td>
+                <td>${escapeHtml(post.texto ? post.texto.substring(0, 100) : '')}${post.texto && post.texto.length > 100 ? '…' : ''}</td>
                 <td>${archivosHtml}</td>
                 <td>${new Date(post.fecha).toLocaleString()}</td>
                 <td class="actions-cell">
-                    <button class="btn btn-sm btn-success aprobar-post" data-id="${post.id}"><i class="fas fa-check"></i> Aprobar</button>
-                    <button class="btn btn-sm btn-danger rechazar-post" data-id="${post.id}"><i class="fas fa-times"></i> Rechazar</button>
+                    <button class="btn btn-sm btn-danger eliminar-publicacion" data-id="${post.id}" style="margin-right: 8px;"><i class="fas fa-trash-alt"></i> Eliminar</button>
+                    <button class="btn btn-sm btn-warning banear-usuario" data-id="${post.usuario_id}" data-nombre="${escapeHtml(post.usuario)}" style="background-color: #ff9800; border-color: #ff9800;"><i class="fas fa-hammer"></i> Banear</button>
                 </td>
             `;
             tbody.appendChild(row);
         });
 
-        // Asignar eventos a los nuevos botones
-        document.querySelectorAll(".aprobar-post").forEach(btn => {
-            btn.addEventListener("click", () => aprobarPost(btn.getAttribute("data-id")));
+        // Eventos para botones de eliminar publicación
+        document.querySelectorAll(".eliminar-publicacion").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const postId = btn.getAttribute("data-id");
+                eliminarPublicacion(postId);
+            });
         });
-        document.querySelectorAll(".rechazar-post").forEach(btn => {
-            btn.addEventListener("click", () => rechazarPost(btn.getAttribute("data-id")));
+        // Eventos para botones de banear usuario
+        document.querySelectorAll(".banear-usuario").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const userId = btn.getAttribute("data-id");
+                const userName = btn.getAttribute("data-nombre");
+                banearUsuario(userId, userName);
+            });
         });
+    } catch (error) {
+        console.error(error);
+        tbody.innerHTML = `<tr><td colspan="6">Error al cargar publicaciones</td></tr>`;
+        showToast("Error al cargar publicaciones", "danger");
     }
+}
 
-    async function aprobarPost(postId) {
+// Nueva función: eliminar publicación individual
+async function eliminarPublicacion(postId) {
+    if (!confirm(`¿Eliminar esta publicación permanentemente?`)) return;
+    const formData = new FormData();
+    formData.append('accion', 'eliminar_publicacion');
+    formData.append('post_id', postId);
+    try {
+        const resp = await fetch('admin_operaciones.php', { method: 'POST', body: formData });
+        const result = await resp.json();
+        if (result.status === 'ok') {
+            showToast(`Publicación #${postId} eliminada`, "success");
+            cargarTodosLosPosts(); // recargar tabla
+        } else {
+            showToast(result.msg || "Error al eliminar", "danger");
+        }
+    } catch (error) {
+        showToast("Error de red", "danger");
+    }
+}
+
+    async function banearUsuario(userId, userName) {
+        if (!confirm(`⚠️ ¿Estás seguro de que quieres BANEAR a ${userName}?\n\nSe eliminarán TODOS sus posts, comentarios y reacciones, y su rol será cambiado a LECTOR (no podrá publicar ni comentar).`)) {
+            return;
+        }
         const formData = new FormData();
-        formData.append('accion', 'aprobar_post');
-        formData.append('post_id', postId);
+        formData.append('accion', 'banear_usuario');
+        formData.append('id', userId);
         try {
             const resp = await fetch('admin_operaciones.php', { method: 'POST', body: formData });
             const result = await resp.json();
             if (result.status === 'ok') {
-                showToast(`Publicación #${postId} aprobada ✅`, "success");
-                cargarPostsPendientes(); // recargar lista
+                showToast(`Usuario ${userName} baneado correctamente`, "danger");
+                cargarTodosLosPosts();    // recargar lista de posts
+                cargarUsuarios();         // actualizar tabla de usuarios (cambió el rol)
             } else {
-                showToast("Error al aprobar", "danger");
+                showToast(result.msg || "Error al banear", "danger");
             }
         } catch (error) {
             showToast("Error de red", "danger");
         }
     }
 
-    async function rechazarPost(postId) {
-        const formData = new FormData();
-        formData.append('accion', 'rechazar_post');
-        formData.append('post_id', postId);
-        try {
-            const resp = await fetch('admin_operaciones.php', { method: 'POST', body: formData });
-            const result = await resp.json();
-            if (result.status === 'ok') {
-                showToast(`Publicación #${postId} rechazada ❌`, "danger");
-                cargarPostsPendientes();
-            } else {
-                showToast("Error al rechazar", "danger");
-            }
-        } catch (error) {
-            showToast("Error de red", "danger");
-        }
-    }
-
-    function actualizarBadgePublicaciones(cantidad) {
-        const badge = document.getElementById("pub-badge");
-        if (badge) {
-            badge.textContent = cantidad;
-            badge.style.display = cantidad > 0 ? "inline-block" : "none";
-        }
-    }
-
-    // === Navegación: al hacer clic en "Petición de Publicación", cargar los posts pendientes ===
-    const pubNavLink = document.querySelector('.nav-link[data-target="peticion-publicacion"]');
-    if (pubNavLink) {
-        pubNavLink.addEventListener("click", () => {
-            cargarPostsPendientes();
+    // Navegación: al hacer clic en la pestaña de publicaciones, cargar todos los posts
+    const postsNavLink = document.querySelector('.nav-link[data-target="peticion-publicacion"]');
+    if (postsNavLink) {
+        postsNavLink.addEventListener("click", () => {
+            cargarTodosLosPosts();
         });
     }
-
-    // También cargar al inicio si la pestaña activa es esa (por si se recarga con esa pestaña)
-    if (document.querySelector('#peticion-publicacion').classList.contains('active')) {
-        cargarPostsPendientes();
+    // Si la pestaña está activa al cargar, cargar datos
+    if (document.querySelector('#peticion-publicacion')?.classList.contains('active')) {
+        cargarTodosLosPosts();
     }
 
-    // Navegación original
+    // Navegación original (sidebar)
     navLinks.forEach(link => {
         link.addEventListener("click", (e) => {
             e.preventDefault();
@@ -331,11 +328,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     menuToggle.addEventListener("click", () => sidebar.classList.toggle("active"));
 
-    // Inicializar tabla de usuarios
+    // Inicializar
     cargarUsuarios();
 });
 
-// Funciones auxiliares globales (para los mock de peticiones de rol)
+// ==================== FUNCIONES AUXILIARES ====================
+
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -346,7 +344,7 @@ function escapeHtml(str) {
     });
 }
 
-// Mock peticiones de rol (siguen siendo demo)
+// Mock peticiones de rol (demo, se mantienen igual)
 window.approveRequest = function(name, targetRole, rowId) {
     const row = document.getElementById(rowId);
     if (row) row.remove();
