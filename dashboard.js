@@ -51,51 +51,86 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderUsersTable(dataArray) {
-        if (!usersTableBody) return;
-        usersTableBody.innerHTML = "";
-        if (dataArray.length === 0) {
-            usersTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center">No hay usuarios</td></tr>`;
-            return;
-        }
-        dataArray.forEach(user => {
-            const row = document.createElement("tr");
-            let roleClass = "reader";
-            if (user.rol === "admin") roleClass = "admin";
-            else if (user.rol === "creador") roleClass = "creator";
-
-            row.innerHTML = `
-                <td>${user.id}</td>
-                <td><strong>${escapeHtml(user.usuario)}</strong><br><small>${escapeHtml(user.nombre_completo || '')}</small></td>
-                <td><span class="badge-role ${roleClass}">${user.rol}</span></td>
-                <td>
-                    <select class="change-role-select" data-id="${user.id}">
-                        <option value="admin" ${user.rol === 'admin' ? 'selected' : ''}>Administrador</option>
-                        <option value="creador" ${user.rol === 'creador' ? 'selected' : ''}>Creador</option>
-                        <option value="lector" ${user.rol === 'lector' ? 'selected' : ''}>Lector</option>
-                    </select>
-                </td>
-                <td class="actions-cell">
-                    <button class="btn btn-sm btn-danger delete-user-btn" data-id="${user.id}"><i class="fas fa-trash-alt"></i></button>
-                </td>
-            `;
-            usersTableBody.appendChild(row);
-        });
-
-        document.querySelectorAll(".change-role-select").forEach(select => {
-            select.addEventListener("change", async (e) => {
-                const userId = e.target.getAttribute("data-id");
-                const newRole = e.target.value;
-                await actualizarRol(userId, newRole);
-            });
-        });
-
-        document.querySelectorAll(".delete-user-btn").forEach(btn => {
-            btn.addEventListener("click", async (e) => {
-                const userId = btn.getAttribute("data-id");
-                await eliminarUsuario(userId);
-            });
-        });
+    if (!usersTableBody) return;
+    usersTableBody.innerHTML = "";
+    if (dataArray.length === 0) {
+        usersTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center">No hay usuarios</td></tr>`;
+        return;
     }
+    dataArray.forEach(user => {
+        const row = document.createElement("tr");
+        let roleClass = "reader";
+        if (user.rol === "admin") roleClass = "admin";
+        else if (user.rol === "creador") roleClass = "creator";
+
+        // Columna de acciones: botón eliminar + (si es lector) botón desbanear
+        let accionesHtml = `<button class="btn btn-sm btn-danger delete-user-btn" data-id="${user.id}"><i class="fas fa-trash-alt"></i></button>`;
+        if (user.rol === 'lector') {
+            accionesHtml += `<button class="btn btn-sm btn-success desbanear-user-btn" data-id="${user.id}" style="margin-left: 8px;"><i class="fas fa-undo-alt"></i> Desbanear</button>`;
+        }
+
+        row.innerHTML = `
+            <td>${user.id}</td>
+            <td><strong>${escapeHtml(user.usuario)}</strong><br><small>${escapeHtml(user.nombre_completo || '')}</small></td>
+            <td><span class="badge-role ${roleClass}">${user.rol}</span></td>
+            <td>
+                <select class="change-role-select" data-id="${user.id}">
+                    <option value="admin" ${user.rol === 'admin' ? 'selected' : ''}>Administrador</option>
+                    <option value="creador" ${user.rol === 'creador' ? 'selected' : ''}>Creador</option>
+                    <option value="lector" ${user.rol === 'lector' ? 'selected' : ''}>Lector</option>
+                </select>
+            </td>
+            <td class="actions-cell">
+                ${accionesHtml}
+            </td>
+        `;
+        usersTableBody.appendChild(row);
+    });
+
+    // Eventos para cambiar rol
+    document.querySelectorAll(".change-role-select").forEach(select => {
+        select.addEventListener("change", async (e) => {
+            const userId = e.target.getAttribute("data-id");
+            const newRole = e.target.value;
+            await actualizarRol(userId, newRole);
+        });
+    });
+
+    // Eventos para eliminar usuario
+    document.querySelectorAll(".delete-user-btn").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+            const userId = btn.getAttribute("data-id");
+            await eliminarUsuario(userId);
+        });
+    });
+
+    // Eventos para desbanear usuario
+    document.querySelectorAll(".desbanear-user-btn").forEach(btn => {
+        btn.addEventListener("click", async (e) => {
+            const userId = btn.getAttribute("data-id");
+            await desbanearUsuario(userId);
+        });
+    });
+}
+
+async function desbanearUsuario(userId) {
+    if (!confirm("¿Desbanear a este usuario? Volverá a tener rol 'creador' (podrá publicar, comentar y enviar mensajes).")) return;
+    const formData = new FormData();
+    formData.append('accion', 'desbanear_usuario');
+    formData.append('id', userId);
+    try {
+        const resp = await fetch('admin_operaciones.php', { method: 'POST', body: formData });
+        const result = await resp.json();
+        if (result.status === 'ok') {
+            showToast("Usuario desbaneado", "success");
+            cargarUsuarios();
+        } else {
+            showToast(result.msg || "Error al desbanear", "danger");
+        }
+    } catch (error) {
+        showToast("Error de red", "danger");
+    }
+}
 
     async function actualizarRol(userId, newRole) {
         const formData = new FormData();

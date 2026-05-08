@@ -105,16 +105,12 @@ switch ($accion) {
         }
         break;
 
-    // ========== NUEVA ACCIÓN: ELIMINAR PUBLICACIÓN INDIVIDUAL ==========
     case 'eliminar_publicacion':
         $post_id = intval($_POST['post_id']);
         mysqli_begin_transaction($conexion);
         try {
-            // Borrar comentarios de esa publicación
             mysqli_query($conexion, "DELETE FROM comentarios WHERE publicacion_id = $post_id");
-            // Borrar reacciones de esa publicación
             mysqli_query($conexion, "DELETE FROM reacciones WHERE publicacion_id = $post_id");
-            // Borrar la publicación
             mysqli_query($conexion, "DELETE FROM publicaciones WHERE id = $post_id");
             mysqli_commit($conexion);
             echo json_encode(['status' => 'ok']);
@@ -122,6 +118,20 @@ switch ($accion) {
             mysqli_rollback($conexion);
             echo json_encode(['status' => 'error', 'msg' => $e->getMessage()]);
         }
+        break;
+
+    // 🔥 NUEVO: DESBANEAR USUARIO (cambia a 'creador')
+    case 'desbanear_usuario':
+        $id = intval($_POST['id']);
+        if ($id == $_SESSION['usuario_id']) {
+            echo json_encode(['status' => 'error', 'msg' => 'No puedes desbanearte a ti mismo']);
+            break;
+        }
+        $stmt = mysqli_prepare($conexion, "UPDATE usuarios SET rol = 'creador' WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        $ok = mysqli_stmt_execute($stmt);
+        echo json_encode(['status' => $ok ? 'ok' : 'error', 'msg' => $ok ? 'Usuario desbaneado' : 'Error al desbanear']);
+        mysqli_stmt_close($stmt);
         break;
 
     default:
