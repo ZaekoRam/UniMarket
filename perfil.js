@@ -1,142 +1,112 @@
+// ========== TEMA Y TRADUCCIONES ==========
 const themeToggleInput = document.getElementById("themeToggleInput");
 const themeText = document.getElementById("themeText");
 
-// ==========================================
-// 🌐 SISTEMA DE TRADUCCIÓN
-// ==========================================
 const translationsPerfil = {
   es: {
-    inicio: "Inicio", perfil: "Perfil", mensajes: "Mensajes",
-    notificaciones: "Notificaciones", configuracion: "Configuración",
-    cerrarSesion: "Cerrar sesión", darkMode: "Dark Mode", lightMode: "Light Mode",
-    editarPerfil: "Editar perfil", editandoPerfil: "Editando perfil",
-    guardar: "Guardar cambios", cancelar: "Cancelar",
-    sobreMi: "Sobre mí", detalles: "Detalles", misGustos: "Mis gustos",
-    vibraActual: "Vibra actual", enLinea: "En línea",
-    perfilGuardado: "¡Perfil guardado con éxito! 🚀",
-    errorGuardar: "Error al guardar: ",
-    bioCorta: "Bio corta", tagsSeparados: "Tags separados por coma",
-    carrera: "Carrera", campus: "Campus", emprendimientos: "Emprendimientos",
-    estado: "Estado", mood: "Mood", colorFavorito: "Color favorito",
-    metaActual: "Meta actual", estilo: "Estilo",
-    sinPublicaciones: "Aún no hay publicaciones",
-    cuandoPublique: "Cuando publiques algo, aparecerá aquí."
+    inicio: "Inicio", perfil: "Perfil", mensajes: "Mensajes", notificaciones: "Notificaciones",
+    configuracion: "Configuración", cerrarSesion: "Cerrar sesión", darkMode: "Dark Mode", lightMode: "Light Mode",
+    miRincon: "Mi rincón en UniMarket", perfilTitulo: "Perfil", editarPerfil: "Editar perfil",
+    guardar: "Guardar", cancelar: "Cancelar", sobreMi: "Sobre mí", misGustos: "Mis gustos",
+    libroPerfil: "Libro de perfil", presentate: "Una zona estilo retro para presentarte",
+    perfilGuardado: "¡Perfil guardado y subido a la base de datos! 🚀", errorGuardar: "Error al guardar: ",
+    nombre: "Nombre", usuario: "@usuario", bioCorta: "Bio corta", tagsSeparados: "Tags separados por coma",
+    carrera: "Carrera", campus: "Campus", emprendimientos: "Emprendimientos", estado: "Estado",
+    mood: "Mood", moodLabel: "Mood:", colorFavorito: "Color favorito", colorFavoritoLabel: "Color favorito:",
+    metaActual: "Meta actual", metaActualLabel: "Meta actual:", estilo: "Estilo", estiloLabel: "Estilo:",
+    gustosSeparados: "Gustos separados por coma", placeholderTags: "retro web, uni vibes, creative",
+    editandoPerfil: "Editando perfil", tags: "Tags", tagsHelp: "Separados por coma",
+    detalles: "Detalles", vibraActual: "Vibra actual", enLinea: "En línea"
   },
   en: {
-    inicio: "Home", perfil: "Profile", mensajes: "Messages",
-    notificaciones: "Notifications", configuracion: "Settings",
-    cerrarSesion: "Log out", darkMode: "Dark Mode", lightMode: "Light Mode",
-    editarPerfil: "Edit profile", editandoPerfil: "Editing profile",
-    guardar: "Save changes", cancelar: "Cancel",
-    sobreMi: "About me", detalles: "Details", misGustos: "My likes",
-    vibraActual: "Current vibe", enLinea: "Online",
-    perfilGuardado: "Profile saved! 🚀",
-    errorGuardar: "Error saving: ",
-    bioCorta: "Short bio", tagsSeparados: "Tags by comma",
-    carrera: "Major", campus: "Campus", emprendimientos: "Startups",
-    estado: "Status", mood: "Mood", colorFavorito: "Favorite color",
-    metaActual: "Current goal", estilo: "Style",
-    sinPublicaciones: "No posts yet",
-    cuandoPublique: "When you publish, it will appear here."
+    inicio: "Home", perfil: "Profile", mensajes: "Messages", notificaciones: "Notifications",
+    configuracion: "Settings", cerrarSesion: "Log out", darkMode: "Dark Mode", lightMode: "Light Mode",
+    miRincon: "My corner in UniMarket", perfilTitulo: "Profile", editarPerfil: "Edit profile",
+    guardar: "Save", cancelar: "Cancel", sobreMi: "About me", misGustos: "My likes",
+    libroPerfil: "Profile book", presentate: "A retro-style zone to introduce yourself",
+    perfilGuardado: "Profile saved and uploaded to the database! 🚀", errorGuardar: "Error saving: ",
+    nombre: "Name", usuario: "@username", bioCorta: "Short bio", tagsSeparados: "Tags separated by comma",
+    carrera: "Major", campus: "Campus", emprendimientos: "Entrepreneurships", estado: "Status",
+    mood: "Mood", moodLabel: "Mood:", colorFavorito: "Favorite color", colorFavoritoLabel: "Favorite color:",
+    metaActual: "Current goal", metaActualLabel: "Current goal:", estilo: "Style", estiloLabel: "Style:",
+    gustosSeparados: "Likes separated by comma", placeholderTags: "retro web, uni vibes, creative",
+    editandoPerfil: "Editing profile", tags: "Tags", tagsHelp: "Separated by commas",
+    detalles: "Details", vibraActual: "Current vibe", enLinea: "Online"
   }
 };
 
 function getLang() { return localStorage.getItem("lang") || "es"; }
-function tPerfil(key) {
-  const lang = getLang();
-  return translationsPerfil[lang]?.[key] || key;
-}
+function t(key) { return translationsPerfil[getLang()]?.[key] || key; }
 
-function aplicarIdiomaPerfil() {
+function aplicarIdioma() {
+  const lang = getLang();
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.dataset.i18n;
-    if (translationsPerfil[getLang()]?.[key]) {
-      el.textContent = translationsPerfil[getLang()][key];
-    }
+    if (translationsPerfil[lang]?.[key]) el.textContent = translationsPerfil[lang][key];
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (translationsPerfil[lang]?.[key]) el.placeholder = translationsPerfil[lang][key];
   });
   actualizarTextoTema();
 }
-
 function actualizarTextoTema() {
-  if (themeText) {
-    const isLight = document.body.classList.contains("light-mode");
-    themeText.textContent = isLight ? tPerfil("lightMode") : tPerfil("darkMode");
-  }
+  if (themeText) themeText.textContent = document.body.classList.contains("light-mode") ? t("lightMode") : t("darkMode");
 }
-
-// ==========================================
-// 🌓 TEMA
-// ==========================================
 function aplicarTema(modo) {
   const isLight = modo === "light";
   document.body.classList.toggle("light-mode", isLight);
-  if (themeToggleInput) themeToggleInput.checked = isLight;
+  themeToggleInput.checked = isLight;
   actualizarTextoTema();
 }
-
 const temaGuardado = localStorage.getItem("theme") || "dark";
 aplicarTema(temaGuardado);
+themeToggleInput.addEventListener("change", () => {
+  const nuevoTema = themeToggleInput.checked ? "light" : "dark";
+  localStorage.setItem("theme", nuevoTema);
+  aplicarTema(nuevoTema);
+});
 
-if (themeToggleInput) {
-  themeToggleInput.addEventListener("change", () => {
-    const nuevoTema = themeToggleInput.checked ? "light" : "dark";
-    localStorage.setItem("theme", nuevoTema);
-    aplicarTema(nuevoTema);
-  });
-}
-
-// ==========================================
-// ✨ PARTÍCULAS
-// ==========================================
-function createParticles() {
-  const container = document.getElementById("particlesBg");
-  if (!container) return;
-  container.innerHTML = "";
-  for (let i = 0; i < 25; i++) {
-    const p = document.createElement("div");
-    p.className = "particle";
-    p.style.cssText = `
-      width:${Math.random()*5+2}px; height:${Math.random()*5+2}px;
-      left:${Math.random()*100}%; animation-duration:${Math.random()*18+8}s;
-      animation-delay:${Math.random()*12}s;
-    `;
-    container.appendChild(p);
-  }
-}
-
-// ==========================================
-// 📋 DATOS POR DEFECTO
-// ==========================================
+// ========== PERFIL - DATOS POR DEFECTO ==========
 const defaultProfile = {
-  nombre: "Invitado", usuario: "@invitado", bio: "Sin biografía.",
-  tags: [], carrera: "Sin carrera.", campus: "Sin campus.",
-  emprendimientos: "Sin emprendimientos.", estado: "Sin estado.",
-  sobreMi: "Sin descripción.", gustos: [],
-  mood: "Sin mood.", color: "Sin color favorito.",
-  meta: "Sin meta actual.", estilo: "Sin estilo."
+  nombre: "Invitado",
+  usuario: "@invitado",
+  bio: "Sin biografía.",
+  tags: [],
+  carrera: "Sin carrera.",
+  campus: "Sin campus.",
+  emprendimientos: "Sin emprendimientos.",
+  estado: "Sin estado.",
+  sobreMi: "Sin descripción.",
+  gustos: [],
+  mood: "Sin mood.",
+  color: "Sin color favorito.",
+  meta: "Sin meta actual.",
+  estilo: "Sin estilo."
 };
 
-// ==========================================
-// 🔄 OBTENER PERFIL
-// ==========================================
+// ========== OBTENER Y GUARDAR CON DEPURACIÓN ==========
 async function getProfile() {
+  console.log("🔄 Cargando perfil desde obtener_perfil.php...");
   try {
     const res = await fetch('obtener_perfil.php');
     const data = await res.json();
-    if (data.error) return defaultProfile;
+    console.log("📦 Datos recibidos:", data);
+    if (data.error) {
+      console.warn("⚠️ Error de servidor:", data.error);
+      return defaultProfile;
+    }
     if (typeof data.tags === 'string' && data.tags) data.tags = data.tags.split(',');
     if (typeof data.gustos === 'string' && data.gustos) data.gustos = data.gustos.split(',');
     return { ...defaultProfile, ...data };
   } catch (e) {
-    console.error("Error perfil:", e);
+    console.error("❌ Error al obtener perfil:", e);
     return defaultProfile;
   }
 }
 
-// ==========================================
-// 💾 GUARDAR PERFIL
-// ==========================================
 async function saveProfile(profile) {
+  console.log("💾 Guardando perfil en actualizar_perfil.php...", profile);
   try {
     const res = await fetch('actualizar_perfil.php', {
       method: 'POST',
@@ -144,177 +114,223 @@ async function saveProfile(profile) {
       body: JSON.stringify(profile)
     });
     const result = await res.json();
-    if (result.success) showToast(tPerfil("perfilGuardado"), "success");
-    else showToast(tPerfil("errorGuardar") + (result.error || ''), "error");
-  } catch (e) {
-    showToast("Error de conexión", "error");
-  }
-}
-
-// ==========================================
-// 🎨 RENDERIZAR
-// ==========================================
-function renderProfile(p) {
-  const dn = document.getElementById("displayName");
-  const du = document.getElementById("displayUsername");
-  const db = document.getElementById("displayBio");
-  const ai = document.getElementById("avatarInitial");
-  const hb = document.getElementById("heroBadges");
-  const vs = document.getElementById("viewSobreMi");
-  const vc = document.getElementById("viewCarrera");
-  const vca = document.getElementById("viewCampus");
-  const ve = document.getElementById("viewEmprendimientos");
-  const ves = document.getElementById("viewEstado");
-  const vg = document.getElementById("viewGustos");
-  const vm = document.getElementById("viewMood");
-  const vco = document.getElementById("viewColor");
-  const vme = document.getElementById("viewMeta");
-  const ves2 = document.getElementById("viewEstilo");
-
-  if (dn) { const ns = dn.querySelector('.name-gradient'); if (ns) ns.textContent = p.nombre; else dn.textContent = p.nombre; }
-  if (du) du.textContent = p.usuario;
-  if (db) { const bs = db.querySelector('span:last-child'); if (bs) bs.textContent = p.bio; }
-  if (ai && p.nombre) ai.textContent = p.nombre.trim().charAt(0).toUpperCase();
-  
-  if (hb) {
-    hb.innerHTML = "";
-    if (p.tags?.length && p.tags[0]) {
-      p.tags.forEach(t => { if (t.trim()) { const s = document.createElement("span"); s.className = "tag-item"; s.textContent = t.trim(); hb.appendChild(s); } });
-    }
-  }
-
-  if (vs) { const pp = vs.querySelector('p'); if (pp) pp.textContent = p.sobreMi; }
-  if (vc) vc.textContent = p.carrera;
-  if (vca) vca.textContent = p.campus;
-  if (ve) ve.textContent = p.emprendimientos;
-  if (ves) ves.textContent = p.estado;
-
-  if (vg) {
-    vg.innerHTML = "";
-    if (p.gustos?.length && p.gustos[0]) {
-      p.gustos.forEach(g => { if (g.trim()) { const s = document.createElement("span"); s.className = "tag-item"; s.textContent = g.trim(); vg.appendChild(s); } });
+    console.log("✅ Respuesta del servidor:", result);
+    if (result.success) {
+      showToast(t("perfilGuardado"), "success");
     } else {
-      vg.innerHTML = '<span class="tag-item empty-tag">Sin gustos.</span>';
+      showToast(t("errorGuardar") + result.error, "danger");
+    }
+  } catch (e) {
+    console.error("❌ Error de conexión:", e);
+    showToast("Error de conexión", "danger");
+  }
+}
+
+// ========== RENDERIZAR PERFIL EN MODO LECTURA (para el nuevo HTML) ==========
+function renderProfile(profile) {
+  console.log("🎨 Renderizando perfil con datos:", profile);
+  // Hero
+  const displayName = document.getElementById("displayName");
+  if (displayName) displayName.innerHTML = `<span class="name-gradient">${escapeHtml(profile.nombre)}</span>`;
+  const displayUsername = document.getElementById("displayUsername");
+  if (displayUsername) displayUsername.innerHTML = `@${profile.usuario.replace('@', '')}`;
+  const displayBio = document.getElementById("displayBio");
+  if (displayBio) displayBio.innerHTML = `<span class="bio-icon"></span><span>${escapeHtml(profile.bio)}</span>`;
+  
+  // Avatar inicial
+  const avatarSpan = document.getElementById("avatarInitial");
+  if (avatarSpan) avatarSpan.textContent = profile.nombre ? profile.nombre.trim().charAt(0).toUpperCase() : "U";
+
+  // Hero badges (tags)
+  const heroBadges = document.getElementById("heroBadges");
+  if (heroBadges) {
+    heroBadges.innerHTML = "";
+    if (profile.tags && profile.tags.length) {
+      profile.tags.forEach(tag => {
+        const badge = document.createElement("span");
+        badge.className = "hero-badge";
+        badge.textContent = tag;
+        heroBadges.appendChild(badge);
+      });
+    } else {
+      heroBadges.innerHTML = '<span class="badge-placeholder">Sin tags</span>';
     }
   }
 
-  if (vm) vm.textContent = p.mood;
-  if (vco) vco.textContent = p.color;
-  if (vme) vme.textContent = p.meta;
-  if (ves2) ves2.textContent = p.estilo;
+  // Sobre mí
+  const viewSobreMi = document.getElementById("viewSobreMi");
+  if (viewSobreMi) viewSobreMi.innerHTML = `<p>${escapeHtml(profile.sobreMi)}</p>`;
+
+  // Detalles
+  const viewCarrera = document.getElementById("viewCarrera");
+  if (viewCarrera) viewCarrera.innerHTML = escapeHtml(profile.carrera);
+  const viewCampus = document.getElementById("viewCampus");
+  if (viewCampus) viewCampus.innerHTML = escapeHtml(profile.campus);
+  const viewEmprendimientos = document.getElementById("viewEmprendimientos");
+  if (viewEmprendimientos) viewEmprendimientos.innerHTML = escapeHtml(profile.emprendimientos);
+  const viewEstado = document.getElementById("viewEstado");
+  if (viewEstado) viewEstado.innerHTML = escapeHtml(profile.estado);
+
+  // Gustos (nube de tags)
+  const viewGustos = document.getElementById("viewGustos");
+  if (viewGustos) {
+    viewGustos.innerHTML = "";
+    if (profile.gustos && profile.gustos.length) {
+      profile.gustos.forEach(g => {
+        const span = document.createElement("span");
+        span.className = "tag-item";
+        span.textContent = g;
+        viewGustos.appendChild(span);
+      });
+    } else {
+      viewGustos.innerHTML = '<span class="tag-item empty-tag">Sin gustos.</span>';
+    }
+  }
+
+  // Mood, color, meta, estilo
+  const viewMood = document.getElementById("viewMood");
+  if (viewMood) viewMood.textContent = profile.mood;
+  const viewColor = document.getElementById("viewColor");
+  if (viewColor) viewColor.textContent = profile.color;
+  const viewMeta = document.getElementById("viewMeta");
+  if (viewMeta) viewMeta.textContent = profile.meta;
+  const viewEstilo = document.getElementById("viewEstilo");
+  if (viewEstilo) viewEstilo.textContent = profile.estilo;
 }
 
-// ==========================================
-// ✏️ LLENAR INPUTS
-// ==========================================
-function fillInputs(p) {
-  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
-  setVal("inputBio", p.bio);
-  setVal("inputTags", Array.isArray(p.tags) ? p.tags.join(", ") : "");
-  setVal("inputSobreMi", p.sobreMi);
-  setVal("inputGustos", Array.isArray(p.gustos) ? p.gustos.join(", ") : "");
-  setVal("inputCarrera", p.carrera);
-  setVal("inputCampus", p.campus);
-  setVal("inputEmprendimientos", p.emprendimientos);
-  setVal("inputEstado", p.estado);
-  setVal("inputMood", p.mood);
-  setVal("inputColor", p.color);
-  setVal("inputMeta", p.meta);
-  setVal("inputEstilo", p.estilo);
+// ========== RELLENAR INPUTS DE EDICIÓN ==========
+function fillEditInputs(profile) {
+  const inputBio = document.getElementById("inputBio");
+  if (inputBio) inputBio.value = profile.bio;
+  const inputTags = document.getElementById("inputTags");
+  if (inputTags) inputTags.value = profile.tags ? profile.tags.join(", ") : "";
+  const inputCarrera = document.getElementById("inputCarrera");
+  if (inputCarrera) inputCarrera.value = profile.carrera;
+  const inputCampus = document.getElementById("inputCampus");
+  if (inputCampus) inputCampus.value = profile.campus;
+  const inputEmprendimientos = document.getElementById("inputEmprendimientos");
+  if (inputEmprendimientos) inputEmprendimientos.value = profile.emprendimientos;
+  const inputEstado = document.getElementById("inputEstado");
+  if (inputEstado) inputEstado.value = profile.estado;
+  const inputSobreMi = document.getElementById("inputSobreMi");
+  if (inputSobreMi) inputSobreMi.value = profile.sobreMi;
+  const inputGustos = document.getElementById("inputGustos");
+  if (inputGustos) inputGustos.value = profile.gustos ? profile.gustos.join(", ") : "";
+  const inputMood = document.getElementById("inputMood");
+  if (inputMood) inputMood.value = profile.mood;
+  const inputColor = document.getElementById("inputColor");
+  if (inputColor) inputColor.value = profile.color;
+  const inputMeta = document.getElementById("inputMeta");
+  if (inputMeta) inputMeta.value = profile.meta;
+  const inputEstilo = document.getElementById("inputEstilo");
+  if (inputEstilo) inputEstilo.value = profile.estilo;
 }
 
-// ==========================================
-// 🔄 TOGGLE EDICIÓN
-// ==========================================
+// ========== MODO EDICIÓN ==========
+let currentProfile = null;
+
 async function setEditMode(editing) {
   const editPanel = document.getElementById("editPanel");
-  const editBtn = document.getElementById("editBtn");
   const editDetails = document.getElementById("editDetails");
-  const editSobreMi = document.getElementById("editSobreMiWrap");
-  const editGustos = document.getElementById("editGustosWrap");
-  const editMood = document.getElementById("editMoodGrid");
+  const editSobreMiWrap = document.getElementById("editSobreMiWrap");
+  const editGustosWrap = document.getElementById("editGustosWrap");
+  const editMoodGrid = document.getElementById("editMoodGrid");
   const viewDetails = document.getElementById("viewDetails");
   const viewSobreMi = document.getElementById("viewSobreMi");
   const viewGustos = document.getElementById("viewGustos");
-  const viewMood = document.getElementById("viewMoodGrid");
-
-  const toggle = (el, show) => { if (el) el.classList.toggle("hidden", !show); };
+  const editBtn = document.getElementById("editBtn");
+  const saveBtn = document.getElementById("saveBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
 
   if (editing) {
-    toggle(editPanel, true);
-    toggle(editDetails, true);
-    toggle(editSobreMi, true);
-    toggle(editGustos, true);
-    toggle(editMood, true);
-    toggle(viewDetails, false);
-    toggle(viewSobreMi, false);
-    toggle(viewGustos, false);
-    toggle(viewMood, false);
-    if (editBtn) editBtn.style.display = "none";
-    fillInputs(await getProfile());
+    currentProfile = await getProfile();
+    fillEditInputs(currentProfile);
+    if (editPanel) editPanel.classList.remove("hidden");
+    if (editDetails) editDetails.classList.remove("hidden");
+    if (editSobreMiWrap) editSobreMiWrap.classList.remove("hidden");
+    if (editGustosWrap) editGustosWrap.classList.remove("hidden");
+    if (editMoodGrid) editMoodGrid.classList.remove("hidden");
+    if (viewDetails) viewDetails.classList.add("hidden");
+    if (viewSobreMi) viewSobreMi.classList.add("hidden");
+    if (viewGustos) viewGustos.classList.add("hidden");
+    if (editBtn) editBtn.classList.add("hidden");
+    if (saveBtn) saveBtn.classList.remove("hidden");
+    if (cancelBtn) cancelBtn.classList.remove("hidden");
   } else {
-    toggle(editPanel, false);
-    toggle(editDetails, false);
-    toggle(editSobreMi, false);
-    toggle(editGustos, false);
-    toggle(editMood, false);
-    toggle(viewDetails, true);
-    toggle(viewSobreMi, true);
-    toggle(viewGustos, true);
-    toggle(viewMood, true);
-    if (editBtn) editBtn.style.display = "";
+    if (editPanel) editPanel.classList.add("hidden");
+    if (editDetails) editDetails.classList.add("hidden");
+    if (editSobreMiWrap) editSobreMiWrap.classList.add("hidden");
+    if (editGustosWrap) editGustosWrap.classList.add("hidden");
+    if (editMoodGrid) editMoodGrid.classList.add("hidden");
+    if (viewDetails) viewDetails.classList.remove("hidden");
+    if (viewSobreMi) viewSobreMi.classList.remove("hidden");
+    if (viewGustos) viewGustos.classList.remove("hidden");
+    if (editBtn) editBtn.classList.remove("hidden");
+    if (saveBtn) saveBtn.classList.add("hidden");
+    if (cancelBtn) cancelBtn.classList.add("hidden");
   }
 }
 
-// ==========================================
-// 🎯 EVENTOS
-// ==========================================
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("editBtn")?.addEventListener("click", () => setEditMode(true));
-  document.getElementById("cancelBtn")?.addEventListener("click", () => setEditMode(false));
-  
-  document.getElementById("saveBtn")?.addEventListener("click", async () => {
-    const gv = (id) => document.getElementById(id)?.value?.trim() || "";
-    const nuevo = {
-      bio: gv("inputBio") || defaultProfile.bio,
-      tags: gv("inputTags").split(",").map(t => t.trim()).filter(Boolean),
-      carrera: gv("inputCarrera") || defaultProfile.carrera,
-      campus: gv("inputCampus") || defaultProfile.campus,
-      emprendimientos: gv("inputEmprendimientos") || defaultProfile.emprendimientos,
-      estado: gv("inputEstado") || defaultProfile.estado,
-      sobreMi: gv("inputSobreMi") || defaultProfile.sobreMi,
-      gustos: gv("inputGustos").split(",").map(g => g.trim()).filter(Boolean),
-      mood: gv("inputMood") || defaultProfile.mood,
-      color: gv("inputColor") || defaultProfile.color,
-      meta: gv("inputMeta") || defaultProfile.meta,
-      estilo: gv("inputEstilo") || defaultProfile.estilo
-    };
-    if (!nuevo.tags.length) nuevo.tags = defaultProfile.tags;
-    if (!nuevo.gustos.length) nuevo.gustos = defaultProfile.gustos;
-    await saveProfile(nuevo);
-    renderProfile(await getProfile());
-    setEditMode(false);
-  });
-});
+async function guardarCambios() {
+  const nuevoPerfil = {
+    nombre: currentProfile?.nombre || defaultProfile.nombre,
+    usuario: currentProfile?.usuario || defaultProfile.usuario,
+    bio: document.getElementById("inputBio")?.value.trim() || defaultProfile.bio,
+    tags: (document.getElementById("inputTags")?.value || "").split(",").map(t => t.trim()).filter(t => t !== ""),
+    carrera: document.getElementById("inputCarrera")?.value.trim() || defaultProfile.carrera,
+    campus: document.getElementById("inputCampus")?.value.trim() || defaultProfile.campus,
+    emprendimientos: document.getElementById("inputEmprendimientos")?.value.trim() || defaultProfile.emprendimientos,
+    estado: document.getElementById("inputEstado")?.value.trim() || defaultProfile.estado,
+    sobreMi: document.getElementById("inputSobreMi")?.value.trim() || defaultProfile.sobreMi,
+    gustos: (document.getElementById("inputGustos")?.value || "").split(",").map(g => g.trim()).filter(g => g !== ""),
+    mood: document.getElementById("inputMood")?.value.trim() || defaultProfile.mood,
+    color: document.getElementById("inputColor")?.value.trim() || defaultProfile.color,
+    meta: document.getElementById("inputMeta")?.value.trim() || defaultProfile.meta,
+    estilo: document.getElementById("inputEstilo")?.value.trim() || defaultProfile.estilo
+  };
+  if (nuevoPerfil.tags.length === 0) nuevoPerfil.tags = defaultProfile.tags;
+  if (nuevoPerfil.gustos.length === 0) nuevoPerfil.gustos = defaultProfile.gustos;
 
-// ==========================================
-// 🍞 TOAST
-// ==========================================
-function showToast(msg, type = "info") {
-  const c = document.getElementById("toastContainer");
-  if (!c) return;
-  const t = document.createElement("div");
-  t.className = `profile-toast toast-${type}`;
-  t.textContent = msg;
-  c.appendChild(t);
-  setTimeout(() => { t.style.animation = "toastOut 0.3s ease forwards"; setTimeout(() => t.remove(), 300); }, 3000);
+  await saveProfile(nuevoPerfil);
+  const actualizado = await getProfile();
+  renderProfile(actualizado);
+  setEditMode(false);
 }
 
-// ==========================================
-// 🚀 INICIO
-// ==========================================
-(async () => {
-  createParticles();
-  aplicarIdiomaPerfil();
-  renderProfile(await getProfile());
-})();
+// ========== INICIALIZACIÓN ==========
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("🚀 Inicializando perfil...");
+  aplicarIdioma();
+  const profile = await getProfile();
+  renderProfile(profile);
+  currentProfile = profile;
+  
+  const editBtn = document.getElementById("editBtn");
+  const saveBtn = document.getElementById("saveBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
+  if (editBtn) editBtn.addEventListener("click", () => setEditMode(true));
+  if (saveBtn) saveBtn.addEventListener("click", guardarCambios);
+  if (cancelBtn) cancelBtn.addEventListener("click", () => setEditMode(false));
+});
+
+// ========== UTILIDADES ==========
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+function showToast(message, type = "success") {
+  const container = document.getElementById("toastContainer");
+  if (!container) return;
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  const icon = type === "success" ? "fa-check-circle" : "fa-exclamation-triangle";
+  toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}

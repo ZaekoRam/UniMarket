@@ -158,21 +158,22 @@
 
             <div id="peticion-publicacion" class="tab-content">
     <section class="table-section">
-        <h3>Peticiones de Publicación</h3>
-        <p class="section-desc">Solicitudes de usuarios para publicar posts. Revisa el contenido y decide si es aceptable.</p>
+        <h3>Todas las Publicaciones</h3>
+        <p class="section-desc">Aquí puedes ver todas las publicaciones realizadas. Usa el botón "Banear usuario" para eliminar todo su contenido y revocar sus permisos.</p>
 
-        <table id="pubRequestsTable">
+        <table id="allPostsTable">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Usuario</th>
                     <th>Contenido</th>
                     <th>Archivos</th>
                     <th>Fecha</th>
-                    <th>Acciones</th>
+                    <th>Acción</th>
                 </tr>
             </thead>
-            <tbody id="pubRequestsBody">
-                <tr><td colspan="5">Cargando publicaciones pendientes...</td></tr>
+            <tbody id="allPostsBody">
+                <tr><td colspan="6">Cargando publicaciones...</td></tr>
             </tbody>
         </table>
     </section>

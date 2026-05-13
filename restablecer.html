@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva contraseña - UniMarket</title>
+    <link rel="stylesheet" href="style_login.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #061b1a, #0a2b28);
+            font-family: 'Montserrat', sans-serif;
+        }
+        .reset-card {
+            background: rgba(8, 31, 29, 0.95);
+            backdrop-filter: blur(12px);
+            padding: 40px 35px;
+            border-radius: 32px;
+            max-width: 440px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid #39c5bb;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.4);
+        }
+        h2 {
+            color: #39c5bb;
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cffcf5;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 40px;
+            border: none;
+            background: #eafffb;
+            color: #061b1a;
+            font-weight: 600;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+        input:focus {
+            box-shadow: 0 0 0 2px #39c5bb;
+        }
+        button {
+            background: linear-gradient(90deg, #39c5bb, #0f8f87);
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            color: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(57,197,187,0.3);
+        }
+        .error {
+            background: rgba(255, 125, 146, 0.2);
+            color: #ff7d92;
+            padding: 10px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .back-link {
+            display: block;
+            margin-top: 25px;
+            color: #9bded7;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="reset-card">
+        <h2>✏️ Establecer nueva contraseña</h2>
+        <div id="mensaje-error" class="error" style="display: none;"></div>
+        <form id="resetForm" action="actualizar_password.php" method="POST">
+            <div class="input-group">
+                <label>🔒 Nueva contraseña (mínimo 8 caracteres)</label>
+                <input type="password" name="password" id="password" required minlength="8">
+            </div>
+            <div class="input-group">
+                <label>🔁 Confirmar contraseña</label>
+                <input type="password" name="confirm_password" id="confirm" required>
+            </div>
+            <button type="submit">Actualizar contraseña</button>
+        </form>
+        <a href="index.html" class="back-link">← Volver al inicio</a>
+    </div>
+
+    <script>
+        document.getElementById('resetForm').addEventListener('submit', function(e) {
+            const pass = document.getElementById('password').value;
+            const conf = document.getElementById('confirm').value;
+            const errorDiv = document.getElementById('mensaje-error');
+            if (pass !== conf) {
+                e.preventDefault();
+                errorDiv.textContent = '❌ Las contraseñas no coinciden';
+                errorDiv.style.display = 'block';
+            } else if (pass.length < 8) {
+                e.preventDefault();
+                errorDiv.textContent = '❌ La contraseña debe tener al menos 8 caracteres';
+                errorDiv.style.display = 'block';
+            } else {
+                errorDiv.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
