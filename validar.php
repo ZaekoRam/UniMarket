@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
+require 'credenciales.php';
 $conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 
 $usuario  = mysqli_real_escape_string($conexion, $_POST['usuario']);
@@ -10,46 +10,27 @@ $consulta = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
 $resultado = mysqli_query($conexion, $consulta);
 
 if (mysqli_num_rows($resultado) > 0) {
-    $datos = mysqli_fetch_array($resultado); 
-    
-    // Verificamos la contraseña
+    $datos = mysqli_fetch_array($resultado);
     if (password_verify($password_ingresada, $datos['PASSWORD'])) {
-        
-        // ==========================================
-        // 🛑 CANDADO FINAL: ¿Ya verificó su correo?
-        // ==========================================
         if ($datos['verificado'] == 0) {
-            $correo = $datos['cuenta']; // Sacamos el correo para mandarlo por la URL
-            echo "<script>
-                    alert('¡Tu cuenta aún no está activa! Por favor, ingresa el código que enviamos a tu correo.');
-                    window.location='index.html?verificar=$correo';
-                  </script>";
-            exit(); // 🚫 ¡Detenemos el login aquí para que no pase!
+            $correo = $datos['cuenta'];
+            header("Location: index.html?verificar=$correo&msg=" . urlencode("⚠️ ¡Tu cuenta aún no está activa! Revisa tu correo.") . "&type=warning");
+            exit();
         }
-        // ==========================================
-
-        // ✅ Si pasó el candado, ¡Metemos todo a la mochila de la sesión!
         $_SESSION['usuario_id'] = $datos['id'];
         $_SESSION['usuario'] = $datos['usuario'];
         $_SESSION['rol'] = $datos['rol'];
-        $_SESSION['nombre_completo'] = $datos['nombre_completo']; 
-    
-        header("location:menu.html");
+        $_SESSION['nombre_completo'] = $datos['nombre_completo'];
+        header("Location: menu.html?msg=" . urlencode("✅ ¡Bienvenido, " . $datos['usuario'] . "!") . "&type=success");
         exit();
-        
     } else {
-        echo "<script>
-                alert('Contraseña incorrecta. Intenta de nuevo.');
-                window.location='index.html';
-              </script>";
+        header("Location: index.html?msg=" . urlencode("❌ Contraseña incorrecta.") . "&type=error");
+        exit();
     }
 } else {
-    echo "<script>
-            alert('Ese usuario no existe. ¡Regístrate primero!');
-            window.location='index.html';
-          </script>";
+    header("Location: index.html?msg=" . urlencode("❌ Ese usuario no existe. ¡Regístrate primero!") . "&type=error");
+    exit();
 }
-
 mysqli_free_result($resultado);
 mysqli_close($conexion);
 ?>

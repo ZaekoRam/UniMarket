@@ -4,7 +4,8 @@ require 'credenciales.php';
 $conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 
 if (!isset($_SESSION['usuario_id']) || !in_array($_SESSION['rol'], ['admin', 'creador'])) {
-    die("Error: No tienes permiso para publicar.");
+    header("Location: menu?msg=" . urlencode("❌ Error: No tienes permiso para publicar.") . "&type=error");
+        exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -28,16 +29,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre_imagen = $tiene_archivo ? implode(',', $nombres_media) : null;
 
     if (empty($texto) && !$tiene_archivo) {
-        echo "<script>alert('No puedes publicar un post vacío.'); window.history.back();</script>";
+        // Redirigir de vuelta a menu.html con mensaje de error
+        header("Location: menu.html?msg=" . urlencode("⚠️ No puedes publicar un post vacío.") . "&type=warning");
         exit();
     }
 
     $sql = "INSERT INTO publicaciones (usuario_id, texto, imagen, fecha) VALUES ('$usuario_id', '$texto', '$nombre_imagen', NOW())";
     if (mysqli_query($conexion, $sql)) {
-        header("location: menu.html");
+        header("Location: menu.html?msg=" . urlencode("✅ Publicación creada exitosamente.") . "&type=success");
         exit();
     } else {
-        echo "Error: " . mysqli_error($conexion);
+        header("Location: menu.html?msg=" . urlencode("❌ Error al publicar: " . mysqli_error($conexion)) . "&type=error");
+        exit();
     }
 }
 mysqli_close($conexion);

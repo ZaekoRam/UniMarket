@@ -2,19 +2,20 @@
 require_once 'credenciales.php';
 session_start();
 
-// Verificar sesión
 if (!isset($_SESSION['usuario_id'])) {
-    die("Inicia sesión para comentar.");
+    header("Location: index.html?msg=" . urlencode("❌ Inicia sesión para comentar.") . "&type=error");
+    exit();
 }
 
-// Verificar rol: los lectores NO pueden comentar
 if ($_SESSION['rol'] === 'lector') {
-    die("Tu rol de 'lector' no te permite comentar publicaciones.");
+    header("Location: " . $_SERVER['HTTP_REFERER'] . "?msg=" . urlencode("⚠️ Tu rol de lector no te permite comentar publicaciones.") . "&type=warning");
+    exit();
 }
 
 $conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
 if (!$conexion) {
-    die("Error de conexión a la base de datos.");
+    header("Location: " . $_SERVER['HTTP_REFERER'] . "?msg=" . urlencode("❌ Error de conexión a la base de datos.") . "&type=error");
+    exit();
 }
 
 $post_id = mysqli_real_escape_string($conexion, $_POST['post_id']);
@@ -26,10 +27,9 @@ $sql = "INSERT INTO comentarios (publicacion_id, usuario_id, comentario, padre_i
         VALUES ('$post_id', '$usuario_id', '$comentario', $padre_id)";
 
 if (mysqli_query($conexion, $sql)) {
-    echo "ok";
+    header("Location: " . $_SERVER['HTTP_REFERER'] . "?msg=" . urlencode("💬 Comentario agregado correctamente.") . "&type=success");
 } else {
-    echo "Error: " . mysqli_error($conexion);
+    header("Location: " . $_SERVER['HTTP_REFERER'] . "?msg=" . urlencode("❌ Error al agregar comentario: " . mysqli_error($conexion)) . "&type=error");
 }
-
 mysqli_close($conexion);
 ?>

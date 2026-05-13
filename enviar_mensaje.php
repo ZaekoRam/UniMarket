@@ -2,9 +2,11 @@
 session_start();
 require 'credenciales.php';
 
-if (!isset($_SESSION['usuario_id'])) exit();
+if (!isset($_SESSION['usuario_id'])) {
+    echo json_encode(["status" => "error", "msg" => "No autenticado"]);
+    exit();
+}
 
-// 🔥 Verificar que el remitente NO sea lector
 if ($_SESSION['rol'] === 'lector') {
     echo json_encode(["status" => "error", "msg" => "Los lectores no pueden enviar mensajes."]);
     exit();
@@ -16,8 +18,6 @@ $destinatario_id = (int)$_POST['destinatario_id'];
 $mensaje = trim(mysqli_real_escape_string($conexion, $_POST['mensaje'] ?? ''));
 
 if (!empty($mensaje) && $destinatario_id > 0) {
-    // Opcional: también verificar que el destinatario no sea lector? (según requieras)
-    // Si no quieres que los lectores reciban mensajes, puedes agregar:
     $check = mysqli_query($conexion, "SELECT rol FROM usuarios WHERE id = $destinatario_id");
     $dest_rol = mysqli_fetch_assoc($check)['rol'] ?? '';
     if ($dest_rol === 'lector') {
