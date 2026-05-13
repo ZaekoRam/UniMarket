@@ -10,7 +10,6 @@ if (!isset($_SESSION['usuario_id'])) {
 $mi_id = $_SESSION['usuario_id'];
 $mi_rol = $_SESSION['rol'] ?? '';
 
-// Si el usuario actual es lector, no debe ver ningún contacto
 if ($mi_rol === 'lector') {
     echo json_encode([]);
     exit();
@@ -22,15 +21,14 @@ if (!$conexion) {
     exit();
 }
 
-// 🔥 Excluir al propio usuario y a los lectores
-$sql = "SELECT id, usuario, nombre_completo, rol 
+// 🔥 Incluir foto_perfil en la consulta
+$sql = "SELECT id, usuario, nombre_completo, rol, foto_perfil
         FROM usuarios 
         WHERE id != $mi_id AND rol != 'lector'
         ORDER BY nombre_completo ASC";
 
 $resultado = mysqli_query($conexion, $sql);
 $usuarios = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
-
 echo json_encode($usuarios);
 mysqli_close($conexion);
 ?>
