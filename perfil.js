@@ -82,7 +82,8 @@ const defaultProfile = {
   mood: "Sin mood.",
   color: "Sin color favorito.",
   meta: "Sin meta actual.",
-  estilo: "Sin estilo."
+  estilo: "Sin estilo.",
+  foto_perfil: null
 };
 
 // ========== DETECTAR SI ES PERFIL PROPIO ==========
@@ -177,10 +178,15 @@ function renderProfile(profile) {
   if (displayUsername) displayUsername.innerHTML = `@${profile.usuario.replace('@', '')}`;
   const displayBio = document.getElementById("displayBio");
   if (displayBio) displayBio.innerHTML = `<span class="bio-icon"></span><span>${escapeHtml(profile.bio)}</span>`;
-  
-  // Avatar inicial
-  const avatarSpan = document.getElementById("avatarInitial");
-  if (avatarSpan) avatarSpan.textContent = profile.nombre ? profile.nombre.trim().charAt(0).toUpperCase() : "U";
+
+  // Avatar: si hay foto, mostrarla; si no, mostrar iniciales
+  const avatarMain = document.getElementById("profileAvatarMain");
+  if (profile.foto_perfil && profile.foto_perfil !== "") {
+    avatarMain.innerHTML = `<img src="${profile.foto_perfil}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover; border-radius:28px;">`;
+  } else {
+    const inicial = profile.nombre ? profile.nombre.trim().charAt(0).toUpperCase() : "U";
+    avatarMain.innerHTML = `<span id="avatarInitial">${inicial}</span>`;
+  }
 
   // Hero badges (tags)
   const heroBadges = document.getElementById("heroBadges");
@@ -348,6 +354,28 @@ async function guardarCambios() {
   setEditMode(false);
 }
 
+// ========== SUBIR FOTO DE PERFIL (solo si es mi perfil) ==========
+async function subirFotoPerfil(file) {
+  const formData = new FormData();
+  formData.append('foto', file);
+  try {
+    const res = await fetch('subir_foto_perfil.php', { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.success) {
+      showToast('Foto de perfil actualizada', 'success');
+      // Recargar el perfil completo para mostrar la nueva foto
+      const nuevoPerfil = await getProfile();
+      renderProfile(nuevoPerfil);
+      currentProfile = nuevoPerfil;
+    } else {
+      showToast('Error: ' + data.error, 'error');
+    }
+  } catch (e) {
+    console.error(e);
+    showToast('Error al subir la foto', 'error');
+  }
+}
+
 // ========== INICIALIZACIÓN ==========
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 Inicializando perfil...");
@@ -364,6 +392,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (editBtn) editBtn.addEventListener("click", () => setEditMode(true));
     if (saveBtn) saveBtn.addEventListener("click", guardarCambios);
     if (cancelBtn) cancelBtn.addEventListener("click", () => setEditMode(false));
+
+    // Evento para cambiar foto de perfil (clic en el avatar)
+    const avatarMain = document.getElementById("profileAvatarMain");
+    if (avatarMain) {
+      avatarMain.style.cursor = "pointer";
+      avatarMain.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/jpeg,image/png,image/gif,image/webp";
+        input.onchange = (e) => {
+          if (e.target.files && e.target.files[0]) {
+            subirFotoPerfil(e.target.files[0]);
+          }
+        };
+        input.click();
+      });
+    }
   }
 });
 

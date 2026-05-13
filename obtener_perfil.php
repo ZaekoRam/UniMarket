@@ -20,7 +20,7 @@ if (!$conexion) {
     exit();
 }
 
-$query = "SELECT nombre_completo AS nombre, usuario, bio, tags, carrera, campus, emprendimientos, estado, sobre_mi AS sobreMi, gustos, mood, color, meta, estilo FROM usuarios WHERE id = '$id'";
+$query = "SELECT nombre_completo AS nombre, usuario, bio, tags, carrera, campus, emprendimientos, estado, sobre_mi AS sobreMi, gustos, mood, color, meta, estilo, foto_perfil FROM usuarios WHERE id = '$id'";
 $resultado = mysqli_query($conexion, $query);
 
 if ($perfil = mysqli_fetch_assoc($resultado)) {
