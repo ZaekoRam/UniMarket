@@ -85,11 +85,46 @@ const defaultProfile = {
   estilo: "Sin estilo."
 };
 
-// ========== OBTENER Y GUARDAR ==========
+// ========== DETECTAR SI ES PERFIL PROPIO ==========
+const urlParams = new URLSearchParams(window.location.search);
+const perfilUserId = urlParams.get('user_id');
+let esMiPerfil = true;
+let miUsuarioId = null;
+
+// Obtener el ID del usuario logueado
+fetch('obtener_sesion.php')
+  .then(res => res.json())
+  .then(data => {
+    miUsuarioId = data.usuario_id;
+    if (perfilUserId && perfilUserId != miUsuarioId) {
+      esMiPerfil = false;
+      // Ocultar botones de edición y paneles de edición
+      const editBtn = document.getElementById('editBtn');
+      if (editBtn) editBtn.style.display = 'none';
+      const saveBtn = document.getElementById('saveBtn');
+      if (saveBtn) saveBtn.style.display = 'none';
+      const cancelBtn = document.getElementById('cancelBtn');
+      if (cancelBtn) cancelBtn.style.display = 'none';
+      const editPanel = document.getElementById('editPanel');
+      if (editPanel) editPanel.classList.add('hidden');
+      // También ocultar cualquier campo de edición suelto si está visible
+      document.getElementById('editDetails')?.classList.add('hidden');
+      document.getElementById('editSobreMiWrap')?.classList.add('hidden');
+      document.getElementById('editGustosWrap')?.classList.add('hidden');
+      document.getElementById('editMoodGrid')?.classList.add('hidden');
+    }
+  })
+  .catch(() => {});
+
+// ========== OBTENER PERFIL (acepta ID externo) ==========
 async function getProfile() {
-  console.log("🔄 Cargando perfil desde obtener_perfil.php...");
+  let url = 'obtener_perfil.php';
+  if (perfilUserId) {
+    url += '?id=' + perfilUserId;
+  }
+  console.log("🔄 Cargando perfil desde", url);
   try {
-    const res = await fetch('obtener_perfil.php');
+    const res = await fetch(url);
     const data = await res.json();
     console.log("📦 Datos recibidos:", data);
     if (data.error) {
@@ -105,7 +140,13 @@ async function getProfile() {
   }
 }
 
+// ========== GUARDAR PERFIL (solo si es mi perfil) ==========
 async function saveProfile(profile) {
+  if (!esMiPerfil) {
+    console.warn("No puedes editar un perfil ajeno");
+    showToast("No puedes editar este perfil", "warning");
+    return;
+  }
   console.log("💾 Guardando perfil en actualizar_perfil.php...", profile);
   try {
     const res = await fetch('actualizar_perfil.php', {
@@ -126,7 +167,7 @@ async function saveProfile(profile) {
   }
 }
 
-// ========== RENDERIZAR PERFIL EN MODO LECTURA ==========
+// ========== RENDERIZAR PERFIL ==========
 function renderProfile(profile) {
   console.log("🎨 Renderizando perfil con datos:", profile);
   // Hero
@@ -197,7 +238,7 @@ function renderProfile(profile) {
   const viewEstilo = document.getElementById("viewEstilo");
   if (viewEstilo) viewEstilo.textContent = profile.estilo;
 
-  // 🚀 Ocultar loader y mostrar contenido (si existen los divs)
+  // Ocultar loader y mostrar contenido
   const loader = document.getElementById('profileLoader');
   const content = document.getElementById('profileContent');
   if (loader && content) {
@@ -234,10 +275,11 @@ function fillEditInputs(profile) {
   if (inputEstilo) inputEstilo.value = profile.estilo;
 }
 
-// ========== MODO EDICIÓN ==========
+// ========== MODO EDICIÓN (solo si es mi perfil) ==========
 let currentProfile = null;
 
 async function setEditMode(editing) {
+  if (!esMiPerfil) return;
   const editPanel = document.getElementById("editPanel");
   const editDetails = document.getElementById("editDetails");
   const editSobreMiWrap = document.getElementById("editSobreMiWrap");
@@ -280,6 +322,7 @@ async function setEditMode(editing) {
 }
 
 async function guardarCambios() {
+  if (!esMiPerfil) return;
   const nuevoPerfil = {
     nombre: currentProfile?.nombre || defaultProfile.nombre,
     usuario: currentProfile?.usuario || defaultProfile.usuario,
@@ -313,12 +356,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderProfile(profile);
   currentProfile = profile;
   
-  const editBtn = document.getElementById("editBtn");
-  const saveBtn = document.getElementById("saveBtn");
-  const cancelBtn = document.getElementById("cancelBtn");
-  if (editBtn) editBtn.addEventListener("click", () => setEditMode(true));
-  if (saveBtn) saveBtn.addEventListener("click", guardarCambios);
-  if (cancelBtn) cancelBtn.addEventListener("click", () => setEditMode(false));
+  // Solo asignar eventos si es mi perfil
+  if (esMiPerfil) {
+    const editBtn = document.getElementById("editBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    if (editBtn) editBtn.addEventListener("click", () => setEditMode(true));
+    if (saveBtn) saveBtn.addEventListener("click", guardarCambios);
+    if (cancelBtn) cancelBtn.addEventListener("click", () => setEditMode(false));
+  }
 });
 
 // ========== UTILIDADES ==========

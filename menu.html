@@ -929,122 +929,114 @@ textarea.addEventListener('input', function() {
 }
 
 function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null) {
-            const post = document.createElement("div");
-            post.className = "post-card";
+    const post = document.createElement("div");
+    post.className = "post-card";
 
-            const mediaCount = imgs.length;
-            const visibleMedia = mediaCount > 4 ? imgs.slice(0, 4) : imgs;
-            const gridClass = `post-images-grid media-count-${Math.min(mediaCount, 4)}${mediaCount > 4 ? " media-count-more" : ""}`;
+    const mediaCount = imgs.length;
+    const visibleMedia = mediaCount > 4 ? imgs.slice(0, 4) : imgs;
+    const gridClass = `post-images-grid media-count-${Math.min(mediaCount, 4)}${mediaCount > 4 ? " media-count-more" : ""}`;
 
-let fechaFormateada = t("haceUnMomento");
+    let fechaFormateada = t("haceUnMomento");
+    if (fechaStr) {
+        const d = new Date(fechaStr);
+        fechaFormateada = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ", " + 
+                          d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    }
 
-if (fechaStr) {
-    const d = new Date(fechaStr);
-    fechaFormateada = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ", " + 
-                      d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    let mediaHTML = visibleMedia.map((src, idx) => {
+        const extension = src.split('.').pop().toLowerCase();
+        const esVideo = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'].includes(extension);
+        const mediaTag = esVideo
+            ? `<video src="${src}" controls class="post-video"></video>`
+            : `<img src="${src}" class="post-img" onclick="abrirLightbox(this.src)">`;
+        const overlay = (mediaCount > 4 && idx === 3)
+            ? `<div class="more-overlay">+${mediaCount - 4}</div>`
+            : "";
+        return `<div class="media-item">${mediaTag}${overlay}</div>`;
+    }).join('');
+
+    const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
+    const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
+
+    let comentariosHTML = principales.map(c => {
+        const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
+            <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid var(--accent-2, #42d79a); padding-left:10px; margin-top:5px;">
+                <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">${r.nombre_autor || "Usuario"}:</strong> ${r.comentario}</div>
+            </div>
+        `).join('');
+
+        return `
+            <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
+                <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">${c.nombre_autor || "Usuario"}:</strong> ${c.comentario}</div>
+                <div class="comment-actions" style="margin-top:8px;">
+                    <span onclick="prepararRespuesta(this)" style="color:var(--muted, #9dc7b8); cursor:pointer; font-size:12px; font-weight:600;">${t("responder")}</span>
+                </div>
+                <div class="reply-input-container"></div>
+                <div class="reply-list">${susRespuestas}</div>
+            </div>
+        `;
+    }).join('');
+
+    const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
+    const palabras = nombreFinal.trim().split(" ");
+    let inicial = palabras[0].charAt(0).toUpperCase();
+    if (palabras.length > 1) {
+        inicial += palabras[1].charAt(0).toUpperCase();
+    }
+
+    let opcionesHTML = "";
+    if (autorId == miId || miRol === 'admin') {
+        opcionesHTML = `
+            <div class="post-options-container">
+                <button class="options-btn" onclick="toggleMenu(this)">⋯</button>
+                <div class="options-menu">
+                    <button onclick="editarPost(this)">${t("editar")}</button>
+                    <button onclick="eliminarPost(this)" style="color:#ff7d92;">${t("eliminar")}</button>
+                </div>
+            </div>
+        `;
+    }
+
+    post.innerHTML = `
+        <div class="post-header">
+            <div class="post-user" onclick="window.location.href='perfil?user_id=${autorId}'" style="cursor: pointer;">
+                <div class="profile-circle small" style="width:40px; height:40px; border-radius:50%; background:var(--accent, #76f3c2); color:#000; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px;">
+                    ${inicial}
+                </div>
+                <div>
+                    <h4 style="margin:0; color:var(--text, #fff); font-size:15px;">${nombreFinal}</h4>
+                    <span style="font-size:12px; color:var(--muted, #9dc7b8);">${fechaFormateada}</span>
+                </div>
+            </div>
+            ${opcionesHTML}
+        </div>
+        <div class="post-content" style="margin-top:15px;">
+            <p class="post-text">${texto}</p>
+            <div class="${gridClass}">${mediaHTML}</div>
+        </div>
+        <div class="post-actions" style="margin-top:15px; display:flex; gap:10px;">
+            <label class="like-btn-unibot ${miReaccion === 'like' ? 'active' : ''}" onclick="manejarReaccionUnibot(this, 'like')">
+                <div class="unibot-icon"></div>
+                <span class="count-number">${likes}</span>
+                <div class="fireworks-unibot"></div>
+            </label>
+            <label class="dislike-btn-unibot ${miReaccion === 'dislike' ? 'active' : ''}" onclick="manejarReaccionUnibot(this, 'dislike')">
+                <div class="unibot-icon"></div>
+                <span class="count-number">${dislikes}</span>
+                <div class="fireworks-unibot"></div>
+            </label>
+        </div>
+        <div class="comments-section" style="margin-top:15px;">
+            <div class="comments-list">${comentariosHTML}</div>
+            <div class="comment-input-row" style="margin-top:10px;">
+                <input type="text" placeholder="${t("escribeComentario")}" 
+                    onkeypress="if(event.key==='Enter') enviarComentario(this.value, this.closest('.post-card').dataset.id, 0)"
+                    style="width: 100%; background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 12px 14px; outline: none;">
+            </div>
+        </div>
+    `;
+    return post;
 }
-
-            let mediaHTML = visibleMedia.map((src, idx) => {
-                const extension = src.split('.').pop().toLowerCase();
-                const esVideo = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'].includes(extension);
-                const mediaTag = esVideo
-                    ? `<video src="${src}" controls class="post-video"></video>`
-                    : `<img src="${src}" class="post-img" onclick="abrirLightbox(this.src)">`;
-                const overlay = (mediaCount > 4 && idx === 3)
-                    ? `<div class="more-overlay">+${mediaCount - 4}</div>`
-                    : "";
-                return `<div class="media-item">${mediaTag}${overlay}</div>`;
-            }).join('');
-
-            const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
-            const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
-
-            let comentariosHTML = principales.map(c => {
-                const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
-                    <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid var(--accent-2, #42d79a); padding-left:10px; margin-top:5px;">
-                        <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">${r.nombre_autor || "Usuario"}:</strong> ${r.comentario}</div>
-                    </div>
-                `).join('');
-
-                return `
-                    <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
-                        <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">${c.nombre_autor || "Usuario"}:</strong> ${c.comentario}</div>
-                        <div class="comment-actions" style="margin-top:8px;">
-                            <span onclick="prepararRespuesta(this)" style="color:var(--muted, #9dc7b8); cursor:pointer; font-size:12px; font-weight:600;">${t("responder")}</span>
-                        </div>
-                        <div class="reply-input-container"></div>
-                        <div class="reply-list">${susRespuestas}</div>
-                    </div>
-                `;
-            }).join('');
-
-           const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
-
-const palabras = nombreFinal.trim().split(" ");
-let inicial = palabras[0].charAt(0).toUpperCase();
-if (palabras.length > 1) {
-    inicial += palabras[1].charAt(0).toUpperCase();
-}
-
-            let opcionesHTML = "";
-            
-            if (autorId == miId || miRol === 'admin') {
-                opcionesHTML = `
-                    <div class="post-options-container">
-                        <button class="options-btn" onclick="toggleMenu(this)">⋯</button>
-                        <div class="options-menu">
-                            <button onclick="editarPost(this)">${t("editar")}</button>
-                            <button onclick="eliminarPost(this)" style="color:#ff7d92;">${t("eliminar")}</button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            post.innerHTML = `
-                <div class="post-header">
-                    <div class="post-user">
-                        <div class="profile-circle small" style="width:40px; height:40px; border-radius:50%; background:var(--accent, #76f3c2); color:#000; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px;">
-                            ${inicial}
-                        </div>
-                        <div>
-                            <h4 style="margin:0; color:var(--text, #fff); font-size:15px;">${nombreFinal}</h4>
-                            <span style="font-size:12px; color:var(--muted, #9dc7b8);">${fechaFormateada}</span>
-                        </div>
-                    </div>
-
-                    ${opcionesHTML}
-
-                </div>
-
-                <div class="post-content" style="margin-top:15px;">
-                    <p class="post-text">${texto}</p>
-                    <div class="${gridClass}">${mediaHTML}</div>
-                </div>
-
-                <div class="post-actions" style="margin-top:15px; display:flex; gap:10px;">
-                    <label class="like-btn-unibot ${miReaccion === 'like' ? 'active' : ''}" onclick="manejarReaccionUnibot(this, 'like')">
-    <div class="unibot-icon"></div>
-    <span class="count-number">${likes}</span>
-    <div class="fireworks-unibot"></div>
-</label>
-<label class="dislike-btn-unibot ${miReaccion === 'dislike' ? 'active' : ''}" onclick="manejarReaccionUnibot(this, 'dislike')">
-    <div class="unibot-icon"></div>
-    <span class="count-number">${dislikes}</span>
-    <div class="fireworks-unibot"></div>
-</label>
-                </div>
-
-                <div class="comments-section" style="margin-top:15px;">
-                    <div class="comments-list">${comentariosHTML}</div>
-                    <div class="comment-input-row" style="margin-top:10px;">
-                        <input type="text" placeholder="${t("escribeComentario")}" 
-                            onkeypress="if(event.key==='Enter') enviarComentario(this.value, this.closest('.post-card').dataset.id, 0)"
-                            style="width: 100%; background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 12px 14px; outline: none;">
-                    </div>
-                </div>
-            `;
-            return post;
-        }
 
         function manejarReaccion(btn, tipo) {
             const postCard = btn.closest('.post-card');

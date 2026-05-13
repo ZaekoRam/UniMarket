@@ -1,16 +1,25 @@
 <?php
 session_start();
-require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
-// Si no hay sesión, no mandamos nada
-if (!isset($_SESSION['usuario_id'])) {
-    echo json_encode(['error' => 'No autenticado']);
-    exit();
+require 'credenciales.php';
+
+// Determinar qué ID de usuario cargar
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $id = intval($_GET['id']); // ID pasado por URL (perfil de otro usuario)
+} else {
+    // Si no hay ID en la URL, cargar el perfil del usuario logueado
+    if (!isset($_SESSION['usuario_id'])) {
+        echo json_encode(['error' => 'No autenticado']);
+        exit();
+    }
+    $id = $_SESSION['usuario_id'];
 }
 
 $conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
-$id = $_SESSION['usuario_id'];
+if (!$conexion) {
+    echo json_encode(['error' => 'Error de conexión a la base de datos']);
+    exit();
+}
 
-// Buscamos los datos. 'nombre_completo' lo mandamos como 'nombre' para que tu JS lo entienda igual.
 $query = "SELECT nombre_completo AS nombre, usuario, bio, tags, carrera, campus, emprendimientos, estado, sobre_mi AS sobreMi, gustos, mood, color, meta, estilo FROM usuarios WHERE id = '$id'";
 $resultado = mysqli_query($conexion, $query);
 
