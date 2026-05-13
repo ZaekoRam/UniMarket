@@ -85,7 +85,7 @@ const defaultProfile = {
   estilo: "Sin estilo."
 };
 
-// ========== OBTENER Y GUARDAR CON DEPURACIÓN ==========
+// ========== OBTENER Y GUARDAR ==========
 async function getProfile() {
   console.log("🔄 Cargando perfil desde obtener_perfil.php...");
   try {
@@ -126,7 +126,7 @@ async function saveProfile(profile) {
   }
 }
 
-// ========== RENDERIZAR PERFIL EN MODO LECTURA (para el nuevo HTML) ==========
+// ========== RENDERIZAR PERFIL EN MODO LECTURA ==========
 function renderProfile(profile) {
   console.log("🎨 Renderizando perfil con datos:", profile);
   // Hero
@@ -196,6 +196,14 @@ function renderProfile(profile) {
   if (viewMeta) viewMeta.textContent = profile.meta;
   const viewEstilo = document.getElementById("viewEstilo");
   if (viewEstilo) viewEstilo.textContent = profile.estilo;
+
+  // 🚀 Ocultar loader y mostrar contenido (si existen los divs)
+  const loader = document.getElementById('profileLoader');
+  const content = document.getElementById('profileContent');
+  if (loader && content) {
+    loader.style.display = 'none';
+    content.style.display = 'block';
+  }
 }
 
 // ========== RELLENAR INPUTS DE EDICIÓN ==========

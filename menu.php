@@ -29,17 +29,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre_imagen = $tiene_archivo ? implode(',', $nombres_media) : null;
 
     if (empty($texto) && !$tiene_archivo) {
-        // Redirigir de vuelta a menu.html con mensaje de error
-        header("Location: menu.html?msg=" . urlencode("⚠️ No puedes publicar un post vacío.") . "&type=warning");
+        // Redirigir de vuelta a menu con mensaje de error
+        header("Location: menu?msg=" . urlencode("⚠️ No puedes publicar un post vacío.") . "&type=warning");
         exit();
     }
 
     $sql = "INSERT INTO publicaciones (usuario_id, texto, imagen, fecha) VALUES ('$usuario_id', '$texto', '$nombre_imagen', NOW())";
     if (mysqli_query($conexion, $sql)) {
-        header("Location: menu.html?msg=" . urlencode("✅ Publicación creada exitosamente.") . "&type=success");
+        header("Location: menu?msg=" . urlencode("✅ Publicación creada exitosamente.") . "&type=success");
         exit();
     } else {
-        header("Location: menu.html?msg=" . urlencode("❌ Error al publicar: " . mysqli_error($conexion)) . "&type=error");
+        header("Location: menu?msg=" . urlencode("❌ Error al publicar: " . mysqli_error($conexion)) . "&type=error");
         exit();
     }
 }

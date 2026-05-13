@@ -33,7 +33,7 @@ if (strlen($password) < 8) {
         if (mysqli_stmt_execute($update)) {
             unset($_SESSION['reset_user_id']);
             unset($_SESSION['reset_token']);
-            header("Location: index.html?msg=" . urlencode("✅ Contraseña actualizada correctamente.") . "&type=success");
+            header("Location: index?msg=" . urlencode("✅ Contraseña actualizada correctamente.") . "&type=success");
             exit();
         } else {
             $error = "Error al actualizar. Intenta de nuevo.";

@@ -23,27 +23,27 @@
     </div>
 
     <nav class="sidebar-menu">
-      <a href="menu.html" class="menu-item">
+      <a href="menu" class="menu-item">
         <span class="icon"><img src="img/Icon_inicio.png" alt="Inicio" style="width:28px;height:28px;"></span>
         <span class="label" data-i18n="inicio">Inicio</span>
       </a>
 
-      <a href="perfil.html" class="menu-item active">
+      <a href="perfil" class="menu-item active">
         <span class="icon"><img src="img/Icon_perfil.png" alt="Perfil" style="width:28px;height:28px;"></span>
         <span class="label" data-i18n="perfil">Perfil</span>
       </a>
 
-      <a href="mensajes.html" class="menu-item">
+      <a href="mensajes" class="menu-item">
         <span class="icon"><img src="img/Icon_mensajes.png" alt="Mensajes" style="width:28px;height:28px;"></span>
         <span class="label" data-i18n="mensajes">Mensajes</span>
       </a>
 
-      <a href="notificaciones.html" class="menu-item">
+      <a href="notificaciones" class="menu-item">
         <span class="icon"><img src="img/Icon_notificaciones.png" alt="Notificaciones" style="width:28px;height:28px;"></span>
         <span class="label" data-i18n="notificaciones">Notificaciones</span>
       </a>
 
-      <a href="configuraciones.html" class="menu-item">
+      <a href="configuraciones" class="menu-item">
         <span class="icon"><img src="img/Icon_ajustes.png" alt="Configuraciones" style="width:28px;height:28px;"></span>
         <span class="label" data-i18n="configuracion">Configuración</span>
       </a>
@@ -71,7 +71,12 @@
   </aside>
 
   <main class="main-content">
+    <div id="profileLoader" class="profile-loader" style="display: flex; justify-content: center; align-items: center; min-height: 300px;">
+    <div class="spinner"></div>
+    <p style="margin-left: 15px; color: var(--muted);">Cargando tu perfil...</p>
+</div>
     <!-- Hero Section Rediseñada -->
+     <div id="profileContent" style="display: none;">
     <div class="profile-hero">
       <div class="hero-backdrop">
         <div class="hero-particles"></div>
@@ -332,6 +337,7 @@
           </div>
         </div>
       </div>
+    </div>
     </div>
   </main>
 

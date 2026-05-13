@@ -3,7 +3,7 @@ require_once 'credenciales.php';
 session_start();
 
 if (!isset($_SESSION['usuario_id'])) {
-    header("Location: index.html?msg=" . urlencode("❌ Inicia sesión para comentar.") . "&type=error");
+    header("Location: index?msg=" . urlencode("❌ Inicia sesión para comentar.") . "&type=error");
     exit();
 }
 

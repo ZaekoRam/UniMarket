@@ -4,7 +4,7 @@ require 'credenciales.php';
 
 // Si ya hay sesión de administrador, redirigir al dashboard
 if (isset($_SESSION['usuario_id']) && isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin') {
-    header('Location: dashboard.html');
+    header('Location: dashboard');
     exit;
 }
 
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($user['rol'] === 'admin') {
                     $_SESSION['usuario_id'] = $user['id'];
                     $_SESSION['rol'] = $user['rol'];
-                    header('Location: dashboard.html');
+                    header('Location: dashboard');
                     exit;
                 } else {
                     $error = 'Acceso denegado: No tienes permisos de administrador.';
