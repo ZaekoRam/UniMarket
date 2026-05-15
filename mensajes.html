@@ -1114,6 +1114,18 @@
     </main>
 
     <script>
+      // Mapeo de texto unicode a imagen personalizada (para usar en chat y preview)
+const emojiMap = {
+    '😎': 'img/uni_cool.png',
+    '🥰': 'img/uni_cute.png',
+    '🤔': 'img/uni_dudando.png',
+    '😍': 'img/uni_enamorado.png',
+    '😠': 'img/uni_enojado.png',
+    '😊': 'img/uni_feliz.png',
+    '😟': 'img/uni_preocupado.png',
+    '😲': 'img/uni_sorprendido.png'
+};
+      
         // ========== TEMA OSCURO/CLARO ==========
         const themeToggle = document.getElementById("themeToggle");
         const themeText = document.getElementById("themeText");
@@ -1135,6 +1147,15 @@
         let currentContactId = null;
         let contactos = [];
         let pollInterval = null;
+        let pendingImageFile = null;
+        
+
+        // Crear input de archivo oculto para imágenes
+const fileImageInput = document.createElement('input');
+fileImageInput.type = 'file';
+fileImageInput.accept = 'image/*';
+fileImageInput.style.display = 'none';
+document.body.appendChild(fileImageInput);
 
         // ========== FUNCIONES AUXILIARES ==========
         function formatFecha(fechaISO) {
@@ -1165,8 +1186,50 @@
                 container.innerHTML = '';
                 contactos.forEach(contact => {
                     const iniciales = (contact.nombre_completo?.split(' ').map(n => n[0]).join('') || 'U').toUpperCase().slice(0,2);
-                    let preview = contact.ultimo_mensaje || 'Sin mensajes';
-                    if (preview.length > 35) preview = preview.slice(0,35)+'...';
+                    let previewHtml = 'Sin mensajes';
+if (contact.ultimo_mensaje) {
+    if (contact.ultimo_mensaje.includes('/uploads/')) {
+        previewHtml = '📷 Imagen';
+    } 
+    else {
+        let textoPreview = contact.ultimo_mensaje;
+        // Reemplazar emojis por imágenes
+        for (const [unicode, ruta] of Object.entries(emojiMap)) {
+            textoPreview = textoPreview.split(unicode).join(`<img src="${ruta}" style="width: 20px; height: 20px; object-fit: contain; vertical-align: middle;">`);
+        }
+        // Limitar longitud del texto visible, pero sin romper etiquetas HTML
+        // Creamos un div temporal para extraer el texto plano
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = textoPreview;
+        let plainText = tempDiv.textContent || tempDiv.innerText || '';
+        if (plainText.length > 35) {
+            // Cortamos el texto plano, pero mantenemos las etiquetas img completas
+            // Solución simple: recortar el HTML a 35 caracteres visibles (aproximado)
+            // Para evitar complicaciones, mostramos solo los primeros 35 caracteres del HTML sin cortar etiquetas
+            let truncated = '';
+            let count = 0;
+            let inTag = false;
+            for (let i = 0; i < textoPreview.length && count < 35; i++) {
+                const ch = textoPreview[i];
+                if (ch === '<') {
+                    inTag = true;
+                    truncated += ch;
+                } else if (ch === '>') {
+                    inTag = false;
+                    truncated += ch;
+                } else if (!inTag) {
+                    truncated += ch;
+                    count++;
+                } else {
+                    truncated += ch;
+                }
+            }
+            if (truncated.length < textoPreview.length) truncated += '...';
+            textoPreview = truncated;
+        }
+        previewHtml = textoPreview;
+    }
+}
                     const div = document.createElement('div');
                     div.className = `chat-item ${currentContactId === contact.id ? 'chat-active' : ''}`;
                     div.innerHTML = `
@@ -1179,8 +1242,7 @@
                                     <span class="status-text">En línea</span>
                                 </div>
                             </div>
-                            <p class="chat-preview">${escapeHtml(preview)}</p>
-                        </div>
+                            <p class="chat-preview">${previewHtml}</p>
                     `;
                     div.querySelector('.chat-avatar').addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -1257,42 +1319,90 @@
         }
 
         function renderMensaje(container, msg, miId) {
-            const isMio = (msg.remitente_id == miId);
-            const div = document.createElement('div');
-            div.className = `message-bubble ${isMio ? 'message-out' : 'message-in'}`;
-            div.innerHTML = `
-                <div class="bubble ${isMio ? 'bubble-out' : 'bubble-in'}">${escapeHtml(msg.mensaje)}</div>
-                <div class="message-time">${formatFecha(msg.fecha)}</div>
-                ${isMio ? `<button class="delete-msg-btn" onclick="eliminarMensaje(${msg.id})"><i class="fas fa-trash-alt"></i></button>` : ''}
-            `;
-            container.appendChild(div);
+    const isMio = (msg.remitente_id == miId);
+    const div = document.createElement('div');
+    div.className = `message-bubble ${isMio ? 'message-out' : 'message-in'}`;
+    let contenidoHtml = '';
+    
+    // Mapeo de texto unicode a imagen personalizada
+    const emojiMap = {
+        '😎': 'img/uni_cool.png',
+        '🥰': 'img/uni_cute.png',
+        '🤔': 'img/uni_dudando.png',
+        '😍': 'img/uni_enamorado.png',
+        '😠': 'img/uni_enojado.png',
+        '😊': 'img/uni_feliz.png',
+        '😟': 'img/uni_preocupado.png',
+        '😲': 'img/uni_sorprendido.png'
+    };
+    
+    if (msg.tipo === 'imagen') {
+        contenidoHtml = `<img src="${escapeHtml(msg.mensaje)}" class="message-image" onclick="window.open(this.src)" style="max-width:200px; border-radius:16px; cursor:pointer;">`;
+    } else {
+        let texto = msg.mensaje;
+        // Reemplazar cada emoji por su imagen
+        for (const [unicode, ruta] of Object.entries(emojiMap)) {
+            texto = texto.split(unicode).join(`<img src="${ruta}" class="message-emoji" style="width:32px; height:32px; object-fit:contain; vertical-align:middle;">`);
         }
-
+        contenidoHtml = `<div class="bubble ${isMio ? 'bubble-out' : 'bubble-in'}">${texto}</div>`;
+    }
+    
+    div.innerHTML = `
+        ${contenidoHtml}
+        <div class="message-time">${formatFecha(msg.fecha)}</div>
+        ${isMio ? `<button class="delete-msg-btn" onclick="eliminarMensaje(${msg.id})"><i class="fas fa-trash-alt"></i></button>` : ''}
+    `;
+    container.appendChild(div);
+}
         // ========== ENVIAR MENSAJE ==========
         async function enviarMensaje() {
-            if (!currentContactId) return;
-            const input = document.getElementById('messageInput');
-            const texto = input.value.trim();
-            if (!texto) return;
-            
-            const formData = new FormData();
-            formData.append('destinatario_id', currentContactId);
-            formData.append('mensaje', texto);
-            
-            try {
-                const resp = await fetch('enviar_mensaje.php', { method: 'POST', body: formData });
-                const data = await resp.json();
-                if (data.status === 'ok') {
-                    input.value = '';
-                    await cargarMensajes(currentContactId);
-                    cargarContactos(); // actualizar preview
-                } else {
-                    alert(data.msg || 'Error al enviar');
-                }
-            } catch(err) {
-                console.error('Error enviando mensaje', err);
+    if (!currentContactId) return;
+    const input = document.getElementById('messageInput');
+    const texto = input.value.trim();
+
+    // Prioridad: si hay imagen pendiente
+    if (pendingImageFile) {
+        const formData = new FormData();
+        formData.append('destinatario_id', currentContactId);
+        formData.append('imagen', pendingImageFile);
+        try {
+            const resp = await fetch('enviar_mensaje.php', { method: 'POST', body: formData });
+            const data = await resp.json();
+            if (data.status === 'ok') {
+                pendingImageFile = null;
+                document.getElementById('filePreview').style.display = 'none';
+                document.getElementById('filePreview').innerHTML = '';
+                input.value = '';
+                await cargarMensajes(currentContactId);
+                cargarContactos(); // actualizar preview
+            } else {
+                alert(data.msg || 'Error al enviar imagen');
             }
+        } catch(err) {
+            console.error('Error enviando imagen', err);
         }
+        return;
+    }
+
+    // Enviar texto normal
+    if (!texto) return;
+    const formData = new FormData();
+    formData.append('destinatario_id', currentContactId);
+    formData.append('mensaje', texto);
+    try {
+        const resp = await fetch('enviar_mensaje.php', { method: 'POST', body: formData });
+        const data = await resp.json();
+        if (data.status === 'ok') {
+            input.value = '';
+            await cargarMensajes(currentContactId);
+            cargarContactos();
+        } else {
+            alert(data.msg || 'Error al enviar');
+        }
+    } catch(err) {
+        console.error('Error enviando mensaje', err);
+    }
+}
 
         // ========== ELIMINAR MENSAJE ==========
         async function eliminarMensaje(msgId) {
@@ -1344,10 +1454,18 @@
                 img.title = emoji.text;
                 item.appendChild(img);
                 item.onclick = () => {
-                    document.getElementById('messageInput').value += emoji.text;
-                    picker.classList.remove('active');
-                    emojiPickerVisible = false;
-                };
+    const input = document.getElementById('messageInput');
+    const currentValue = input.value;
+    // Insertar el carácter unicode al final, con espacio si es necesario
+    if (currentValue && !currentValue.endsWith(' ')) {
+        input.value = currentValue + ' ' + emoji.text;
+    } else {
+        input.value = currentValue + emoji.text;
+    }
+    picker.classList.remove('active');
+    emojiPickerVisible = false;
+    input.focus();
+};
                 grid.appendChild(item);
             });
             picker.appendChild(grid);
@@ -1383,11 +1501,32 @@
             });
         }
         const fileBtn = document.getElementById('fileBtn');
-        if(fileBtn) {
-            fileBtn.addEventListener('click', () => {
-                alert('Adjuntar imágenes próximamente. Por ahora solo texto.');
-            });
-        }
+if (fileBtn) {
+    fileBtn.addEventListener('click', () => fileImageInput.click());
+}
+
+fileImageInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        pendingImageFile = file;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const previewDiv = document.getElementById('filePreview');
+            previewDiv.style.display = 'flex';
+            previewDiv.innerHTML = `
+                <img src="${ev.target.result}" style="width:50px; height:50px; object-fit:cover; border-radius:10px;">
+                <span>${escapeHtml(file.name.substring(0, 20))}</span>
+                <i class="fas fa-times cancel-file" style="cursor:pointer; margin-left:auto;"></i>
+            `;
+            previewDiv.querySelector('.cancel-file').onclick = () => {
+                pendingImageFile = null;
+                previewDiv.style.display = 'none';
+                fileImageInput.value = '';
+            };
+        };
+        reader.readAsDataURL(file);
+    }
+});
 
         // Inicializar
         initEmojiPicker();

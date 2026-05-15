@@ -10,7 +10,6 @@ if (!isset($_SESSION['usuario_id'])) {
 $mi_id = $_SESSION['usuario_id'];
 $mi_rol = $_SESSION['rol'] ?? '';
 
-// 🔥 Los lectores NO pueden ver mensajes
 if ($mi_rol === 'lector') {
     echo json_encode(["mi_id" => $mi_id, "mensajes" => []]);
     exit();
@@ -29,7 +28,6 @@ if (!$conexion) {
 
 $con_quien = (int)$_GET['con_quien'];
 
-// Verificar que el destinatario NO sea lector (opcional pero recomendado)
 $check = mysqli_query($conexion, "SELECT rol FROM usuarios WHERE id = $con_quien");
 $dest_rol = mysqli_fetch_assoc($check)['rol'] ?? '';
 if ($dest_rol === 'lector') {
