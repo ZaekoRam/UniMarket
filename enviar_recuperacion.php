@@ -65,7 +65,7 @@ try {
 
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
     $dominio = $protocol . $_SERVER['HTTP_HOST'];
-    $enlace = $dominio . "/restablecer.php?token=" . $token;
+    $enlace = $dominio . "/restablecer.html?token=" . $token;
 
     $mail->isHTML(true);
     $mail->Subject = 'Restablece tu contraseña en UniMarket';

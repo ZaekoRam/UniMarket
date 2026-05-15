@@ -14,7 +14,7 @@
             align-items: center;
             justify-content: center;
             background: rgba(0, 0, 0, 0.96);
-            z-index: 9999;
+            z-index: 20000;
             padding: 0;
         }
         .lightbox-overlay.active {
@@ -38,6 +38,11 @@
         }
 
         /* ========== NUEVAS MEJORAS VISUALES ========== */
+
+        /* Admin menu item should match the rest of the sidebar menu */
+        #adminMenuItem {
+            display: none;
+        }
 
         /* Fondo animado */
         body::after {
@@ -369,6 +374,11 @@
                 <span class="label" data-i18n="configuraciones">Configuraciones</span>
             </a>
 
+            <a id="adminMenuItem" href="login_admin.php" class="menu-item" style="display:none;">
+                <span class="icon"><img src="img/Icon_administracion.png" alt="Notificaciones" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="admin">Administración</span>
+            </a>
+
             <a href="cerrar_sesion.php" class="menu-item">
                 <span class="icon"><img src="img/Icon_cerrar_sesion.png" alt="Cerrar sesión" style="width:28px;height:28px;"></span>
                 <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
@@ -415,40 +425,48 @@
             <span class="divider-icon">✦</span>
             <span class="divider-line"></span>
         </div>
+ <div class="search-tags-bar" style="max-width:820px; margin:0 auto 20px; position:relative;">
+    <input type="text" id="searchTagsInput" class="search-tags-input" placeholder="🔎 Buscar por tags...">
+    <div id="searchSuggestions" class="tags-suggestions" style="position:absolute; top:100%; left:0; right:0; background:var(--panel); border-radius:12px; border:1px solid var(--border); display:none; z-index:100; max-height:200px; overflow-y:auto;"></div>
+</div>
 
-        <section class="feed-container">
-            <div class="publish-box">
-                <div class="publish-header">
-                    <div class="profile-circle small" id="publishCircle">
-                        <img id="publishImage" src="" alt="Foto de perfil" style="display: none;">
-                        <span id="publishInitial">U</span>
-                    </div>
-
-                    <div>
-                        <h3 data-i18n="crearPublicacion">Crear publicación</h3>
-                        <p data-i18n="subCrearPublicacion">Comparte algo con la comunidad de UniMarket</p>
-                    </div>
-                </div>
-
-                <form id="contenidoForm" action="menu.php" method="POST" enctype="multipart/form-data">
-    <div class="textarea-wrapper">
-        <textarea id="texto" name="texto" placeholder="¿Qué vamos a emprender hoy?"></textarea>
-        
-        <!-- Botón de cámara estilo WhatsApp -->
-        <label class="camera-btn" title="Agregar imagen o video">
-            <input type="file" id="archivoImagen" name="media[]" accept="image/*,video/*" multiple>
-            📷
-        </label>
-    </div>
-
-    <div id="previewContainer" class="post-images-grid preview-grid"></div>
-
-    <button type="submit" class="btn-publicar" data-i18n="publicar">Publicar</button>
-</form>
+       <!-- Contenedor del formulario de publicación (centrado arriba) -->
+<div class="publish-wrapper">
+    <div class="publish-box">
+        <div class="publish-header">
+            <div class="profile-circle small" id="publishCircle">
+                <img id="publishImage" src="" alt="Foto de perfil" style="display: none;">
+                <span id="publishInitial">U</span>
             </div>
+            <div>
+                <h3 data-i18n="crearPublicacion">Crear publicación</h3>
+                <p data-i18n="subCrearPublicacion">Comparte algo con la comunidad de UniMarket</p>
+            </div>
+        </div>
 
-            <div id="resultado"></div>
-        </section>
+        <form id="contenidoForm" action="menu.php" method="POST" enctype="multipart/form-data">
+            <div class="textarea-wrapper">
+                <textarea id="texto" name="texto" placeholder="¿Qué vamos a emprender hoy?"></textarea>
+                <label class="camera-btn" title="Agregar imagen o video">
+                    <input type="file" id="archivoImagen" name="media[]" accept="image/*,video/*" multiple>
+                    📷
+                </label>
+            </div>
+            <!-- Dentro de <form id="contenidoForm">, antes del botón btn-publicar -->
+<div class="tags-input-wrapper" style="position:relative; margin-top:12px;">
+    <input type="text" id="tagsInput" name="tags" class="tags-input" placeholder="Ej: tecnología, unibot, web (separados por comas)">
+    <div id="tagsSuggestions" class="tags-suggestions" style="position:absolute; top:100%; left:0; right:0; background:var(--panel); border-radius:12px; border:1px solid var(--border); display:none; z-index:100; max-height:200px; overflow-y:auto;"></div>
+</div>
+            <div id="previewContainer" class="post-images-grid preview-grid"></div>
+            <button type="submit" class="btn-publicar" data-i18n="publicar">Publicar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Contenedor de la cuadrícula de posts -->
+<section class="feed-container">
+    <div id="resultado"></div>
+</section>
     </main>
 
     <div id="lightboxOverlay" class="lightbox-overlay" onclick="cerrarLightbox()">
@@ -468,6 +486,7 @@
                 notificaciones: "Notificaciones",
                 configuraciones: "Configuraciones",
                 cerrarSesion: "Cerrar sesión",
+                admin: "Administración",
                 fraseInicio: "Todo comienza por un 0",
                 crearPublicacion: "Crear publicación",
                 subCrearPublicacion: "Comparte algo con la comunidad de UniMarket",
@@ -504,6 +523,7 @@
                 notificaciones: "Notifications",
                 configuraciones: "Settings",
                 cerrarSesion: "Log out",
+                admin: "Administration",
                 fraseInicio: "Everything starts from zero",
                 crearPublicacion: "Create post",
                 subCrearPublicacion: "Share something with the UniMarket community",
@@ -927,9 +947,8 @@ textarea.addEventListener('input', function() {
         alert("Hubo un problema al conectar con el servidor.");
     });
 }
-
-function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null, fotoAutor = null) {
-    const post = document.createElement("div");
+function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null, fotoAutor = null, tags = []) {
+        const post = document.createElement("div");
     post.className = "post-card";
 
     const mediaCount = imgs.length;
@@ -939,7 +958,7 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
     let fechaFormateada = t("haceUnMomento");
     if (fechaStr) {
         const d = new Date(fechaStr);
-        fechaFormateada = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ", " + 
+        fechaFormateada = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ", " +
                           d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
     }
 
@@ -949,9 +968,7 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
         const mediaTag = esVideo
             ? `<video src="${src}" controls class="post-video"></video>`
             : `<img src="${src}" class="post-img" onclick="abrirLightbox(this.src)">`;
-        const overlay = (mediaCount > 4 && idx === 3)
-            ? `<div class="more-overlay">+${mediaCount - 4}</div>`
-            : "";
+        const overlay = (mediaCount > 4 && idx === 3) ? `<div class="more-overlay">+${mediaCount - 4}</div>` : "";
         return `<div class="media-item">${mediaTag}${overlay}</div>`;
     }).join('');
 
@@ -964,7 +981,6 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
                 <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">${r.nombre_autor || "Usuario"}:</strong> ${r.comentario}</div>
             </div>
         `).join('');
-
         return `
             <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
                 <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">${c.nombre_autor || "Usuario"}:</strong> ${c.comentario}</div>
@@ -980,9 +996,7 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
     const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
     const palabras = nombreFinal.trim().split(" ");
     let inicial = palabras[0].charAt(0).toUpperCase();
-    if (palabras.length > 1) {
-        inicial += palabras[1].charAt(0).toUpperCase();
-    }
+    if (palabras.length > 1) inicial += palabras[1].charAt(0).toUpperCase();
 
     let opcionesHTML = "";
     if (autorId == miId || miRol === 'admin') {
@@ -997,10 +1011,15 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
         `;
     }
 
-    // Avatar: si hay foto, mostrarla; si no, las iniciales
-   const avatarHtml = (fotoAutor && fotoAutor !== '' && fotoAutor !== null)
-    ? `<img src="${fotoAutor}" class="profile-circle small" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">`
-    : `<div class="profile-circle small" style="width:40px; height:40px; border-radius:50%; background:var(--accent, #76f3c2); color:#000; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px;">${inicial}</div>`;
+    const avatarHtml = fotoAutor
+        ? `<img src="${fotoAutor}" class="profile-circle small" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">`
+        : `<div class="profile-circle small" style="width:40px; height:40px; border-radius:50%; background:var(--accent, #76f3c2); color:#000; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px;">${inicial}</div>`;
+
+    const tagsHtml = (tags && tags.length) 
+    ? `<div class="post-tags" style="margin: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px;">
+        ${tags.map(tag => `<span class="tag" data-tag="${tag}" style="background: var(--panel-soft); padding:4px 10px; border-radius:20px; font-size:11px; cursor:pointer;">#${tag}</span>`).join('')}
+       </div>`
+    : '';
     post.innerHTML = `
         <div class="post-header">
             <div class="post-user" onclick="window.location.href='perfil?user_id=${autorId}'" style="cursor: pointer;">
@@ -1016,6 +1035,7 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
             <p class="post-text">${texto}</p>
             <div class="${gridClass}">${mediaHTML}</div>
         </div>
+        ${tagsHtml}   <!-- 👈 TAGS AQUÍ -->
         <div class="post-actions" style="margin-top:15px; display:flex; gap:10px;">
             <label class="like-btn-unibot ${miReaccion === 'like' ? 'active' : ''}" onclick="manejarReaccionUnibot(this, 'like')">
                 <div class="unibot-icon"></div>
@@ -1031,13 +1051,99 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
         <div class="comments-section" style="margin-top:15px;">
             <div class="comments-list">${comentariosHTML}</div>
             <div class="comment-input-row" style="margin-top:10px;">
-                <input type="text" placeholder="${t("escribeComentario")}" 
+                <input type="text" placeholder="${t("escribeComentario")}"
                     onkeypress="if(event.key==='Enter') enviarComentario(this.value, this.closest('.post-card').dataset.id, 0)"
                     style="width: 100%; background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 12px 14px; outline: none;">
             </div>
         </div>
     `;
     return post;
+}
+function crearPostCard(postData) {
+    const { id, texto, imagen, total_likes, total_dislikes, comentarios_data, nombre_autor, usuario_id, foto_autor } = postData;
+    
+    let mediaUrl = null;
+    let tieneImagen = false;
+    if (imagen) {
+        const archivos = imagen.split(",").map(s => s.trim());
+        if (archivos.length > 0 && archivos[0]) {
+            mediaUrl = "uploads/" + archivos[0];
+            tieneImagen = true;
+        }
+    }
+    
+    const card = document.createElement("div");
+    card.className = "post-card-grid";
+    if (tieneImagen) {
+        card.classList.add("has-image");
+    } else {
+        card.classList.add("no-image");
+    }
+    card.dataset.id = id;
+    
+    const inicial = nombre_autor ? nombre_autor.charAt(0).toUpperCase() : "U";
+    const avatarHtml = foto_autor 
+        ? `<img src="${foto_autor}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">`
+        : `<div style="width:36px; height:36px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:bold;">${inicial}</div>`;
+    
+    let mediaHtml = "";
+    if (tieneImagen) {
+        const esVideo = mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
+        mediaHtml = `<div class="post-content" style="aspect-ratio:16/9; background:#000;">
+                        ${esVideo ? `<video src="${mediaUrl}" style="width:100%; height:100%; object-fit:cover;"></video>` : `<img src="${mediaUrl}" style="width:100%; height:100%; object-fit:cover;">`}
+                     </div>`;
+    }
+    
+    const comentariosCount = comentarios_data?.length || 0;
+    // Sin escapeHtml: usamos directamente las variables (pero cuidado con caracteres especiales)
+    const nombreMostrar = nombre_autor || "Usuario";
+    const textoMostrar = texto || "";
+    // Dentro de crearPostCard, después de const textoMostrar = texto || "";
+// Generar HTML de tags
+const tagsHtml = (postData.tags && postData.tags.length) 
+    ? `<div class="post-tags" style="margin: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px;">
+        ${postData.tags.map(tag => `<span class="tag" data-tag="${tag}" style="background: var(--panel-soft); padding:4px 10px; border-radius:20px; font-size:11px; cursor:pointer; transition:0.2s;">#${tag}</span>`).join('')}
+       </div>`
+    : '';
+
+// Luego, en el innerHTML, colócalo justo antes de <div class="post-stats">
+    
+    card.innerHTML = `
+    <div class="post-header">
+        ${avatarHtml}
+        <div>
+            <strong>${nombreMostrar}</strong>
+        </div>
+    </div>
+    ${mediaHtml}
+    <div class="post-text">
+        ${textoMostrar}
+    </div>
+    ${tagsHtml}   <!-- 👈 AHORA SÍ SE INSERTAN LOS TAGS -->
+    <div class="post-stats">
+        <span class="stat-like">
+            <img src="img/like.png" alt="like" style="width:20px; height:20px; vertical-align:middle; margin-right:4px;">
+            ${total_likes || 0}
+        </span>
+        <span class="stat-comment">
+            <img src="img/icon_mensajes.png" alt="comentarios" style="width:20px; height:20px; vertical-align:middle; margin-right:4px;">
+            ${comentariosCount}
+        </span>
+    </div>
+`;
+    card.querySelectorAll('.tag').forEach(tagEl => {
+    tagEl.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evitar abrir el modal
+        const tagName = tagEl.dataset.tag;
+        filtrarPorTag(tagName);
+    });
+});
+    
+    card.addEventListener("click", () => {
+        abrirModalPost(postData);
+    });
+    
+    return card;
 }
 
         function manejarReaccion(btn, tipo) {
@@ -1133,6 +1239,38 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
             contenedor.appendChild(input);
             input.focus();
         }
+        function abrirModalPost(postData) {
+    const modal = document.getElementById("postModal");
+    const modalBody = document.getElementById("modalPostBody");
+    // Reutilizar la función crearPost (la original) para mostrar el contenido completo
+    const imgArray = postData.imagen ? postData.imagen.split(",").map(src => src.trim()).filter(Boolean).map(src => "uploads/" + src) : [];
+    const fullPost = crearPost(
+    postData.texto || "",
+    imgArray,
+    postData.total_likes || 0,
+    postData.total_dislikes || 0,
+    postData.comentarios_data || [],
+    postData.mi_reaccion || null,
+    postData.nombre_autor,
+    postData.usuario_id,
+    miUsuarioId,
+    miRol,
+    postData.fecha,
+    postData.foto_perfil,
+    postData.tags || []   // 👈 NUEVO
+);
+    fullPost.dataset.id = postData.id;
+    modalBody.innerHTML = "";
+    modalBody.appendChild(fullPost);
+    modal.classList.add("active");
+    
+    // Cerrar modal al hacer clic en la X o fuera del contenido
+    const closeSpan = modal.querySelector(".close-modal");
+    closeSpan.onclick = () => modal.classList.remove("active");
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.classList.remove("active");
+    };
+}
 
         function enviarComentario(texto, postId, padreId) {
             if (!texto.trim()) return;
@@ -1160,105 +1298,232 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
         }
 
         window.onload = async () => {
-            let miUsuarioId = null;
-            let miRol = null;
-  
+    let miUsuarioId = null;
+    let miRol = null;
 
-            // 1. Cargamos la sesión
-            try {
-                const peticionSesion = await fetch("obtener_sesion.php");
-                const sesion = await peticionSesion.json();
-                miUsuarioId = sesion.usuario_id;
-                miRol = sesion.rol;
+    // Guardar en el objeto window para que lo usen otras funciones
+    window.miUsuarioId = null;
+    window.miRol = null;
 
-                // 👇 AQUÍ RECIBIMOS EL NOMBRE COMPLETO
-                const saludoActual = document.getElementById("saludoUsuario");
-                
-                if (sesion.nombre_completo) {
-                    saludoActual.dataset.nombreActual = sesion.nombre_completo;
-                } else if (sesion.usuario) {
-                    saludoActual.dataset.nombreActual = sesion.usuario;
-                }
+    // 1. Cargamos la sesión
+    try {
+        const peticionSesion = await fetch("obtener_sesion.php");
+        const sesion = await peticionSesion.json();
+        miUsuarioId = sesion.usuario_id;
+        miRol = sesion.rol;
+        window.miUsuarioId = miUsuarioId;
+        window.miRol = miRol;
 
-                // 👇 APLICAMOS EL SALUDO Y LA MAGIA DE LAS INICIALES
-                const nombreActual = saludoActual.dataset.nombreActual || "";
-                
-                // Asegurarnos de que tenemos el idioma actual (si no, por defecto "es")
-                const lang = localStorage.getItem("lang") || "es";
+        const adminMenuItem = document.getElementById("adminMenuItem");
+        if (adminMenuItem) {
+            adminMenuItem.style.display = (miRol === "admin") ? "inline-flex" : "none";
+        }
 
-                if (nombreActual) {
-                    saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
-                    
-                    // Sacamos las dos iniciales
-                    const palabras = nombreActual.trim().split(" ");
-                    let iniciales = palabras[0].charAt(0).toUpperCase();
-                    if (palabras.length > 1) {
-                        iniciales += palabras[1].charAt(0).toUpperCase();
-                    }
-                    
-                    // Se las ponemos a los iconos
-                    document.getElementById("profileInitial").textContent = iniciales;
-                    document.getElementById("publishInitial").textContent = iniciales;
-                } else {
-                    // Si es invitado
-                    saludoActual.textContent = translations[lang].saludoInvitado;
-                    const inicialInvitado = lang === "en" ? "G" : "I";
-                    document.getElementById("profileInitial").textContent = inicialInvitado;
-                    document.getElementById("publishInitial").textContent = inicialInvitado;
-                }
+        const saludoActual = document.getElementById("saludoUsuario");
+        if (sesion.nombre_completo) {
+            saludoActual.dataset.nombreActual = sesion.nombre_completo;
+        } else if (sesion.usuario) {
+            saludoActual.dataset.nombreActual = sesion.usuario;
+        }
 
-            } catch (e) {
-                console.error("No se pudo cargar la sesión", e);
+        const nombreActual = saludoActual.dataset.nombreActual || "";
+        const lang = localStorage.getItem("lang") || "es";
+
+        if (nombreActual) {
+            saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
+            const palabras = nombreActual.trim().split(" ");
+            let iniciales = palabras[0].charAt(0).toUpperCase();
+            if (palabras.length > 1) iniciales += palabras[1].charAt(0).toUpperCase();
+            document.getElementById("profileInitial").textContent = iniciales;
+            document.getElementById("publishInitial").textContent = iniciales;
+        } else {
+            saludoActual.textContent = translations[lang].saludoInvitado;
+            const inicialInvitado = lang === "en" ? "G" : "I";
+            document.getElementById("profileInitial").textContent = inicialInvitado;
+            document.getElementById("publishInitial").textContent = inicialInvitado;
+        }
+    } catch (e) {
+        console.error("No se pudo cargar la sesión", e);
+    }
+
+    // 2. Traemos los posts y los mostramos en cuadrícula
+    fetch("obtener_posts.php")
+        .then(response => response.json())
+        .then(data => {
+            let resultado = document.getElementById("resultado");
+            if (!resultado) {
+                resultado = document.createElement("div");
+                resultado.id = "resultado";
+                document.querySelector(".main-content").appendChild(resultado);
             }
 
-            // 2. Ahora sí, traemos los posts (ESTO SE QUEDA IGUAL)
-        fetch("obtener_posts.php")
-    .then(response => response.json())
-    .then(data => {
-        let resultado = document.getElementById("resultado");
-        if (!resultado) {
-            resultado = document.createElement("div");
-            resultado.id = "resultado";
-            document.querySelector(".main-content").appendChild(resultado);
-        }
+            if (data.error) {
+                console.error("❌ Error del servidor:", data.error);
+                resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">Error al cargar publicaciones: ${data.error}</div>`;
+                return;
+            }
 
-        // 🔥 MANEJO DE ERROR DEL SERVIDOR
-        if (data.error) {
-            console.error("❌ Error del servidor:", data.error);
-            resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">Error al cargar publicaciones: ${data.error}</div>`;
+            resultado.innerHTML = "";
+            data.forEach(post => {
+                // Normalizar datos para la tarjeta
+                const postData = {
+    id: post.id,
+    texto: post.texto || "",
+    imagen: post.imagen || null,
+    total_likes: post.total_likes || 0,
+    total_dislikes: post.total_dislikes || 0,
+    comentarios_data: post.comentarios_data || [],
+    mi_reaccion: post.mi_reaccion || null,
+    nombre_autor: post.nombre_autor || "Usuario",
+    usuario_id: post.usuario_id,
+    fecha: post.fecha,
+    foto_autor: post.foto_perfil || null,
+    foto_perfil: post.foto_perfil || null,
+    tags: post.tags || []   // 👈 AGREGA ESTA LÍNEA
+};
+                const card = crearPostCard(postData);
+                resultado.appendChild(card);
+            });
+        })
+        .catch(err => {
+            console.error("❌ Error de red:", err);
+            const resultado = document.getElementById("resultado");
+            if (resultado) {
+                resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">Error de conexión al servidor.</div>`;
+            }
+        });
+};
+// ========== FUNCIONES PARA TAGS ==========
+let currentTagsList = [];
+
+// Cargar todos los tags existentes para autocompletado
+function cargarTagsDisponibles() {
+    fetch('obtener_tags.php')
+        .then(res => res.json())
+        .then(data => {
+            currentTagsList = data;
+        })
+        .catch(err => console.error("Error cargando tags:", err));
+}
+
+// Autocompletado para el campo de escribir tags (en publicación)
+function setupTagAutocomplete(inputId, suggestionsId, esFiltro = false) {
+    const input = document.getElementById(inputId);
+    const suggestionsDiv = document.getElementById(suggestionsId);
+    if (!input) return;
+    
+    input.addEventListener('input', function() {
+        const valor = this.value.trim().toLowerCase();
+        if (valor.length === 0) {
+            suggestionsDiv.style.display = 'none';
             return;
         }
-
-        resultado.innerHTML = "";
-        data.forEach(post => {
-            const imgArray = post.imagen ? post.imagen.split(",").map(src => src.trim()).filter(Boolean).map(src => "uploads/" + src) : [];
-            const nuevoPost = crearPost(
-                post.texto || "",
-                imgArray,
-                post.total_likes || 0,
-                post.total_dislikes || 0,
-                post.comentarios_data || [],
-                post.mi_reaccion || null,
-                post.nombre_autor,
-                post.usuario_id,
-                miUsuarioId,
-                miRol,
-                post.fecha,
-                post.foto_perfil
-            );
-            nuevoPost.dataset.id = post.id;
-            resultado.appendChild(nuevoPost);
-        });
-    })
-    .catch(err => {
-        console.error("❌ Error de red:", err);
-        const resultado = document.getElementById("resultado");
-        if (resultado) {
-            resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">Error de conexión al servidor.</div>`;
+        // Buscar tags que contengan lo escrito
+        const coincidencias = currentTagsList.filter(tag => tag.includes(valor)).slice(0, 8);
+        if (coincidencias.length === 0) {
+            suggestionsDiv.style.display = 'none';
+            return;
         }
+        suggestionsDiv.innerHTML = coincidencias.map(tag => 
+            `<div style="padding:8px 12px; cursor:pointer; border-bottom:1px solid var(--border);" data-tag="${tag}">#${tag}</div>`
+        ).join('');
+        suggestionsDiv.style.display = 'block';
+        
+        // Evento para cada sugerencia
+        suggestionsDiv.querySelectorAll('[data-tag]').forEach(el => {
+            el.addEventListener('click', () => {
+                const tagSeleccionado = el.dataset.tag;
+                if (esFiltro) {
+                    input.value = tagSeleccionado;
+                    filtrarPorTag(tagSeleccionado);
+                } else {
+                    // Para el campo de publicación, mantener los tags existentes + agregar
+                    const actual = input.value.trim();
+                    const tagsActuales = actual.split(',').map(s => s.trim()).filter(s => s);
+                    if (!tagsActuales.includes(tagSeleccionado)) {
+                        tagsActuales.push(tagSeleccionado);
+                        input.value = tagsActuales.join(', ');
+                    }
+                }
+                suggestionsDiv.style.display = 'none';
+            });
+        });
+    });
+    
+    input.addEventListener('blur', () => {
+        setTimeout(() => { suggestionsDiv.style.display = 'none'; }, 200);
     });
 }
+
+// Filtrar posts por tag
+function filtrarPorTag(tag) {
+    // Mostrar notificación
+    showNotification(`Mostrando posts con tag: #${tag}`, 'info');
+    
+    fetch(`obtener_posts.php?tag=${encodeURIComponent(tag)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
+            const resultado = document.getElementById("resultado");
+            resultado.innerHTML = "";
+            data.forEach(post => {
+                const postData = {
+                    id: post.id,
+                    texto: post.texto || "",
+                    imagen: post.imagen || null,
+                    total_likes: post.total_likes || 0,
+                    total_dislikes: post.total_dislikes || 0,
+                    comentarios_data: post.comentarios_data || [],
+                    mi_reaccion: post.mi_reaccion || null,
+                    nombre_autor: post.nombre_autor || "Usuario",
+                    usuario_id: post.usuario_id,
+                    fecha: post.fecha,
+                    foto_autor: post.foto_perfil || null,
+                    foto_perfil: post.foto_perfil || null,
+                    tags: post.tags || []
+                };
+                const card = crearPostCard(postData);
+                resultado.appendChild(card);
+            });
+            
+            // Mostrar botón para limpiar filtro
+            if (!document.getElementById('clearFilterBtn')) {
+                const clearBtn = document.createElement('button');
+                clearBtn.id = 'clearFilterBtn';
+                clearBtn.textContent = '✕ Limpiar filtro';
+                clearBtn.style.cssText = 'position:fixed; bottom:20px; left:20px; background:var(--accent); color:#000; border:none; border-radius:30px; padding:10px 20px; cursor:pointer; z-index:1000; font-weight:bold;';
+                clearBtn.onclick = () => location.reload();
+                document.body.appendChild(clearBtn);
+            }
+        })
+        .catch(err => console.error("Error al filtrar:", err));
+}
+
+// Inicializar autocompletado cuando cargue la página
+cargarTagsDisponibles();
+setTimeout(() => {
+    setupTagAutocomplete('tagsInput', 'tagsSuggestions', false);
+    setupTagAutocomplete('searchTagsInput', 'searchSuggestions', true);
+}, 1000);
+
+// Al presionar Enter en el buscador
+document.getElementById('searchTagsInput')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const tag = e.target.value.trim();
+        if (tag) filtrarPorTag(tag);
+    }
+});
     </script>
+    <div id="postModal" class="post-modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div id="modalPostBody"></div>
+    </div>
+</div>
+
 </body>
 <!-- Contenedor de notificaciones -->
 <div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
