@@ -7,7 +7,7 @@ if (!isset($_SESSION['usuario_id'])) {
     exit();
 }
 
-$mi_id = $_SESSION['usuario_id'];
+$mi_id = (int)$_SESSION['usuario_id'];
 $mi_rol = $_SESSION['rol'] ?? '';
 
 if ($mi_rol === 'lector') {
@@ -21,14 +21,22 @@ if (!$conexion) {
     exit();
 }
 
-// 🔥 Incluir foto_perfil en la consulta
-$sql = "SELECT id, usuario, nombre_completo, rol, foto_perfil
-        FROM usuarios 
-        WHERE id != $mi_id AND rol != 'lector'
-        ORDER BY nombre_completo ASC";
+// Obtener usuarios con rol != 'lector' (excepto yo) y agregar último mensaje
+$sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil,
+        (SELECT mensaje FROM mensajes 
+         WHERE (remitente_id = $mi_id AND destinatario_id = u.id)
+            OR (remitente_id = u.id AND destinatario_id = $mi_id)
+         ORDER BY fecha DESC LIMIT 1) as ultimo_mensaje,
+        (SELECT fecha FROM mensajes 
+         WHERE (remitente_id = $mi_id AND destinatario_id = u.id)
+            OR (remitente_id = u.id AND destinatario_id = $mi_id)
+         ORDER BY fecha DESC LIMIT 1) as ultima_fecha
+        FROM usuarios u
+        WHERE u.id != $mi_id AND u.rol != 'lector'
+        ORDER BY ultima_fecha DESC, u.nombre_completo ASC";
 
 $resultado = mysqli_query($conexion, $sql);
-$usuarios = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
-echo json_encode($usuarios);
+$contactos = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
+echo json_encode($contactos);
 mysqli_close($conexion);
 ?>
