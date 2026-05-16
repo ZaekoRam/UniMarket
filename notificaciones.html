@@ -69,224 +69,254 @@
         <p class="mini-label" data-i18n="actividadReciente">Actividad reciente en UniMarket</p>
         <h1 data-i18n="tituloNotif">Notificaciones</h1>
       </div>
+      <div style="display: flex; gap: 12px;">
+  <button class="ghost-btn" id="marcarTodasBtn" data-i18n="marcarLeido">Marcar todo como leído</button>
+  <button class="ghost-btn" id="eliminarTodasBtn" style="color: var(--glitch-pink);">🗑️ Eliminar todas</button>
+</div>
 
-      <button class="ghost-btn" data-i18n="marcarLeido">Marcar todo como leído</button>
+      
     </header>
 
     <section class="notifications-wrapper">
       <div class="notifications-toolbar">
-        <button class="filter-chip active" data-i18n="todas">Todas</button>
-        <button class="filter-chip" data-i18n="noLeidas">No leídas</button>
-        <button class="filter-chip" data-i18n="comentarios">Comentarios</button>
-        <button class="filter-chip" data-i18n="reacciones">Reacciones</button>
-        <button class="filter-chip" data-i18n="mensajes">Mensajes</button>
+        <button class="filter-chip active" data-filter="todas" data-i18n="todas">Todas</button>
+        <button class="filter-chip" data-filter="noLeidas" data-i18n="noLeidas">No leídas</button>
+        <button class="filter-chip" data-filter="comentarios" data-i18n="comentarios">Comentarios</button>
+        <button class="filter-chip" data-filter="reacciones" data-i18n="reacciones">Reacciones</button>
+        <button class="filter-chip" data-filter="mensajes" data-i18n="mensajes">Mensajes</button>
       </div>
 
-      <section class="notifications-feed">
-        <article class="notification-card unread">
-          <div class="notification-avatar">💬</div>
-          <div class="notification-content">
-            <div class="notification-top">
-              <h3 data-i18n="comentarios">Comentarios</h3>
-              <span data-i18n="ahora">Ahora</span>
-            </div>
-            <p data-i18n="descripcionComentarios">Cuando alguien comente una publicación, aparecerá aquí.</p>
-          </div>
-          <div class="notification-dot"></div>
-        </article>
-
-        <article class="notification-card">
-          <div class="notification-avatar">❤️</div>
-          <div class="notification-content">
-            <div class="notification-top">
-              <h3 data-i18n="reacciones">Reacciones</h3>
-              <span data-i18n="hacePoco">Hace poco</span>
-            </div>
-            <p data-i18n="descripcionReacciones">Los likes y respuestas futuras se mostrarán en esta sección.</p>
-          </div>
-        </article>
-
-        <article class="notification-card">
-          <div class="notification-avatar">📩</div>
-          <div class="notification-content">
-            <div class="notification-top">
-              <h3 data-i18n="mensajes">Mensajes</h3>
-              <span data-i18n="proximamente">Próximamente</span>
-            </div>
-            <p data-i18n="descripcionMensajes">También podrás ver avisos cuando recibas un mensaje nuevo.</p>
-          </div>
-        </article>
-
-        <article class="notification-card">
-          <div class="notification-avatar">🔔</div>
-          <div class="notification-content">
-            <div class="notification-top">
-              <h3 data-i18n="sistema">Sistema</h3>
-              <span data-i18n="sinActividad">Sin actividad</span>
-            </div>
-            <p data-i18n="descripcionSistema">Aquí aparecerán novedades o avisos importantes de UniMarket.</p>
-          </div>
-        </article>
-      </section>
-
-      <section class="notifications-empty-box">
-        <div class="empty-icon">✨</div>
-        <h2 data-i18n="centroListo">Centro de notificaciones listo</h2>
-        <p data-i18n="baseVisual">
-          Esta sección ya tiene la base visual. Cuando conecten el sistema,
-          aquí se mostrará toda la actividad real del usuario.
-        </p>
-      </section>
+      <div id="notificationsFeed" class="notifications-feed">
+        <!-- Aquí se cargarán dinámicamente las notificaciones reales -->
+        <div class="notifications-empty-box" style="margin-top:0;">
+          <div class="empty-icon">🔔</div>
+          <h2>Cargando notificaciones...</h2>
+        </div>
+      </div>
     </section>
   </main>
 
   <script>
     // ==========================================
-    // 🌐 SISTEMA DE TRADUCCIÓN
+    // 🌐 SISTEMA DE TRADUCCIÓN (mismo que ya tenías)
     // ==========================================
     const translationsNotif = {
       es: {
-        // Sidebar
-        inicio: "Inicio",
-        perfil: "Perfil",
-        mensajes: "Mensajes",
-        notificaciones: "Notificaciones",
-        configuracion: "Configuración",
-        cerrarSesion: "Cerrar sesión",
-        darkMode: "Dark Mode",
-        lightMode: "Light Mode",
-        
-        // Títulos y botones
-        actividadReciente: "Actividad reciente en UniMarket",
-        tituloNotif: "Notificaciones",
-        marcarLeido: "Marcar todo como leído",
-        
-        // Filtros
-        todas: "Todas",
-        noLeidas: "No leídas",
-        comentarios: "Comentarios",
-        reacciones: "Reacciones",
-        
-        // Estados y tiempos
-        ahora: "Ahora",
-        hacePoco: "Hace poco",
-        proximamente: "Próximamente",
-        sistema: "Sistema",
-        sinActividad: "Sin actividad",
-        
-        // Descripciones
+        inicio: "Inicio", perfil: "Perfil", mensajes: "Mensajes", notificaciones: "Notificaciones",
+        configuracion: "Configuración", cerrarSesion: "Cerrar sesión", darkMode: "Dark Mode", lightMode: "Light Mode",
+        actividadReciente: "Actividad reciente en UniMarket", tituloNotif: "Notificaciones", marcarLeido: "Marcar todo como leído",
+        todas: "Todas", noLeidas: "No leídas", comentarios: "Comentarios", reacciones: "Reacciones", mensajes: "Mensajes",
+        ahora: "Ahora", hacePoco: "Hace poco", proximamente: "Próximamente", sistema: "Sistema", sinActividad: "Sin actividad",
         descripcionComentarios: "Cuando alguien comente una publicación, aparecerá aquí.",
         descripcionReacciones: "Los likes y respuestas futuras se mostrarán en esta sección.",
         descripcionMensajes: "También podrás ver avisos cuando recibas un mensaje nuevo.",
         descripcionSistema: "Aquí aparecerán novedades o avisos importantes de UniMarket.",
-        
-        // Sección inferior
-        centroListo: "Centro de notificaciones listo",
-        baseVisual: "Esta sección ya tiene la base visual. Cuando conecten el sistema, aquí se mostrará toda la actividad real del usuario."
+        centroListo: "Centro de notificaciones listo", baseVisual: "Esta sección ya tiene la base visual."
       },
       en: {
-        // Sidebar
-        inicio: "Home",
-        perfil: "Profile",
-        mensajes: "Messages",
-        notificaciones: "Notifications",
-        configuracion: "Settings",
-        cerrarSesion: "Log out",
-        darkMode: "Dark Mode",
-        lightMode: "Light Mode",
-        
-        // Títulos y botones
-        actividadReciente: "Recent activity in UniMarket",
-        tituloNotif: "Notifications",
-        marcarLeido: "Mark all as read",
-        
-        // Filtros
-        todas: "All",
-        noLeidas: "Unread",
-        comentarios: "Comments",
-        reacciones: "Reactions",
-        
-        // Estados y tiempos
-        ahora: "Now",
-        hacePoco: "Recently",
-        proximamente: "Coming soon",
-        sistema: "System",
-        sinActividad: "No activity",
-        
-        // Descripciones
+        inicio: "Home", perfil: "Profile", mensajes: "Messages", notificaciones: "Notifications",
+        configuracion: "Settings", cerrarSesion: "Log out", darkMode: "Dark Mode", lightMode: "Light Mode",
+        actividadReciente: "Recent activity in UniMarket", tituloNotif: "Notifications", marcarLeido: "Mark all as read",
+        todas: "All", noLeidas: "Unread", comentarios: "Comments", reacciones: "Reactions", mensajes: "Messages",
+        ahora: "Now", hacePoco: "Recently", proximamente: "Coming soon", sistema: "System", sinActividad: "No activity",
         descripcionComentarios: "When someone comments on a post, it will appear here.",
         descripcionReacciones: "Future likes and replies will be shown in this section.",
         descripcionMensajes: "You will also see alerts when you receive a new message.",
         descripcionSistema: "News or important UniMarket alerts will appear here.",
-        
-        // Sección inferior
-        centroListo: "Notification center ready",
-        baseVisual: "This section already has the visual base. When the system is connected, all real user activity will be displayed here."
+        centroListo: "Notification center ready", baseVisual: "This section already has the visual base."
       }
     };
 
-    function getLang() {
-      return localStorage.getItem("lang") || "es";
-    }
-
-    function tNotif(key) {
-      const lang = getLang();
-      return translationsNotif[lang] && translationsNotif[lang][key] ? translationsNotif[lang][key] : key;
-    }
-
+    function getLang() { return localStorage.getItem("lang") || "es"; }
+    function tNotif(key) { const lang = getLang(); return translationsNotif[lang]?.[key] || key; }
     function aplicarIdiomaNotif() {
       const lang = getLang();
-      
-      // Elementos con data-i18n (texto)
       document.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.dataset.i18n;
-        if (translationsNotif[lang] && translationsNotif[lang][key]) {
-          el.textContent = translationsNotif[lang][key];
-        }
+        if (translationsNotif[lang]?.[key]) el.textContent = translationsNotif[lang][key];
       });
-
-      // Actualizar texto del tema
       actualizarTextoTema();
     }
-
     function actualizarTextoTema() {
-      if (themeText) {
-        const isLight = document.body.classList.contains("light-mode");
-        themeText.textContent = isLight ? tNotif("lightMode") : tNotif("darkMode");
-      }
+      if (themeText) themeText.textContent = document.body.classList.contains("light-mode") ? tNotif("lightMode") : tNotif("darkMode");
     }
+
     const themeToggleInput = document.getElementById("themeToggleInput");
     const themeText = document.getElementById("themeText");
-
     function aplicarTema(modo) {
       const isLight = modo === "light";
       document.body.classList.toggle("light-mode", isLight);
       themeToggleInput.checked = isLight;
       themeText.textContent = isLight ? tNotif("lightMode") : tNotif("darkMode");
     }
-
     const temaGuardado = localStorage.getItem("theme") || "dark";
     aplicarTema(temaGuardado);
-
     themeToggleInput.addEventListener("change", () => {
       const nuevoTema = themeToggleInput.checked ? "light" : "dark";
       localStorage.setItem("theme", nuevoTema);
       aplicarTema(nuevoTema);
     });
-
-    // Observar cambios de tema
-    const observer = new MutationObserver(() => {
-      actualizarTextoTema();
-    });
-
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
+    new MutationObserver(() => actualizarTextoTema()).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
     // ==========================================
-    // 🚀 INICIALIZACIÓN
+    // 🔔 NOTIFICACIONES REALES (POLLING)
     // ==========================================
+    let currentFilter = 'todas';
+
+    function formatFechaNoti(fechaISO) {
+      const date = new Date(fechaISO);
+      const ahora = new Date();
+      const diffMs = ahora - date;
+      const diffMin = Math.floor(diffMs / 60000);
+      if (diffMin < 1) return tNotif("ahora");
+      if (diffMin < 60) return `Hace ${diffMin} min`;
+      const diffHoras = Math.floor(diffMin / 60);
+      if (diffHoras < 24) return `Hace ${diffHoras} h`;
+      const diffDias = Math.floor(diffHoras / 24);
+      if (diffDias === 1) return 'Ayer';
+      return date.toLocaleDateString();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str.replace(/[&<>]/g, m => {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    async function cargarNotificaciones() {
+  try {
+    const resp = await fetch('obtener_notificaciones.php');
+    const notis = await resp.json();
+    const feedDiv = document.getElementById('notificationsFeed');
+    if (!feedDiv) return;
+
+    let filtradas = notis;
+    if (currentFilter === 'noLeidas') filtradas = notis.filter(n => n.leida == 0);
+    else if (currentFilter === 'comentarios') filtradas = notis.filter(n => n.tipo === 'comentario' || n.tipo === 'respuesta');
+    else if (currentFilter === 'reacciones') filtradas = notis.filter(n => n.tipo === 'like');
+    else if (currentFilter === 'mensajes') filtradas = notis.filter(n => n.tipo === 'mensaje');
+
+    if (filtradas.length === 0) {
+      feedDiv.innerHTML = `<div class="notifications-empty-box" style="margin-top:0;">
+        <div class="empty-icon">🔔</div>
+        <h2>${tNotif("centroListo")}</h2>
+        <p>${tNotif("baseVisual")}</p>
+      </div>`;
+      return;
+    }
+
+    feedDiv.innerHTML = filtradas.map(noti => {
+      let texto = '';
+      let url = '';
+      switch (noti.tipo) {
+        case 'like': 
+          texto = `❤️ le dio like a tu publicación: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+          url = `menu.html?post_id=${noti.post_id}`;
+          break;
+        case 'comentario': 
+          texto = `💬 comentó en tu publicación: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+          url = `menu.html?post_id=${noti.post_id}`;
+          break;
+        case 'respuesta': 
+          texto = `↩️ respondió a tu comentario: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+          url = `menu.html?post_id=${noti.post_id}`;
+          break;
+        case 'mensaje': 
+          texto = `✉️ te envió un mensaje: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+          url = `mensajes.html?user_id=${noti.emisor_id}`;
+          break;
+        default: texto = 'Nueva actividad';
+      }
+      const avatarHtml = noti.emisor_foto 
+        ? `<img src="${noti.emisor_foto}" style="width:58px; height:58px; border-radius:18px; object-fit:cover;">` 
+        : `<div class="notification-avatar">${noti.tipo === 'like' ? '❤️' : (noti.tipo === 'mensaje' ? '💬' : '💬')}</div>`;
+      return `
+        <article class="notification-card ${noti.leida == 0 ? 'unread' : ''}" data-id="${noti.id}" data-url="${url}">
+          <div class="notification-avatar">${avatarHtml}</div>
+          <div class="notification-content">
+            <div class="notification-top">
+              <h3>${escapeHtml(noti.emisor_nombre)}</h3>
+              <span>${formatFechaNoti(noti.creado)}</span>
+            </div>
+            <p>${texto}</p>
+          </div>
+          ${noti.leida == 0 ? '<div class="notification-dot"></div>' : ''}
+          <button class="delete-notif-btn" data-id="${noti.id}" title="Eliminar notificación">🗑️</button>
+        </article>
+      `;
+    }).join('');
+
+    // ===== EVENTOS =====
+    // 1. Redirigir al hacer clic en la tarjeta (excepto en el botón eliminar)
+    document.querySelectorAll('.notification-card').forEach(card => {
+      card.addEventListener('click', async (e) => {
+        // Si el clic fue en el botón de eliminar, no redirigimos
+        if (e.target.classList.contains('delete-notif-btn')) return;
+        const id = card.dataset.id;
+        const url = card.dataset.url;
+        if (!url) return;
+        if (id && card.classList.contains('unread')) {
+          await fetch('marcar_leida.php', { method: 'POST', body: new URLSearchParams({id}) });
+        }
+        window.location.href = url;
+      });
+    });
+
+    // 2. Eliminar notificación individual (con confirmación)
+    document.querySelectorAll('.delete-notif-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation(); // evita que también se dispare el clic de la tarjeta
+        const id = btn.dataset.id;
+        if (confirm('¿Eliminar esta notificación permanentemente?')) {
+          const formData = new FormData();
+          formData.append('id', id);
+          const resp = await fetch('eliminar_notificaciones.php', { method: 'POST', body: formData });
+          if (resp.ok) {
+            cargarNotificaciones(); // recargar la lista
+          } else {
+            alert('Error al eliminar');
+          }
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error('Error cargando notificaciones', err);
+    document.getElementById('notificationsFeed').innerHTML = `<div class="notifications-empty-box"><p>Error al cargar notificaciones.</p></div>`;
+  }
+}
+
+document.getElementById('eliminarTodasBtn')?.addEventListener('click', async () => {
+  if (confirm('¿Eliminar TODAS las notificaciones? Esta acción no se puede deshacer.')) {
+    await fetch('eliminar_todas_notificaciones.php', { method: 'POST' });
+    cargarNotificaciones();
+  }
+});
+
+    // Filtros
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.getAttribute('data-filter');
+        cargarNotificaciones();
+      });
+    });
+
+    // Marcar todas como leídas
+    document.getElementById('marcarTodasBtn')?.addEventListener('click', async () => {
+      await fetch('marcar_todas_leidas.php', { method: 'POST' });
+      cargarNotificaciones();
+    });
+
+
+    // Polling cada 10 segundos
+    cargarNotificaciones();
+    setInterval(cargarNotificaciones, 10000);
     aplicarIdiomaNotif();
   </script>
 </body>

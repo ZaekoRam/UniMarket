@@ -21,7 +21,6 @@ if (!$conexion) {
     exit();
 }
 
-// Obtener usuarios con rol != 'lector' (excepto yo) y agregar último mensaje
 $sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil,
         (SELECT mensaje FROM mensajes 
          WHERE (remitente_id = $mi_id AND destinatario_id = u.id)
@@ -30,7 +29,11 @@ $sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil,
         (SELECT fecha FROM mensajes 
          WHERE (remitente_id = $mi_id AND destinatario_id = u.id)
             OR (remitente_id = u.id AND destinatario_id = $mi_id)
-         ORDER BY fecha DESC LIMIT 1) as ultima_fecha
+         ORDER BY fecha DESC LIMIT 1) as ultima_fecha,
+        CASE 
+            WHEN u.last_activity > DATE_SUB(NOW(), INTERVAL 5 MINUTE) THEN 1
+            ELSE 0
+        END as is_online
         FROM usuarios u
         WHERE u.id != $mi_id AND u.rol != 'lector'
         ORDER BY ultima_fecha DESC, u.nombre_completo ASC";

@@ -379,24 +379,33 @@
 
         /* ========== MENSAJES LAYOUT ========== */
         .messages-layout {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 360px 1fr;
-            gap: 20px;
-            align-items: start;
-        }
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 24px;
+  align-items: start;
+  height: calc(100vh - 180px);
+  min-height: 600px;
+}
 
         .chat-list-panel,
         .chat-panel {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            backdrop-filter: blur(20px);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+  background: var(--glass);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* aquí usa el alto del contenedor padre */
+  overflow: hidden; /* evita desbordes */
+}
+
+.chat-panel {
+  height: 100%;
+  max-height: 100%;
+}
 
         .chat-list-panel:hover,
         .chat-panel:hover {
@@ -648,14 +657,22 @@
         }
 
         /* MENSAJES */
-        .chat-body {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        /* Cuerpo de mensajes: scroll interno */
+.chat-body {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;  /* ← hace que aparezca el scroll cuando sea necesario */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(57, 197, 187, 0.03) 0%, transparent 60%);
+  position: relative;
+}
+
+.chat-body {
+  max-height: 100%;
+  min-height: 0; /* importante para flex */
+}
 
         .message-bubble {
             max-width: 70%;
@@ -1004,6 +1021,17 @@
             .message-out:hover .delete-msg-btn { left: -35px; }
             .custom-emoji-grid { grid-template-columns: repeat(3, 1fr); }
         }
+        /* Eliminar cualquier subrayado en el sidebar */
+.sidebar-menu .menu-item,
+.sidebar-menu .menu-item .label {
+    text-decoration: none !important;
+}
+
+/* También para el hover */
+.sidebar-menu .menu-item:hover,
+.sidebar-menu .menu-item:hover .label {
+    text-decoration: none !important;
+}
     </style>
 </head>
 <body>
@@ -1016,27 +1044,27 @@
             <div class="sidebar-brand">UniMarket</div>
         </div>
         <nav class="sidebar-menu">
-            <a href="menu.html" class="menu-item">
+            <a href="menu" class="menu-item">
                 <span class="icon"><img src="img/Icon_inicio.png" alt="Inicio"></span>
                 <span class="label">Inicio</span>
             </a>
-            <a href="perfil.html" class="menu-item">
+            <a href="perfil" class="menu-item">
                 <span class="icon"><img src="img/Icon_perfil.png" alt="Perfil"></span>
                 <span class="label">Perfil</span>
             </a>
-            <a href="mensajes.html" class="menu-item active">
+            <a href="mensajes" class="menu-item active">
                 <span class="icon"><img src="img/Icon_mensajes.png" alt="Mensajes"></span>
                 <span class="label">Mensajes</span>
             </a>
-            <a href="notificaciones.html" class="menu-item">
+            <a href="notificaciones" class="menu-item">
                 <span class="icon"><img src="img/Icon_notificaciones.png" alt="Notificaciones"></span>
                 <span class="label">Notificaciones</span>
             </a>
-            <a href="configuraciones.html" class="menu-item">
+            <a href="configuraciones" class="menu-item">
                 <span class="icon"><img src="img/Icon_ajustes.png" alt="Configuraciones"></span>
                 <span class="label">Configuración</span>
             </a>
-            <a href="cerrar_sesion.php" class="menu-item">
+            <a href="cerrar_sesion" class="menu-item">
                 <span class="icon"><img src="img/Icon_cerrar_sesion.png" alt="Cerrar sesión"></span>
                 <span class="label">Cerrar sesión</span>
             </a>
@@ -1174,119 +1202,152 @@ document.body.appendChild(fileImageInput);
         }
 
         // ========== CARGAR CONTACTOS ==========
-        async function cargarContactos() {
-            try {
-                const resp = await fetch('obtener_usuarios_chat.php');
-                contactos = await resp.json();
-                const container = document.getElementById('contactsContainer');
-                if (contactos.length === 0) {
-                    container.innerHTML = `<div class="empty-state-list"><div class="empty-list-box"><div class="empty-list-icon">💬</div><h3>Aún no hay contactos</h3><p>No hay usuarios disponibles para chatear (solo creadores y admins).</p></div></div>`;
-                    return;
-                }
-                container.innerHTML = '';
-                contactos.forEach(contact => {
-                    const iniciales = (contact.nombre_completo?.split(' ').map(n => n[0]).join('') || 'U').toUpperCase().slice(0,2);
-                    let previewHtml = 'Sin mensajes';
-if (contact.ultimo_mensaje) {
-    if (contact.ultimo_mensaje.includes('/uploads/')) {
-        previewHtml = '📷 Imagen';
-    } 
-    else {
-        let textoPreview = contact.ultimo_mensaje;
-        // Reemplazar emojis por imágenes
-        for (const [unicode, ruta] of Object.entries(emojiMap)) {
-            textoPreview = textoPreview.split(unicode).join(`<img src="${ruta}" style="width: 20px; height: 20px; object-fit: contain; vertical-align: middle;">`);
+       async function cargarContactos() {
+    try {
+        const resp = await fetch('obtener_usuarios_chat.php');
+        contactos = await resp.json();
+        const container = document.getElementById('contactsContainer');
+        if (contactos.length === 0) {
+            container.innerHTML = `<div class="empty-state-list"><div class="empty-list-box"><div class="empty-list-icon">💬</div><h3>Aún no hay contactos</h3><p>No hay usuarios disponibles para chatear (solo creadores y admins).</p></div></div>`;
+            return;
         }
-        // Limitar longitud del texto visible, pero sin romper etiquetas HTML
-        // Creamos un div temporal para extraer el texto plano
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = textoPreview;
-        let plainText = tempDiv.textContent || tempDiv.innerText || '';
-        if (plainText.length > 35) {
-            // Cortamos el texto plano, pero mantenemos las etiquetas img completas
-            // Solución simple: recortar el HTML a 35 caracteres visibles (aproximado)
-            // Para evitar complicaciones, mostramos solo los primeros 35 caracteres del HTML sin cortar etiquetas
-            let truncated = '';
-            let count = 0;
-            let inTag = false;
-            for (let i = 0; i < textoPreview.length && count < 35; i++) {
-                const ch = textoPreview[i];
-                if (ch === '<') {
-                    inTag = true;
-                    truncated += ch;
-                } else if (ch === '>') {
-                    inTag = false;
-                    truncated += ch;
-                } else if (!inTag) {
-                    truncated += ch;
-                    count++;
-                } else {
-                    truncated += ch;
+        container.innerHTML = '';
+        contactos.forEach(contact => {
+            // Calcular iniciales primero
+            const iniciales = (contact.nombre_completo?.split(' ').map(n => n[0]).join('') || 'U').toUpperCase().slice(0,2);
+            
+            // Avatar con foto o con iniciales
+            let avatarHtml;
+            if (contact.foto_perfil) {
+                avatarHtml = `<img src="${contact.foto_perfil}" style="width:52px; height:52px; border-radius:50%; object-fit:cover;">`;
+            } else {
+                avatarHtml = `<div style="width:52px; height:52px; background:var(--accent-gradient); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; color:#082016;">${iniciales}</div>`;
+            }
+
+            // Estado online (1 = online, 0 = offline)
+            const isOnline = contact.is_online == 1;
+            const statusDotClass = isOnline ? 'online' : 'offline';
+            const statusText = isOnline ? 'En línea' : 'Desconectado';
+
+            let previewHtml = 'Sin mensajes';
+            if (contact.ultimo_mensaje) {
+                if (contact.ultimo_mensaje.includes('/uploads/')) {
+                    previewHtml = '📷 Imagen';
+                } 
+                else {
+                    let textoPreview = contact.ultimo_mensaje;
+                    // Reemplazar emojis por imágenes
+                    for (const [unicode, ruta] of Object.entries(emojiMap)) {
+                        textoPreview = textoPreview.split(unicode).join(`<img src="${ruta}" style="width: 20px; height: 20px; object-fit: contain; vertical-align: middle;">`);
+                    }
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = textoPreview;
+                    let plainText = tempDiv.textContent || tempDiv.innerText || '';
+                    if (plainText.length > 35) {
+                        let truncated = '';
+                        let count = 0;
+                        let inTag = false;
+                        for (let i = 0; i < textoPreview.length && count < 35; i++) {
+                            const ch = textoPreview[i];
+                            if (ch === '<') {
+                                inTag = true;
+                                truncated += ch;
+                            } else if (ch === '>') {
+                                inTag = false;
+                                truncated += ch;
+                            } else if (!inTag) {
+                                truncated += ch;
+                                count++;
+                            } else {
+                                truncated += ch;
+                            }
+                        }
+                        if (truncated.length < textoPreview.length) truncated += '...';
+                        textoPreview = truncated;
+                    }
+                    previewHtml = textoPreview;
                 }
             }
-            if (truncated.length < textoPreview.length) truncated += '...';
-            textoPreview = truncated;
+
+            const div = document.createElement('div');
+            div.className = `chat-item ${currentContactId === contact.id ? 'chat-active' : ''}`;
+            div.innerHTML = `
+                <div class="chat-avatar" data-id="${contact.id}">${avatarHtml}</div>
+                <div class="chat-item-info">
+                    <div class="chat-item-header">
+                        <h4>${escapeHtml(contact.nombre_completo)}</h4>
+                        <div class="status-badge">
+                            <span class="status-dot ${statusDotClass}"></span>
+                            <span class="status-text">${statusText}</span>
+                        </div>
+                    </div>
+                    <p class="chat-preview">${previewHtml}</p>
+                </div>
+            `;
+            div.querySelector('.chat-avatar').addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.location.href = `perfil?user_id=${contact.id}`;
+            });
+            div.addEventListener('click', () => seleccionarContacto(contact.id));
+            container.appendChild(div);
+        });
+
+        // Abrir chat directo desde URL si existe parámetro user_id
+        const urlParams = new URLSearchParams(window.location.search);
+        const userIdParam = urlParams.get('user_id');
+        if (userIdParam) {
+            const targetContact = contactos.find(c => c.id == userIdParam);
+            if (targetContact) {
+                seleccionarContacto(targetContact.id);
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
         }
-        previewHtml = textoPreview;
+    } catch(err) {
+        console.error('Error cargando contactos', err);
+        document.getElementById('contactsContainer').innerHTML = `<div class="empty-state-list"><div class="empty-list-box"><h3>Error al cargar</h3></div></div>`;
     }
 }
-                    const div = document.createElement('div');
-                    div.className = `chat-item ${currentContactId === contact.id ? 'chat-active' : ''}`;
-                    div.innerHTML = `
-                        <div class="chat-avatar" data-id="${contact.id}">${iniciales}</div>
-                        <div class="chat-item-info">
-                            <div class="chat-item-header">
-                                <h4>${escapeHtml(contact.nombre_completo)}</h4>
-                                <div class="status-badge">
-                                    <span class="status-dot online"></span>
-                                    <span class="status-text">En línea</span>
-                                </div>
-                            </div>
-                            <p class="chat-preview">${previewHtml}</p>
-                    `;
-                    div.querySelector('.chat-avatar').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        window.location.href = `perfil?user_id=${contact.id}`;
-                    });
-                    div.addEventListener('click', () => seleccionarContacto(contact.id));
-                    container.appendChild(div);
-                });
-            } catch(err) {
-                console.error('Error cargando contactos', err);
-                document.getElementById('contactsContainer').innerHTML = `<div class="empty-state-list"><div class="empty-list-box"><h3>Error al cargar</h3></div></div>`;
-            }
-        }
 
         // ========== SELECCIONAR CONTACTO ==========
         async function seleccionarContacto(contactId) {
-            currentContactId = contactId;
-            // Actualizar estilo lista
-            document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('chat-active'));
-            const selected = document.querySelector(`.chat-item .chat-avatar[data-id="${contactId}"]`)?.closest('.chat-item');
-            if(selected) selected.classList.add('chat-active');
-            
-            // Actualizar cabecera
-            const contact = contactos.find(c => c.id === contactId);
-            if(contact) {
-                const chatUser = document.getElementById('chatUserInfo');
-                const iniciales = (contact.nombre_completo?.split(' ').map(n => n[0]).join('') || 'U').toUpperCase().slice(0,2);
-                chatUser.innerHTML = `
-                    <div class="chat-avatar" data-id="${contact.id}">${iniciales}</div>
-                    <div>
-                        <h2>${escapeHtml(contact.nombre_completo)}</h2>
-                        <p><span class="online-dot online"></span> En línea</p>
-                    </div>
-                `;
-                const avatar = chatUser.querySelector('.chat-avatar');
-                avatar.style.cursor = 'pointer';
-                avatar.addEventListener('click', () => window.location.href = `perfil.html?id=${contact.id}`);
-            }
-            await cargarMensajes(contactId);
-            // Polling cada 3 segundos
-            if(pollInterval) clearInterval(pollInterval);
-            pollInterval = setInterval(() => cargarMensajes(contactId, true), 3000);
+    currentContactId = contactId;
+    // Actualizar estilo lista
+    document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('chat-active'));
+    const selected = document.querySelector(`.chat-item .chat-avatar[data-id="${contactId}"]`)?.closest('.chat-item');
+    if (selected) selected.classList.add('chat-active');
+    
+    // Actualizar cabecera
+    const contact = contactos.find(c => c.id === contactId);
+    if (contact) {
+        const chatUser = document.getElementById('chatUserInfo');
+        const iniciales = (contact.nombre_completo?.split(' ').map(n => n[0]).join('') || 'U').toUpperCase().slice(0,2);
+        let avatarHeaderHtml;
+        if (contact.foto_perfil) {
+            avatarHeaderHtml = `<img src="${contact.foto_perfil}" style="width:58px; height:58px; border-radius:50%; object-fit:cover;">`;
+        } else {
+            avatarHeaderHtml = `<div style="width:58px; height:58px; background:var(--accent-gradient); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:22px; color:#082016;">${iniciales}</div>`;
         }
-
+        // Estados reales basados en is_online
+        const isOnline = contact.is_online == 1;
+        const statusDotClass = isOnline ? 'online' : 'offline';
+        const statusText = isOnline ? 'En línea' : 'Desconectado';
+        chatUser.innerHTML = `
+            <div class="chat-avatar" data-id="${contact.id}">${avatarHeaderHtml}</div>
+            <div>
+                <h2>${escapeHtml(contact.nombre_completo)}</h2>
+                <p><span class="online-dot ${statusDotClass}"></span> ${statusText}</p>
+            </div>
+        `;
+        const avatar = chatUser.querySelector('.chat-avatar');
+        avatar.style.cursor = 'pointer';
+        avatar.addEventListener('click', () => window.location.href = `perfil?user_id=${contact.id}`);
+    }
+    await cargarMensajes(contactId);
+    // Polling cada 3 segundos
+    if (pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(() => cargarMensajes(contactId, true), 3000);
+}
+  
         // ========== CARGAR MENSAJES ==========
         async function cargarMensajes(contactId, isPolling = false) {
             try {
@@ -1535,5 +1596,6 @@ fileImageInput.addEventListener('change', (e) => {
             if(pollInterval) clearInterval(pollInterval);
         });
     </script>
+    <script src="actividad.js"></script>
 </body>
 </html>

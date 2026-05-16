@@ -27,6 +27,31 @@ $sql = "INSERT INTO comentarios (publicacion_id, usuario_id, comentario, padre_i
         VALUES ('$post_id', '$usuario_id', '$comentario', $padre_id)";
 
 if (mysqli_query($conexion, $sql)) {
+    $comentario_id = mysqli_insert_id($conexion);
+
+    // 🔔 NOTIFICACIÓN AL AUTOR DEL POST
+    $query_autor_post = "SELECT usuario_id FROM publicaciones WHERE id = '$post_id'";
+    $res_autor = mysqli_query($conexion, $query_autor_post);
+    $autor_post = mysqli_fetch_assoc($res_autor)['usuario_id'];
+    if ($autor_post != $usuario_id) {
+        $tipo_noti = ($padre_id !== "NULL") ? 'respuesta' : 'comentario';
+        $sql_noti = "INSERT INTO notificaciones (usuario_id, tipo, emisor_id, referencia_id, post_id) 
+                     VALUES ($autor_post, '$tipo_noti', $usuario_id, $comentario_id, $post_id)";
+        mysqli_query($conexion, $sql_noti);
+    }
+
+    // 🔔 NOTIFICACIÓN AL AUTOR DEL COMENTARIO PADRE (si es respuesta)
+    if ($padre_id !== "NULL") {
+        $query_padre = "SELECT usuario_id FROM comentarios WHERE id = $padre_id";
+        $res_padre = mysqli_query($conexion, $query_padre);
+        $autor_padre = mysqli_fetch_assoc($res_padre)['usuario_id'];
+        if ($autor_padre != $usuario_id && $autor_padre != $autor_post) {
+            $sql_noti_resp = "INSERT INTO notificaciones (usuario_id, tipo, emisor_id, referencia_id, post_id) 
+                              VALUES ($autor_padre, 'respuesta', $usuario_id, $comentario_id, $post_id)";
+            mysqli_query($conexion, $sql_noti_resp);
+        }
+    }
+
     header("Location: " . $_SERVER['HTTP_REFERER'] . "?msg=" . urlencode("💬 Comentario agregado correctamente.") . "&type=success");
 } else {
     header("Location: " . $_SERVER['HTTP_REFERER'] . "?msg=" . urlencode("❌ Error al agregar comentario: " . mysqli_error($conexion)) . "&type=error");

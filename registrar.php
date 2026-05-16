@@ -11,19 +11,19 @@ $rol             = 'lector';
 
 // Validaciones
 if (strlen(trim($nombre_completo)) < 3) {
-    header("Location: index.html?msg=" . urlencode("❌ El nombre completo debe tener al menos 3 letras.") . "&type=error");
+    header("Location: index?msg=" . urlencode("❌ El nombre completo debe tener al menos 3 letras.") . "&type=error");
     exit();
 }
 if (!filter_var($cuenta, FILTER_VALIDATE_EMAIL)) {
-    header("Location: index.html?msg=" . urlencode("❌ El correo electrónico no es válido.") . "&type=error");
+    header("Location: index?msg=" . urlencode("❌ El correo electrónico no es válido.") . "&type=error");
     exit();
 }
 if (!preg_match('/(?=.*[a-z])(?=.*[A-Z])(?=.*[\W])/', $password_plana)) {
-    header("Location: index.html?msg=" . urlencode("⚠️ Contraseña débil. Debe incluir: mayúscula, minúscula y carácter especial.") . "&type=warning");
+    header("Location: index?msg=" . urlencode("⚠️ Contraseña débil. Debe incluir: mayúscula, minúscula y carácter especial.") . "&type=warning");
     exit();
 }
 if (preg_match('/\s/', $usuario)) {
-    header("Location: index.html?msg=" . urlencode("❌ El nombre de usuario no puede tener espacios.") . "&type=error");
+    header("Location: index?msg=" . urlencode("❌ El nombre de usuario no puede tener espacios.") . "&type=error");
     exit();
 }
 
@@ -34,7 +34,7 @@ $codigo_verificacion = rand(100000, 999999);
 $check_query = "SELECT * FROM usuarios WHERE num = '$num' OR cuenta = '$cuenta' OR usuario = '$usuario'";
 $check_result = mysqli_query($conexion, $check_query);
 if (mysqli_num_rows($check_result) > 0) {
-    header("Location: index.html?msg=" . urlencode("❌ El usuario, correo o número de cuenta ya existen.") . "&type=error");
+    header("Location: index?msg=" . urlencode("❌ El usuario, correo o número de cuenta ya existen.") . "&type=error");
     exit();
 }
 
@@ -76,14 +76,14 @@ if (mysqli_query($conexion, $sql)) {
         ";
 
         $mail->send();
-        header("Location: index.html?verificar=" . urlencode($cuenta) . "&msg=" . urlencode("✅ ¡Registro casi listo! Te hemos enviado un código de 6 dígitos a tu correo.") . "&type=success");
+        header("Location: index?verificar=" . urlencode($cuenta) . "&msg=" . urlencode("✅ ¡Registro casi listo! Te hemos enviado un código de 6 dígitos a tu correo.") . "&type=success");
         exit();
     } catch (Exception $e) {
-        header("Location: index.html?msg=" . urlencode("❌ Error al enviar el correo. Contacta al administrador.") . "&type=error");
+        header("Location: index?msg=" . urlencode("❌ Error al enviar el correo. Contacta al administrador.") . "&type=error");
         exit();
     }
 } else {
-    header("Location: index.html?msg=" . urlencode("❌ Error en la Base de Datos: " . mysqli_error($conexion)) . "&type=error");
+    header("Location: index?msg=" . urlencode("❌ Error en la Base de Datos: " . mysqli_error($conexion)) . "&type=error");
     exit();
 }
 mysqli_close($conexion);

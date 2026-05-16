@@ -20,6 +20,7 @@
   --radius-xl: 26px;
   --radius-lg: 18px;
   --radius-md: 14px;
+  --glitch-pink: #ff4fa0;
 }
 
 body.light-mode {
@@ -39,6 +40,7 @@ body.light-mode {
   --accent-2: #0f8f87;
 
   --shadow: 0 18px 45px rgba(20, 70, 50, 0.12);
+  --glitch-pink: #d63e7a;
 }
 
 * {
@@ -578,4 +580,31 @@ body.light-mode .notifications-empty-box {
     height: 28px;
     object-fit: contain;
     display: block;
+}
+.delete-notif-btn {
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  background: rgba(255, 51, 102, 0.1);
+  border: none;
+  border-radius: 30px;
+  padding: 4px 10px;
+  cursor: pointer;
+  color: var(--glitch-pink);
+  font-size: 14px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  z-index: 2;
+}
+.notification-card {
+  position: relative;
+}
+.notification-card:hover .delete-notif-btn {
+  opacity: 1;
+}
+.delete-notif-btn:hover {
+  background: var(--glitch-pink);
+  color: white;
+  transform: scale(1.05);
 }

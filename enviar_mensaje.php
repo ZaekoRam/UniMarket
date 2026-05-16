@@ -58,7 +58,17 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
 
 $sql = "INSERT INTO mensajes (remitente_id, destinatario_id, mensaje, tipo) 
         VALUES ('$mi_id', '$destinatario_id', '$contenido', '$tipo')";
-mysqli_query($conexion, $sql);
-echo json_encode(["status" => "ok"]);
+if (mysqli_query($conexion, $sql)) {
+    $mensaje_id = mysqli_insert_id($conexion);
+
+    // 🔔 NOTIFICACIÓN AL DESTINATARIO
+    $sql_noti = "INSERT INTO notificaciones (usuario_id, tipo, emisor_id, referencia_id) 
+                 VALUES ($destinatario_id, 'mensaje', $mi_id, $mensaje_id)";
+    mysqli_query($conexion, $sql_noti);
+
+    echo json_encode(["status" => "ok"]);
+} else {
+    echo json_encode(["status" => "error", "msg" => "Error al guardar mensaje."]);
+}
 mysqli_close($conexion);
 ?>

@@ -60,6 +60,13 @@
             pointer-events: none;
             z-index: -1;
         }
+        .comment-menu-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text);
+}
+.comment-dropdown button:hover {
+    background: rgba(255,255,255,0.05);
+}
 
         @keyframes gradientShift {
             0%, 100% { opacity: 0.7; transform: scale(1); }
@@ -339,6 +346,7 @@
 </head>
 
 <body>
+    <script src="actividad.js"></script>
 
         <aside class="sidebar">
         <div class="sidebar-top">
@@ -474,6 +482,18 @@
     </div>
 
     <script>
+        // Después de las variables globales (currentTagsList, etc.), agrega:
+let postsDataGlobal = [];
+        // ========== FUNCIÓN ESCAPE HTML (SEGURA) ==========
+function escapeHtml(str) {
+    if (!str) return "";
+    return str.replace(/[&<>]/g, m => {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
         const body = document.body;
         const themeToggleInput = document.getElementById("themeToggleInput");
         const themeText = document.getElementById("themeText");
@@ -948,7 +968,7 @@ textarea.addEventListener('input', function() {
     });
 }
 function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null, fotoAutor = null, tags = []) {
-        const post = document.createElement("div");
+    const post = document.createElement("div");
     post.className = "post-card";
 
     const mediaCount = imgs.length;
@@ -975,25 +995,44 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
     const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
     const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
 
+    // -- AQUÍ CONSTRUIMOS LOS COMENTARIOS CON BOTÓN DE ELIMINAR --
     let comentariosHTML = principales.map(c => {
-        const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
-            <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid var(--accent-2, #42d79a); padding-left:10px; margin-top:5px;">
-                <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">${r.nombre_autor || "Usuario"}:</strong> ${r.comentario}</div>
-            </div>
-        `).join('');
-        return `
-            <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
-                <div class="comment-text"><strong style="color:var(--accent, #76f3c2);">${c.nombre_autor || "Usuario"}:</strong> ${c.comentario}</div>
-                <div class="comment-actions" style="margin-top:8px;">
-                    <span onclick="prepararRespuesta(this)" style="color:var(--muted, #9dc7b8); cursor:pointer; font-size:12px; font-weight:600;">${t("responder")}</span>
+    const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => `
+        <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid var(--accent-2, #42d79a); padding-left:10px; margin-top:5px;">
+            <div class="comment-text"><strong style="color:var(--accent-2, #42d79a);">${escapeHtml(r.nombre_autor || "Usuario")}:</strong> ${escapeHtml(r.comentario)}</div>
+        </div>
+    `).join('');
+
+    // Botón de tres puntos con menú desplegable (solo para autor o admin)
+    let menuOpciones = '';
+    if (miId == c.usuario_id || miRol === 'admin') {
+        menuOpciones = `
+            <div class="comment-menu" style="position:relative;">
+                <button class="comment-menu-btn" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-size:18px; padding:0 6px; border-radius:4px;" title="Opciones">⋮</button>
+                <div class="comment-dropdown" style="position:absolute; right:0; top:100%; background:var(--panel-strong); border:1px solid var(--border); border-radius:8px; display:none; z-index:100; min-width:100px; backdrop-filter:blur(8px); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                    <button class="delete-comment-btn" data-id="${c.id}" style="width:100%; background:transparent; border:none; color:var(--glitch-pink); padding:8px 12px; text-align:left; cursor:pointer; font-size:13px;">🗑️ Eliminar</button>
                 </div>
-                <div class="reply-input-container"></div>
-                <div class="reply-list">${susRespuestas}</div>
             </div>
         `;
-    }).join('');
+    }
 
-    const nombreFinal = nombreAutor ? nombreAutor : "Usuario";
+    return `
+        <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="color:var(--accent, #76f3c2);">${escapeHtml(c.nombre_autor || "Usuario")}:</strong>
+                ${menuOpciones}
+            </div>
+            <div class="comment-text" style="margin-top:6px;">${escapeHtml(c.comentario)}</div>
+            <div class="comment-actions" style="margin-top:8px;">
+                <span onclick="prepararRespuesta(this)" style="color:var(--muted, #9dc7b8); cursor:pointer; font-size:12px; font-weight:600;">${t("responder")}</span>
+            </div>
+            <div class="reply-input-container"></div>
+            <div class="reply-list">${susRespuestas}</div>
+        </div>
+    `;
+}).join('');
+
+    const nombreFinal = nombreAutor || "Usuario";
     const palabras = nombreFinal.trim().split(" ");
     let inicial = palabras[0].charAt(0).toUpperCase();
     if (palabras.length > 1) inicial += palabras[1].charAt(0).toUpperCase();
@@ -1016,26 +1055,27 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
         : `<div class="profile-circle small" style="width:40px; height:40px; border-radius:50%; background:var(--accent, #76f3c2); color:#000; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px;">${inicial}</div>`;
 
     const tagsHtml = (tags && tags.length) 
-    ? `<div class="post-tags" style="margin: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px;">
-        ${tags.map(tag => `<span class="tag" data-tag="${tag}" style="background: var(--panel-soft); padding:4px 10px; border-radius:20px; font-size:11px; cursor:pointer;">#${tag}</span>`).join('')}
-       </div>`
-    : '';
+        ? `<div class="post-tags" style="margin: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px;">
+            ${tags.map(tag => `<span class="tag" data-tag="${tag}" style="background: var(--panel-soft); padding:4px 10px; border-radius:20px; font-size:11px; cursor:pointer;">#${escapeHtml(tag)}</span>`).join('')}
+           </div>`
+        : '';
+
     post.innerHTML = `
         <div class="post-header">
             <div class="post-user" onclick="window.location.href='perfil?user_id=${autorId}'" style="cursor: pointer;">
                 ${avatarHtml}
                 <div>
-                    <h4 style="margin:0; color:var(--text, #fff); font-size:15px;">${nombreFinal}</h4>
+                    <h4 style="margin:0; color:var(--text, #fff); font-size:15px;">${escapeHtml(nombreFinal)}</h4>
                     <span style="font-size:12px; color:var(--muted, #9dc7b8);">${fechaFormateada}</span>
                 </div>
             </div>
             ${opcionesHTML}
         </div>
         <div class="post-content" style="margin-top:15px;">
-            <p class="post-text">${texto}</p>
+            <p class="post-text">${escapeHtml(texto)}</p>
             <div class="${gridClass}">${mediaHTML}</div>
         </div>
-        ${tagsHtml}   <!-- 👈 TAGS AQUÍ -->
+        ${tagsHtml}
         <div class="post-actions" style="margin-top:15px; display:flex; gap:10px;">
             <label class="like-btn-unibot ${miReaccion === 'like' ? 'active' : ''}" onclick="manejarReaccionUnibot(this, 'like')">
                 <div class="unibot-icon"></div>
@@ -1057,6 +1097,60 @@ function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [
             </div>
         </div>
     `;
+    // Manejar menú de tres puntos en comentarios
+post.querySelectorAll('.comment-menu').forEach(menu => {
+    const btn = menu.querySelector('.comment-menu-btn');
+    const dropdown = menu.querySelector('.comment-dropdown');
+    if (btn && dropdown) {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Cerrar otros dropdowns abiertos
+            document.querySelectorAll('.comment-dropdown').forEach(d => {
+                if (d !== dropdown) d.style.display = 'none';
+            });
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    }
+});
+
+// Cerrar dropdowns al hacer clic fuera (dentro del post)
+post.addEventListener('click', (e) => {
+    if (!e.target.closest('.comment-menu')) {
+        post.querySelectorAll('.comment-dropdown').forEach(d => d.style.display = 'none');
+    }
+});
+
+    post.querySelectorAll('.delete-comment-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const comentarioId = btn.dataset.id;
+        if (!confirm('¿Eliminar este comentario?')) return;
+
+        // Obtener el postId desde el post-card más cercano
+        const postCard = btn.closest('.post-card');
+        if (!postCard) {
+            alert('Error: no se pudo identificar la publicación.');
+            return;
+        }
+        const postId = postCard.dataset.id;
+
+        const formData = new FormData();
+        formData.append('comentario_id', comentarioId);
+        try {
+            const resp = await fetch('eliminar_comentario.php', { method: 'POST', body: formData });
+            const text = await resp.text();
+            if (text.includes('"status":"ok"') || text.includes('"ok"')) {
+                window.location.href = `menu?post_id=${postId}`;
+            } else {
+                alert('Error al eliminar comentario');
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            alert('Error de conexión');
+        }
+    });
+});
+
     return post;
 }
 function crearPostCard(postData) {
@@ -1239,49 +1333,90 @@ const tagsHtml = (postData.tags && postData.tags.length)
             contenedor.appendChild(input);
             input.focus();
         }
-        function abrirModalPost(postData) {
+
+       function cerrarModalPost() {
     const modal = document.getElementById("postModal");
-    const modalBody = document.getElementById("modalPostBody");
-    // Reutilizar la función crearPost (la original) para mostrar el contenido completo
-    const imgArray = postData.imagen ? postData.imagen.split(",").map(src => src.trim()).filter(Boolean).map(src => "uploads/" + src) : [];
-    const fullPost = crearPost(
-    postData.texto || "",
-    imgArray,
-    postData.total_likes || 0,
-    postData.total_dislikes || 0,
-    postData.comentarios_data || [],
-    postData.mi_reaccion || null,
-    postData.nombre_autor,
-    postData.usuario_id,
-    miUsuarioId,
-    miRol,
-    postData.fecha,
-    postData.foto_perfil,
-    postData.tags || []   // 👈 NUEVO
-);
-    fullPost.dataset.id = postData.id;
-    modalBody.innerHTML = "";
-    modalBody.appendChild(fullPost);
-    modal.classList.add("active");
+    if (!modal) return;
+    // Pausar todos los videos dentro del modal
+    const videos = modal.querySelectorAll("video");
+    videos.forEach(video => {
+        video.pause();
+        video.currentTime = 0;
+    });
+    modal.classList.remove("active");
+}
+
+function abrirModalPost(postData) {
+    const postId = postData.id;
+    const postActualizado = postsDataGlobal.find(p => p.id == postId);
+    if (!postActualizado) {
+        console.error("Post no encontrado en postsDataGlobal");
+        return;
+    }
+    const modal = document.getElementById("postModal");
+    // Pausar cualquier video que se esté reproduciendo antes de abrir otro
+    const oldVideos = modal.querySelectorAll("video");
+    oldVideos.forEach(video => video.pause());
     
-    // Cerrar modal al hacer clic en la X o fuera del contenido
+    const modalBody = document.getElementById("modalPostBody");
+    const imgArray = postActualizado.imagen ? postActualizado.imagen.split(",").map(src => src.trim()).filter(Boolean).map(src => "uploads/" + src) : [];
+    try {
+        const fullPost = crearPost(
+            postActualizado.texto || "",
+            imgArray,
+            postActualizado.total_likes || 0,
+            postActualizado.total_dislikes || 0,
+            postActualizado.comentarios_data || [],
+            postActualizado.mi_reaccion || null,
+            postActualizado.nombre_autor,
+            postActualizado.usuario_id,
+            window.miUsuarioId,
+            window.miRol,
+            postActualizado.fecha,
+            postActualizado.foto_perfil,
+            postActualizado.tags || []
+        );
+        fullPost.dataset.id = postActualizado.id;
+        modalBody.innerHTML = "";
+        modalBody.appendChild(fullPost);
+        modal.classList.add("active");
+    } catch (err) {
+        console.error("Error al crear el post:", err);
+        modalBody.innerHTML = `<div style="color:red; padding:20px;">Error al cargar el post: ${err.message}</div>`;
+        modal.classList.add("active");
+    }
+    // Asignar eventos de cierre correctamente
     const closeSpan = modal.querySelector(".close-modal");
-    closeSpan.onclick = () => modal.classList.remove("active");
+    closeSpan.onclick = cerrarModalPost;          // ✅ ahora llama a cerrarModalPost
     modal.onclick = (e) => {
-        if (e.target === modal) modal.classList.remove("active");
+        if (e.target === modal) cerrarModalPost(); // ✅ también aquí
     };
 }
 
-        function enviarComentario(texto, postId, padreId) {
-            if (!texto.trim()) return;
-            const fd = new FormData();
-            fd.append('post_id', postId);
-            fd.append('comentario', texto);
-            fd.append('padre_id', padreId || 0);
+// Listener global para la tecla Escape
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+        cerrarModalPost();
+    }
+});
 
-            fetch('comentar.php', { method: 'POST', body: fd })
-                .then(() => location.reload());
-        }
+
+
+
+    
+        function enviarComentario(texto, postId, padreId) {
+    if (!texto.trim()) return;
+    const fd = new FormData();
+    fd.append('post_id', postId);
+    fd.append('comentario', texto);
+    fd.append('padre_id', padreId || 0);
+
+    fetch('comentar.php', { method: 'POST', body: fd })
+        .then(() => {
+            window.location.href = `menu?post_id=${postId}`;
+        })
+        .catch(err => console.error("Error al comentar:", err));
+}
 
         function abrirLightbox(src) {
             const overlay = document.getElementById('lightboxOverlay');
@@ -1301,7 +1436,6 @@ const tagsHtml = (postData.tags && postData.tags.length)
     let miUsuarioId = null;
     let miRol = null;
 
-    // Guardar en el objeto window para que lo usen otras funciones
     window.miUsuarioId = null;
     window.miRol = null;
 
@@ -1364,26 +1498,42 @@ const tagsHtml = (postData.tags && postData.tags.length)
             }
 
             resultado.innerHTML = "";
+            const postsData = [];
+
             data.forEach(post => {
-                // Normalizar datos para la tarjeta
                 const postData = {
-    id: post.id,
-    texto: post.texto || "",
-    imagen: post.imagen || null,
-    total_likes: post.total_likes || 0,
-    total_dislikes: post.total_dislikes || 0,
-    comentarios_data: post.comentarios_data || [],
-    mi_reaccion: post.mi_reaccion || null,
-    nombre_autor: post.nombre_autor || "Usuario",
-    usuario_id: post.usuario_id,
-    fecha: post.fecha,
-    foto_autor: post.foto_perfil || null,
-    foto_perfil: post.foto_perfil || null,
-    tags: post.tags || []   // 👈 AGREGA ESTA LÍNEA
-};
+                    id: post.id,
+                    texto: post.texto || "",
+                    imagen: post.imagen || null,
+                    total_likes: post.total_likes || 0,
+                    total_dislikes: post.total_dislikes || 0,
+                    comentarios_data: post.comentarios_data || [],
+                    mi_reaccion: post.mi_reaccion || null,
+                    nombre_autor: post.nombre_autor || "Usuario",
+                    usuario_id: post.usuario_id,
+                    fecha: post.fecha,
+                    foto_autor: post.foto_perfil || null,
+                    foto_perfil: post.foto_perfil || null,
+                    tags: post.tags || []
+                };
+                postsData.push(postData);
                 const card = crearPostCard(postData);
                 resultado.appendChild(card);
             });
+            // Dentro de window.onload, después de const postsData = [] y del bucle forEach
+postsDataGlobal = postsData;
+
+            // 🔥 ABRIR POST DIRECTAMENTE DESDE URL (sin setInterval)
+            const urlParams = new URLSearchParams(window.location.search);
+            const postIdToOpen = urlParams.get('post_id');
+            if (postIdToOpen) {
+                const targetPost = postsData.find(p => p.id == postIdToOpen);
+                if (targetPost) {
+                    abrirModalPost(targetPost);
+                    // Limpiar la URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }
         })
         .catch(err => {
             console.error("❌ Error de red:", err);
@@ -1516,6 +1666,21 @@ document.getElementById('searchTagsInput')?.addEventListener('keypress', (e) => 
         if (tag) filtrarPorTag(tag);
     }
 });
+
+// Detectar parámetro post_id en la URL
+const urlParamsMenu = new URLSearchParams(window.location.search);
+const postIdParam = urlParamsMenu.get('post_id');
+if (postIdParam) {
+  const checkPosts = setInterval(() => {
+    const postCard = document.querySelector(`.post-card-grid[data-id="${postIdParam}"]`);
+    if (postCard) {
+      clearInterval(checkPosts);
+      postCard.click(); // abre el modal
+      // Limpiar URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, 500);
+}
     </script>
     <div id="postModal" class="post-modal">
     <div class="modal-content">

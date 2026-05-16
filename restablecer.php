@@ -25,6 +25,6 @@ $_SESSION['reset_user_id'] = $user['id'];
 $_SESSION['reset_token'] = $token;
 
 // Redirigir al formulario HTML
-header("Location: restablecer.html");
+header("Location: restablecer");
 exit;
 ?>

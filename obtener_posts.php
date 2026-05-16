@@ -57,8 +57,8 @@ $posts = [];
 while ($row = mysqli_fetch_assoc($res)) {
     $post_id = $row['id'];
     
-    // Comentarios
-    $sql_comentarios = "SELECT c.id, c.comentario, c.padre_id, u.nombre_completo AS nombre_autor 
+    // Comentarios - AHORA CON c.usuario_id
+    $sql_comentarios = "SELECT c.id, c.comentario, c.padre_id, c.usuario_id, u.nombre_completo AS nombre_autor 
                         FROM comentarios c 
                         LEFT JOIN usuarios u ON c.usuario_id = u.id 
                         WHERE c.publicacion_id = $post_id 
