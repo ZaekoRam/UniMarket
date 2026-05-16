@@ -420,7 +420,7 @@
 
         <div class="welcome-text">
             <p class="small-text" data-i18n="fraseInicio">Todo comienza por un 0</p>
-            <h1 id="saludoUsuario">Hola, Invitado</h1>
+            <h1 id="saludoUsuario" data-i18n="cargando">Cargando...</h1>
         </div>
     </div>
 
@@ -534,7 +534,8 @@ function escapeHtml(str) {
                 haceUnMomento: "Hace un momento",
                 confirmarEliminar: "¿Seguro que quieres eliminar esta publicación?",
                 errorEliminar: "No se pudo eliminar la publicación.",
-                errorIdPost: "No se encontró el ID de la publicación."
+                errorIdPost: "No se encontró el ID de la publicación.",
+                cargando: "Cargando...",   
             },
             en: {
                 inicio: "Home",
@@ -571,7 +572,8 @@ function escapeHtml(str) {
                 haceUnMomento: "Just now",
                 confirmarEliminar: "Are you sure you want to delete this post?",
                 errorEliminar: "Could not delete the post.",
-                errorIdPost: "Post ID was not found."
+                errorIdPost: "Post ID was not found.",
+                cargando: "Loading..."
             }
         };
 
@@ -602,32 +604,15 @@ if (textoEl) textoEl.placeholder = translations[lang].placeholderTexto;
 // document.getElementById("labelImagen")...
 // document.getElementById("urlEnlace")...
 
-            const saludoActual = document.getElementById("saludoUsuario");
-        const nombreActual = saludoActual.dataset.nombreActual || "";
-
-        if (nombreActual) {
-            // Ponemos el saludo con el nombre
-            saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
-            
-            // 🔥 MAGIA DE LAS DOS INICIALES PARA LOS ICONOS PRINCIPALES 🔥
-            const palabras = nombreActual.trim().split(" ");
-            let iniciales = palabras[0].charAt(0).toUpperCase();
-            if (palabras.length > 1) {
-                iniciales += palabras[1].charAt(0).toUpperCase();
-            }
-            
-            // Se las ponemos a los circulitos de perfil y de publicar
-            document.getElementById("profileInitial").textContent = iniciales;
-            document.getElementById("publishInitial").textContent = iniciales;
-            
-        } else {
-            // Si es invitado (no ha iniciado sesión)
-            saludoActual.textContent = translations[lang].saludoInvitado;
-            const inicialInvitado = lang === "en" ? "G" : "I";
-            
-            document.getElementById("profileInitial").textContent = inicialInvitado;
-            document.getElementById("publishInitial").textContent = inicialInvitado;
-        }
+            // Actualizar el saludo con el nombre actual si ya se cargó (solo para traducción)
+const saludoElement = document.getElementById("saludoUsuario");
+const nombreGuardado = saludoElement?.dataset.nombreActual;
+if (nombreGuardado && nombreGuardado !== "") {
+    saludoElement.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreGuardado);
+} else {
+    // Si aún no hay nombre, mostramos "Cargando..." traducido
+    saludoElement.textContent = translations[lang].cargando;
+}
         }
 
         function aplicarTema(modo) {
@@ -661,49 +646,6 @@ if (textoEl) textoEl.placeholder = translations[lang].placeholderTexto;
 
         const idiomaGuardado = localStorage.getItem("lang") || "es";
         aplicarIdioma(idiomaGuardado);
-
-        fetch("obtener_sesion.php")
-            .then(res => res.json())
-            .then(data => {
-                const nombre = data.usuario ? data.usuario : "";
-                const nombreBase = nombre || (getLang() === "en" ? "Guest" : "Invitado");
-                const inicial = nombreBase.trim().charAt(0).toUpperCase();
-
-                saludoUsuario.dataset.nombreActual = nombre;
-
-                if (nombre) {
-                    saludoUsuario.textContent = t("saludoUsuario").replace("{nombre}", nombre);
-                } else {
-                    saludoUsuario.textContent = t("saludoInvitado");
-                }
-
-                if (data.foto_perfil && data.foto_perfil.trim() !== "") {
-                    profileImage.src = data.foto_perfil;
-                    profileImage.style.display = "block";
-                    profileInitial.style.display = "none";
-
-                    publishImage.src = data.foto_perfil;
-                    publishImage.style.display = "block";
-                    publishInitial.style.display = "none";
-                } else {
-                    profileInitial.textContent = inicial;
-                    profileInitial.style.display = "flex";
-                    profileImage.style.display = "none";
-
-                    publishInitial.textContent = inicial;
-                    publishInitial.style.display = "flex";
-                    publishImage.style.display = "none";
-                }
-            })
-            .catch(() => {
-                saludoUsuario.dataset.nombreActual = "";
-                saludoUsuario.textContent = t("saludoInvitado");
-
-                const inicialInvitado = getLang() === "en" ? "G" : "I";
-
-                profileInitial.textContent = inicialInvitado;
-                publishInitial.textContent = inicialInvitado;
-            });
 
         const resultado = document.getElementById("resultado");
         const inputArchivo = document.getElementById("archivoImagen");
@@ -1453,11 +1395,9 @@ document.addEventListener("keydown", function(e) {
         window.onload = async () => {
     let miUsuarioId = null;
     let miRol = null;
-
     window.miUsuarioId = null;
     window.miRol = null;
 
-    // 1. Cargamos la sesión
     try {
         const peticionSesion = await fetch("obtener_sesion.php");
         const sesion = await peticionSesion.json();
@@ -1471,28 +1411,57 @@ document.addEventListener("keydown", function(e) {
             adminMenuItem.style.display = (miRol === "admin") ? "inline-flex" : "none";
         }
 
+        // ========== ACTUALIZAR SALUDO Y FOTO DE PERFIL ==========
         const saludoActual = document.getElementById("saludoUsuario");
-        if (sesion.nombre_completo) {
-            saludoActual.dataset.nombreActual = sesion.nombre_completo;
-        } else if (sesion.usuario) {
-            saludoActual.dataset.nombreActual = sesion.usuario;
-        }
+        const profileImage = document.getElementById("profileImage");
+        const profileInitial = document.getElementById("profileInitial");
+        const publishImage = document.getElementById("publishImage");
+        const publishInitial = document.getElementById("publishInitial");
 
-        const nombreActual = saludoActual.dataset.nombreActual || "";
+        // Priorizar nombre_completo (el nombre real), luego usuario, luego nada
+        let nombreReal = sesion.nombre_completo || sesion.usuario || "";
         const lang = localStorage.getItem("lang") || "es";
 
-        if (nombreActual) {
-            saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
-            const palabras = nombreActual.trim().split(" ");
+        if (nombreReal !== "") {
+            saludoActual.dataset.nombreActual = nombreReal;
+            saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreReal);
+
+            // Iniciales para los círculos (2 letras si es posible)
+            const palabras = nombreReal.trim().split(" ");
             let iniciales = palabras[0].charAt(0).toUpperCase();
             if (palabras.length > 1) iniciales += palabras[1].charAt(0).toUpperCase();
-            document.getElementById("profileInitial").textContent = iniciales;
-            document.getElementById("publishInitial").textContent = iniciales;
+
+            // Foto de perfil (si existe)
+            if (sesion.foto_perfil && sesion.foto_perfil.trim() !== "") {
+                profileImage.src = sesion.foto_perfil;
+                profileImage.style.display = "block";
+                profileInitial.style.display = "none";
+
+                publishImage.src = sesion.foto_perfil;
+                publishImage.style.display = "block";
+                publishInitial.style.display = "none";
+            } else {
+                profileInitial.textContent = iniciales;
+                profileInitial.style.display = "flex";
+                profileImage.style.display = "none";
+
+                publishInitial.textContent = iniciales;
+                publishInitial.style.display = "flex";
+                publishImage.style.display = "none";
+            }
         } else {
+            // Usuario no autenticado (invitado)
+            saludoActual.dataset.nombreActual = "";
             saludoActual.textContent = translations[lang].saludoInvitado;
             const inicialInvitado = lang === "en" ? "G" : "I";
-            document.getElementById("profileInitial").textContent = inicialInvitado;
-            document.getElementById("publishInitial").textContent = inicialInvitado;
+
+            profileInitial.textContent = inicialInvitado;
+            profileInitial.style.display = "flex";
+            profileImage.style.display = "none";
+
+            publishInitial.textContent = inicialInvitado;
+            publishInitial.style.display = "flex";
+            publishImage.style.display = "none";
         }
     } catch (e) {
         console.error("No se pudo cargar la sesión", e);

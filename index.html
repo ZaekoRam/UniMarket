@@ -124,6 +124,25 @@
                 line-height: 1.4;
                 text-align: left;
             }
+            .forgot-link {
+  background: none;
+  border: none;
+  color: inherit;
+  /* 🔥 Aquí defines la fuente exacta como la original */
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: underline;
+  cursor: pointer;
+  display: block;
+  margin: 12px auto 8px;
+  text-align: center;
+  width: fit-content;
+}
+.forgot-link:hover {
+  text-decoration: none;
+}
+
   </style>
 </head>
 
@@ -215,13 +234,7 @@
           </div>
 
           <!-- 🔥 ENLACE DE RECUPERACIÓN CORREGIDO (span con onclick) -->
-          <div class="recordar" id="recordarContainer">
-    <a id="linkRecuperar" href="javascript:void(0)" onclick="window.location.replace('recuperar.php'); return false;" 
-       style="color: inherit; text-decoration: underline; cursor: pointer;">
-       ¿Olvidó su contraseña?
-    </a>
-</div>
-
+          <a href="recuperar.php" class="forgot-link" data-i18n="forgot">¿Olvidó su contraseña?</a>
           <button type="submit" data-i18n="loginButton">Iniciar</button>
         </form>
         <div class="mini-login">
@@ -296,57 +309,8 @@
   </div>
 
   <script src="app.js"></script>
-  <script>
-    // Forzar que cualquier elemento con clase 'recordar' que sea enlace o botón funcione
-    document.addEventListener('DOMContentLoaded', function() {
-        const recordarElement = document.querySelector('.recordar a, .recordar button');
-        if (recordarElement) {
-            recordarElement.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                window.location.replace('recuperar.php');
-            });
-        }
-    });
-</script>
-<script>
-    (function() {
-        // Función para asegurar que el enlace funcione
-        function asegurarEnlace() {
-            var enlace = document.getElementById('linkRecuperar');
-            if (enlace) {
-                // Si ya existe, solo aseguramos el evento
-                enlace.onclick = function(e) {
-                    e.preventDefault();
-                    window.location.replace('recuperar.php');
-                    return false;
-                };
-            } else {
-                // Si no existe, lo creamos de nuevo
-                var contenedor = document.getElementById('recordarContainer');
-                if (contenedor) {
-                    contenedor.innerHTML = '<a id="linkRecuperar" href="javascript:void(0)" style="color: inherit; text-decoration: underline; cursor: pointer;">¿Olvidó su contraseña?</a>';
-                    document.getElementById('linkRecuperar').onclick = function(e) {
-                        e.preventDefault();
-                        window.location.replace('recuperar.php');
-                        return false;
-                    };
-                }
-            }
-        }
 
-        // Ejecutar cuando el DOM esté listo
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', asegurarEnlace);
-        } else {
-            asegurarEnlace();
-        }
 
-        // También después de un pequeño retraso por si algún script modifica el DOM después
-        setTimeout(asegurarEnlace, 500);
-        setTimeout(asegurarEnlace, 1000);
-    })();
-</script>
 </body>
 
 <!-- Contenedor de notificaciones -->

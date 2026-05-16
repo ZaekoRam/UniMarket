@@ -7,7 +7,7 @@ $usuario         = mysqli_real_escape_string($conexion, $_POST['usuario']);
 $num             = mysqli_real_escape_string($conexion, $_POST['num']);     
 $cuenta          = mysqli_real_escape_string($conexion, $_POST['cuenta']);  
 $password_plana  = $_POST['password']; 
-$rol             = 'lector'; 
+$rol             = 'creador'; 
 
 // Validaciones
 if (strlen(trim($nombre_completo)) < 3) {

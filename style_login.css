@@ -171,7 +171,21 @@ body::before {
   backdrop-filter: blur(12px);
   transition: transform .2s ease, box-shadow .2s ease, background .25s ease;
 }
-
+.link-button {
+  background: none;
+  border: none;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
+}
+.link-button:hover {
+  text-decoration: none;
+  opacity: 0.8;
+}
 .home-chip:hover {
   transform: translateY(-2px);
   box-shadow:
