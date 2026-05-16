@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniMarket - Inicio</title>
+    <link rel="stylesheet" href="style_home.css">
+    <style>
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.96);
+            z-index: 20000;
+            padding: 0;
+        }
+        .lightbox-overlay.active {
+            display: flex;
+        }
+        .lightbox-overlay img {
+            max-width: 98vw;
+            max-height: 98vh;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+            position: relative;
+            z-index: 1;
+        }
+        .lightbox-overlay::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            cursor: zoom-out;
+        }
+
+        /* ========== NUEVAS MEJORAS VISUALES ========== */
+
+        /* Admin menu item should match the rest of the sidebar menu */
+        #adminMenuItem {
+            display: none;
+        }
+
+        /* Fondo animado */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(57, 197, 187, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(102, 255, 240, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(57, 197, 187, 0.05) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .comment-menu-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text);
+}
+.comment-dropdown button:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+
+        /* Caja de publicar con efecto hover */
+        .publish-box {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .publish-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(57, 197, 187, 0.03), transparent);
+            transition: left 0.7s ease;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .publish-box:hover::before {
+            left: 100%;
+        }
+
+        .publish-box:hover {
+            border-color: rgba(57, 197, 187, 0.25);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(57, 197, 187, 0.1);
+            transform: translateY(-2px);
+        }
+
+
+        .profile-circle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(57, 197, 187, 0.3);
+        }
+
+        /* Botón publicar animado */
+        .btn-publicar {
+            background: linear-gradient(135deg, var(--accent-2), var(--accent), #2dd4bf) !important;
+            background-size: 200% 200% !important;
+            animation: gradientMove 3s ease infinite !important;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-publicar:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(57, 197, 187, 0.4) !important;
+        }
+
+        /* Separador decorativo */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 820px;
+            margin: 24px auto 28px;
+            opacity: 0.4;
+            transition: opacity 0.3s ease;
+        }
+
+        .section-divider:hover {
+            opacity: 0.7;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .divider-icon {
+            color: var(--accent);
+            font-size: 14px;
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Post cards con hover */
+        .post-card {
+            transition: all 0.3s ease;
+        }
+
+        .post-card:hover {
+            border-color: rgba(57, 197, 187, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animación del saludo */
+        .welcome-text h1 {
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* ========== MEJORAS PANEL DE EDICIÓN ========== */
+
+/* Fondo con partículas sutiles */
+.edit-post-box {
+    position: relative;
+    overflow: hidden;
+}
+
+.edit-post-box::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(57,197,187,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.edit-post-box::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -20%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(102,255,240,0.04) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Header con icono animado */
+.edit-post-header .edit-icon {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+/* Input de archivo más atractivo */
+.edit-file-label {
+    position: relative;
+    overflow: hidden;
+}
+
+.edit-file-label::after {
+    content: '📎';
+    position: absolute;
+    right: 12px;
+    opacity: 0.3;
+    font-size: 16px;
+}
+
+.edit-file-label:hover::after {
+    opacity: 0.6;
+}
+
+/* Botón guardar con brillo */
+.btn-save {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-save::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-save:hover::after {
+    left: 100%;
+}
+
+/* Contador de caracteres */
+.edit-char-count {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: -12px;
+    margin-bottom: 12px;
+}
+/* ========== EFECTO GLITCH AL ACTIVAR LIKE/DISLIKE ========== */
+.like-btn-unibot.active,
+.dislike-btn-unibot.active {
+    position: relative;
+    overflow: visible;
+}
+
+.like-btn-unibot.active::after,
+.dislike-btn-unibot.active::after {
+    --slice-0: inset(50% 50% 50% 50%);
+    --slice-1: inset(80% -6px 0 0);
+    --slice-2: inset(50% -6px 30% 0);
+    --slice-3: inset(10% -6px 85% 0);
+    --slice-4: inset(40% -6px 43% 0);
+    --slice-5: inset(80% -6px 5% 0);
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent);
+    border-radius: 14px;
+    clip-path: var(--slice-0);
+    z-index: -1;
+}
+
+.like-btn-unibot.active::after {
+    background: rgba(57, 197, 187, 0.4);
+    box-shadow: 0 0 15px rgba(57, 197, 187, 0.8);
+    animation: glitch-like 0.6s steps(2, end);
+}
+
+.dislike-btn-unibot.active::after {
+    background: rgba(255, 125, 146, 0.4);
+    box-shadow: 0 0 15px rgba(255, 125, 146, 0.8);
+    animation: glitch-dislike 0.6s steps(2, end);
+}
+
+@keyframes glitch-like {
+    0%  { clip-path: var(--slice-1); transform: translate(-4px, -2px); }
+    10% { clip-path: var(--slice-3); transform: translate(4px, 2px); }
+    20% { clip-path: var(--slice-1); transform: translate(-2px, 2px); }
+    30% { clip-path: var(--slice-3); transform: translate(0px, 1px); }
+    40% { clip-path: var(--slice-2); transform: translate(-1px, 0px); }
+    50% { clip-path: var(--slice-3); transform: translate(2px, 0px); }
+    60% { clip-path: var(--slice-4); transform: translate(2px, 2px); }
+    70% { clip-path: var(--slice-2); transform: translate(-2px, 2px); }
+    80% { clip-path: var(--slice-5); transform: translate(4px, -2px); }
+    90% { clip-path: var(--slice-1); transform: translate(-2px, 0px); }
+    100%{ clip-path: var(--slice-1); transform: translate(0); }
+}
+
+@keyframes glitch-dislike {
+    0%  { clip-path: var(--slice-1); transform: translate(4px, 2px); }
+    10% { clip-path: var(--slice-3); transform: translate(-4px, -2px); }
+    20% { clip-path: var(--slice-1); transform: translate(2px, -2px); }
+    30% { clip-path: var(--slice-3); transform: translate(0px, -1px); }
+    40% { clip-path: var(--slice-2); transform: translate(1px, 0px); }
+    50% { clip-path: var(--slice-3); transform: translate(-2px, 0px); }
+    60% { clip-path: var(--slice-4); transform: translate(-2px, -2px); }
+    70% { clip-path: var(--slice-2); transform: translate(2px, -2px); }
+    80% { clip-path: var(--slice-5); transform: translate(-4px, 2px); }
+    90% { clip-path: var(--slice-1); transform: translate(2px, 0px); }
+    100%{ clip-path: var(--slice-1); transform: translate(0); }
+}
+
+/* Quitar los fuegos artificiales si prefieres solo el glitch */
+.fireworks-unibot {
+    display: none;
+}
+    </style>
+
+</head>
+
+<body>
+    <script src="actividad.js"></script>
+
+        <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="sidebar-mascot">
+                <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
+            </div>
+            <div class="sidebar-brand">UniMarket</div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="menu" class="menu-item active">
+                <span class="icon"><img src="img/Icon_inicio.png" alt="Inicio" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="inicio">Inicio</span>
+            </a>
+
+            <a href="perfil" class="menu-item">
+                <span class="icon"><img src="img/Icon_perfil.png" alt="Perfil" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="perfil">Perfil</span>
+            </a>
+
+            <a href="mensajes" class="menu-item">
+                <span class="icon"><img src="img/Icon_mensajes.png" alt="Mensajes" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="mensajes">Mensajes</span>
+            </a>
+
+            <a href="notificaciones" class="menu-item">
+                <span class="icon"><img src="img/Icon_notificaciones.png" alt="Notificaciones" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="notificaciones">Notificaciones</span>
+            </a>
+
+            <a href="configuraciones" class="menu-item">
+                <span class="icon"><img src="img/Icon_ajustes.png" alt="Configuraciones" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="configuraciones">Configuraciones</span>
+            </a>
+
+            <a id="adminMenuItem" href="login_admin.php" class="menu-item" style="display:none;">
+                <span class="icon"><img src="img/Icon_administracion.png" alt="Notificaciones" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="admin">Administración</span>
+            </a>
+
+            <a href="cerrar_sesion.php" class="menu-item">
+                <span class="icon"><img src="img/Icon_cerrar_sesion.png" alt="Cerrar sesión" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
+            </a>
+
+            <label class="theme-switch modern-switch" aria-label="Cambiar tema">
+                <input type="checkbox" id="themeToggleInput">
+                <span class="slider">
+                    <div class="star star_1"></div>
+                    <div class="star star_2"></div>
+                    <div class="star star_3"></div>
+
+                    <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
+                        <path transform="matrix(.77976 0 0 .78395-299.99-418.63)" fill="#fff"
+                            d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
+                        </path>
+                    </svg>
+                </span>
+                <span class="theme-text" id="themeText">Dark Mode</span>
+            </label>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+    <div class="welcome-box">
+        <div class="profile-circle" id="profileCircle">
+            <img id="profileImage" src="" alt="Foto de perfil" style="display: none;">
+            <span id="profileInitial">U</span>
+        </div>
+
+        <div class="welcome-text">
+            <p class="small-text" data-i18n="fraseInicio">Todo comienza por un 0</p>
+            <h1 id="saludoUsuario">Hola, Invitado</h1>
+        </div>
+    </div>
+
+    <span class="neon-title">UniMarket</span>
+</header>
+
+        <!-- NUEVO: Separador decorativo -->
+        <div class="section-divider">
+            <span class="divider-line"></span>
+            <span class="divider-icon">✦</span>
+            <span class="divider-line"></span>
+        </div>
+ <div class="search-tags-bar" style="max-width:820px; margin:0 auto 20px; position:relative;">
+    <input type="text" id="searchTagsInput" class="search-tags-input" placeholder="🔎 Buscar por tags...">
+    <div id="searchSuggestions" class="tags-suggestions" style="position:absolute; top:100%; left:0; right:0; background:var(--panel); border-radius:12px; border:1px solid var(--border); display:none; z-index:100; max-height:200px; overflow-y:auto;"></div>
+</div>
+
+       <!-- Contenedor del formulario de publicación (centrado arriba) -->
+<div class="publish-wrapper">
+    <div class="publish-box">
+        <div class="publish-header">
+            <div class="profile-circle small" id="publishCircle">
+                <img id="publishImage" src="" alt="Foto de perfil" style="display: none;">
+                <span id="publishInitial">U</span>
+            </div>
+            <div>
+                <h3 data-i18n="crearPublicacion">Crear publicación</h3>
+                <p data-i18n="subCrearPublicacion">Comparte algo con la comunidad de UniMarket</p>
+            </div>
+        </div>
+
+        <form id="contenidoForm" action="menu.php" method="POST" enctype="multipart/form-data">
+            <div class="textarea-wrapper">
+                <textarea id="texto" name="texto" placeholder="¿Qué vamos a emprender hoy?"></textarea>
+                <label class="camera-btn" title="Agregar imagen o video">
+                    <input type="file" id="archivoImagen" name="media[]" accept="image/*,video/*" multiple>
+                    📷
+                </label>
+            </div>
+            <!-- Dentro de <form id="contenidoForm">, antes del botón btn-publicar -->
+<div class="tags-input-wrapper" style="position:relative; margin-top:12px;">
+    <input type="text" id="tagsInput" name="tags" class="tags-input" placeholder="Ej: tecnología, unibot, web (separados por comas)">
+    <div id="tagsSuggestions" class="tags-suggestions" style="position:absolute; top:100%; left:0; right:0; background:var(--panel); border-radius:12px; border:1px solid var(--border); display:none; z-index:100; max-height:200px; overflow-y:auto;"></div>
+</div>
+            <div id="previewContainer" class="post-images-grid preview-grid"></div>
+            <button type="submit" class="btn-publicar" data-i18n="publicar">Publicar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Contenedor de la cuadrícula de posts -->
+<section class="feed-container">
+    <div id="resultado"></div>
+</section>
+    </main>
+
+    <div id="lightboxOverlay" class="lightbox-overlay" onclick="cerrarLightbox()">
+        <img id="lightboxImage" src="" alt="Vista ampliada">
+    </div>
+
+    <script>
+        // Después de las variables globales (currentTagsList, etc.), agrega:
+let postsDataGlobal = [];
+        // ========== FUNCIÓN ESCAPE HTML (SEGURA) ==========
+function escapeHtml(str) {
+    if (!str) return "";
+    return str.replace(/[&<>]/g, m => {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+        const body = document.body;
+        const themeToggleInput = document.getElementById("themeToggleInput");
+        const themeText = document.getElementById("themeText");
+
+        const translations = {
+            es: {
+                inicio: "Inicio",
+                perfil: "Perfil",
+                mensajes: "Mensajes",
+                notificaciones: "Notificaciones",
+                configuraciones: "Configuraciones",
+                cerrarSesion: "Cerrar sesión",
+                admin: "Administración",
+                fraseInicio: "Todo comienza por un 0",
+                crearPublicacion: "Crear publicación",
+                subCrearPublicacion: "Comparte algo con la comunidad de UniMarket",
+                publicar: "Publicar",
+                saludoInvitado: "Hola, Invitado",
+                saludoUsuario: "Hola, {nombre}",
+                placeholderTexto: "¿Qué vamos a emprender hoy?",
+                agregarImagen: "📷 Agregar imagen o video",
+                placeholderEnlace: "Enlace externo (https://...)",
+                anonimo: "Anón",
+                responder: "↳ Responder",
+                meGusta: "Me gusta",
+                noMeGusta: "No me gusta",
+                escribeComentario: "Escribe un comentario...",
+                escribeRespuesta: "Escribe tu respuesta...",
+                editar: "Editar",
+                editarPublicacion: "Editar publicación",
+                modificarContenido: "Modifica el texto o el archivo antes de guardar.",
+                seleccionarArchivo: "Seleccionar archivo",
+                archivoActual: "Archivo actual",
+                cancelar: "Cancelar",
+                eliminar: "Eliminar",
+                editarEnlace: "Editar enlace",
+                guardar: "Guardar",
+                haceUnMomento: "Hace un momento",
+                confirmarEliminar: "¿Seguro que quieres eliminar esta publicación?",
+                errorEliminar: "No se pudo eliminar la publicación.",
+                errorIdPost: "No se encontró el ID de la publicación."
+            },
+            en: {
+                inicio: "Home",
+                perfil: "Profile",
+                mensajes: "Messages",
+                notificaciones: "Notifications",
+                configuraciones: "Settings",
+                cerrarSesion: "Log out",
+                admin: "Administration",
+                fraseInicio: "Everything starts from zero",
+                crearPublicacion: "Create post",
+                subCrearPublicacion: "Share something with the UniMarket community",
+                publicar: "Post",
+                saludoInvitado: "Hello, Guest",
+                saludoUsuario: "Hello, {nombre}",
+                placeholderTexto: "What are we building today?",
+                agregarImagen: "📷 Add image or video",
+                placeholderEnlace: "External link (https://...)",
+                anonimo: "Anon",
+                responder: "↳ Reply",
+                meGusta: "Like",
+                noMeGusta: "Dislike",
+                escribeComentario: "Write a comment...",
+                escribeRespuesta: "Write your reply...",
+                editar: "Edit",
+                editarPublicacion: "Edit post",
+                modificarContenido: "Change the text or file before saving.",
+                seleccionarArchivo: "Select file",
+                archivoActual: "Current file",
+                cancelar: "Cancel",
+                eliminar: "Delete",
+                editarEnlace: "Edit link",
+                guardar: "Save",
+                haceUnMomento: "Just now",
+                confirmarEliminar: "Are you sure you want to delete this post?",
+                errorEliminar: "Could not delete the post.",
+                errorIdPost: "Post ID was not found."
+            }
+        };
+
+        function getLang() {
+            return localStorage.getItem("lang") || "es";
+        }
+
+        function t(key) {
+            const lang = getLang();
+            return translations[lang][key] || key;
+        }
+
+        function aplicarIdioma(lang) {
+            localStorage.setItem("lang", lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll("[data-i18n]").forEach(el => {
+                const key = el.dataset.i18n;
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            const textoEl = document.getElementById("texto");
+if (textoEl) textoEl.placeholder = translations[lang].placeholderTexto;
+
+// Estos elementos ya no existen, los quitamos
+// document.getElementById("labelImagen")...
+// document.getElementById("urlEnlace")...
+
+            const saludoActual = document.getElementById("saludoUsuario");
+        const nombreActual = saludoActual.dataset.nombreActual || "";
+
+        if (nombreActual) {
+            // Ponemos el saludo con el nombre
+            saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
+            
+            // 🔥 MAGIA DE LAS DOS INICIALES PARA LOS ICONOS PRINCIPALES 🔥
+            const palabras = nombreActual.trim().split(" ");
+            let iniciales = palabras[0].charAt(0).toUpperCase();
+            if (palabras.length > 1) {
+                iniciales += palabras[1].charAt(0).toUpperCase();
+            }
+            
+            // Se las ponemos a los circulitos de perfil y de publicar
+            document.getElementById("profileInitial").textContent = iniciales;
+            document.getElementById("publishInitial").textContent = iniciales;
+            
+        } else {
+            // Si es invitado (no ha iniciado sesión)
+            saludoActual.textContent = translations[lang].saludoInvitado;
+            const inicialInvitado = lang === "en" ? "G" : "I";
+            
+            document.getElementById("profileInitial").textContent = inicialInvitado;
+            document.getElementById("publishInitial").textContent = inicialInvitado;
+        }
+        }
+
+        function aplicarTema(modo) {
+            if (modo === "light") {
+                body.classList.add("light-mode");
+                themeToggleInput.checked = true;
+                themeText.textContent = "Light Mode";
+            } else {
+                body.classList.remove("light-mode");
+                themeToggleInput.checked = false;
+                themeText.textContent = "Dark Mode";
+            }
+        }
+
+        const temaGuardado = localStorage.getItem("theme") || "dark";
+        aplicarTema(temaGuardado);
+
+        themeToggleInput.addEventListener("change", () => {
+            const nuevoTema = themeToggleInput.checked ? "light" : "dark";
+            localStorage.setItem("theme", nuevoTema);
+            aplicarTema(nuevoTema);
+        });
+
+        const saludoUsuario = document.getElementById("saludoUsuario");
+
+        const profileImage = document.getElementById("profileImage");
+        const profileInitial = document.getElementById("profileInitial");
+
+        const publishImage = document.getElementById("publishImage");
+        const publishInitial = document.getElementById("publishInitial");
+
+        const idiomaGuardado = localStorage.getItem("lang") || "es";
+        aplicarIdioma(idiomaGuardado);
+
+        fetch("obtener_sesion.php")
+            .then(res => res.json())
+            .then(data => {
+                const nombre = data.usuario ? data.usuario : "";
+                const nombreBase = nombre || (getLang() === "en" ? "Guest" : "Invitado");
+                const inicial = nombreBase.trim().charAt(0).toUpperCase();
+
+                saludoUsuario.dataset.nombreActual = nombre;
+
+                if (nombre) {
+                    saludoUsuario.textContent = t("saludoUsuario").replace("{nombre}", nombre);
+                } else {
+                    saludoUsuario.textContent = t("saludoInvitado");
+                }
+
+                if (data.foto_perfil && data.foto_perfil.trim() !== "") {
+                    profileImage.src = data.foto_perfil;
+                    profileImage.style.display = "block";
+                    profileInitial.style.display = "none";
+
+                    publishImage.src = data.foto_perfil;
+                    publishImage.style.display = "block";
+                    publishInitial.style.display = "none";
+                } else {
+                    profileInitial.textContent = inicial;
+                    profileInitial.style.display = "flex";
+                    profileImage.style.display = "none";
+
+                    publishInitial.textContent = inicial;
+                    publishInitial.style.display = "flex";
+                    publishImage.style.display = "none";
+                }
+            })
+            .catch(() => {
+                saludoUsuario.dataset.nombreActual = "";
+                saludoUsuario.textContent = t("saludoInvitado");
+
+                const inicialInvitado = getLang() === "en" ? "G" : "I";
+
+                profileInitial.textContent = inicialInvitado;
+                publishInitial.textContent = inicialInvitado;
+            });
+
+        const resultado = document.getElementById("resultado");
+        const inputArchivo = document.getElementById("archivoImagen");
+        const previewContainer = document.getElementById("previewContainer");
+
+       
+const textarea = document.getElementById('texto');
+
+textarea.addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+    
+    if (this.scrollHeight > 400) {
+        this.style.height = '400px';
+        this.style.overflowY = 'auto';
+    } else {
+        this.style.overflowY = 'hidden';
+    }
+});
+
+        inputArchivo.addEventListener("change", (e) => {
+            previewContainer.innerHTML = "";
+
+            Array.from(e.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "preview-thumb";
+
+                    if (file.type.startsWith("video/")) {
+                        const video = document.createElement("video");
+                        video.src = ev.target.result;
+                        video.controls = true;
+                        wrapper.appendChild(video);
+                    } else {
+                        const img = document.createElement("img");
+                        img.src = ev.target.result;
+                        img.addEventListener("click", () => abrirLightbox(img.src));
+                        wrapper.appendChild(img);
+                    }
+
+                    previewContainer.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function manejarReaccion(btn, tipo) {
+            const container = btn.parentElement;
+            const likeBtn = container.querySelector(".like-btn");
+            const dislikeBtn = container.querySelector(".dislike-btn");
+
+            const updateDisplay = (el, delta) => {
+                let span = el.querySelector(".count-number");
+                if (!span) {
+                    span = document.createElement("span");
+                    span.className = "count-number";
+                    span.innerText = "0";
+                    el.appendChild(span);
+                }
+
+                let val = parseInt(span.innerText) + delta;
+                span.innerText = val < 0 ? 0 : val;
+            };
+
+            if (tipo === "like") {
+                if (likeBtn.classList.contains("active")) {
+                    updateDisplay(likeBtn, -1);
+                    likeBtn.classList.remove("active");
+                } else {
+                    if (dislikeBtn.classList.contains("active")) {
+                        updateDisplay(dislikeBtn, -1);
+                        dislikeBtn.classList.remove("active");
+                    }
+                    updateDisplay(likeBtn, 1);
+                    likeBtn.classList.add("active");
+                }
+            } else {
+                if (dislikeBtn.classList.contains("active")) {
+                    updateDisplay(dislikeBtn, -1);
+                    dislikeBtn.classList.remove("active");
+                } else {
+                    if (likeBtn.classList.contains("active")) {
+                        updateDisplay(likeBtn, -1);
+                        likeBtn.classList.remove("active");
+                    }
+                    updateDisplay(dislikeBtn, 1);
+                    dislikeBtn.classList.add("active");
+                }
+            }
+        }
+
+        function agregarComentario(e, input, parentList = null) {
+            if (e.key === "Enter" && input.value.trim() !== "") {
+                const text = input.value;
+                const list = parentList || input.closest(".comments-section").querySelector(".comments-list");
+
+                const item = document.createElement("div");
+                item.className = "comment-item";
+                item.innerHTML = `
+                    <div class="comment-bubble">
+                        <strong>${t("anonimo")}</strong>
+                        <div>${text}</div>
+                    </div>
+                    <div class="comment-actions">
+                        <span class="like-btn" onclick="manejarReaccion(this, 'like')">${t("meGusta")} <span class="count-number">0</span></span>
+                        <span class="dislike-btn" onclick="manejarReaccion(this, 'dislike')">${t("noMeGusta")} <span class="count-number">0</span></span>
+                    </div>
+                `;
+                list.appendChild(item);
+                input.value = "";
+            }
+        }
+
+        function toggleMenu(btn) {
+            const menu = btn.nextElementSibling;
+            menu.classList.toggle("show");
+        }
+
+        function editarPost(btn) {
+            const post = btn.closest(".post-card");
+            const texto = post.querySelector(".post-text")?.innerText || "";
+            const url = post.querySelector(".link-preview-card")?.href || "";
+            const mediaContainer = post.querySelector(".post-images-grid");
+            let mediaPreviewHTML = "";
+
+            if (mediaContainer) {
+                const mediaElements = mediaContainer.querySelectorAll("img, video");
+                if (mediaElements.length > 0) {
+                    mediaPreviewHTML = `<div class="edit-media-list"><span class="edit-media-label">${t("archivoActual")}</span>`;
+                    mediaElements.forEach((mediaElement, index) => {
+                        const src = mediaElement.src;
+                        const tag = mediaElement.tagName.toLowerCase();
+                        mediaPreviewHTML += `
+                            <div class="edit-media-thumb" data-src="${src}">
+                                <button type="button" class="remove-media-btn" onclick="quitarMedia(this)">&times;</button>
+                                ${tag === 'video'
+                                    ? '<video src="' + src + '" muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>'
+                                    : '<img src="' + src + '" alt="' + t("archivoActual") + '" style="width:100%; height:100%; object-fit:cover;" />'}
+                            </div>
+                        `;
+                    });
+                    mediaPreviewHTML += `</div>`;
+                }
+            }
+
+           post.innerHTML = `
+    <div class="edit-post-box">
+        <div class="edit-post-header">
+            <span class="edit-icon">✏️</span>
+            <div>
+                <strong>${t("editarPublicacion")}</strong>
+                <span>${t("modificarContenido")}</span>
+            </div>
+        </div>
+        ${mediaPreviewHTML}
+        <textarea class="edit-text" placeholder="Escribe tu publicación...">${texto}</textarea>
+        <div class="edit-bottom-row">
+            <label class="edit-file-label">
+                <span>📁 ${t("seleccionarArchivo")}</span>
+                <input type="file" class="edit-files" name="media[]" multiple>
+            </label>
+            <div class="edit-actions">
+                <button type="button" class="btn-cancel" onclick="cancelarEdicion(this)">${t("cancelar")}</button>
+                <button type="button" class="btn-save" onclick="finalizarEdicion(this)">${t("guardar")}</button>
+            </div>
+        </div>
+        <input type="hidden" class="remove-media-input" name="remove_media" value="[]">
+    </div>
+`;
+        }
+
+        function cancelarEdicion(btn) {
+            window.location.reload();
+        }
+
+        function quitarMedia(btn) {
+            const thumb = btn.closest('.edit-media-thumb');
+            if (!thumb) return;
+            const hidden = thumb.closest('.edit-post-box').querySelector('.remove-media-input');
+            if (hidden) {
+                const current = JSON.parse(hidden.value || '[]');
+                const src = thumb.dataset.src;
+                if (src && !current.includes(src)) {
+                    current.push(src);
+                }
+                hidden.value = JSON.stringify(current);
+            }
+            thumb.style.display = 'none';
+        }
+
+        function eliminarPost(btn) {
+            const postCard = btn.closest(".post-card");
+            const postId = postCard.dataset.id;
+
+            if (!postId) {
+                alert(t("errorIdPost"));
+                return;
+            }
+
+            const confirmar = confirm(t("confirmarEliminar"));
+            if (!confirmar) return;
+
+            const datos = new FormData();
+            datos.append("post_id", postId);
+
+            fetch("eliminar_post.php", {
+                method: "POST",
+                body: datos
+            })
+            .then(res => res.text())
+            .then(respuesta => {
+                if (respuesta.trim() === "ok") {
+                    postCard.remove();
+                } else {
+                    alert(t("errorEliminar"));
+                    console.log(respuesta);
+                }
+            })
+            .catch(err => {
+                console.error("Error al eliminar:", err);
+                alert(t("errorEliminar"));
+            });
+        }
+
+        function finalizarEdicion(btn) {
+    const post = btn.closest(".post-card");
+    const postId = post.dataset.id;
+    
+    if (!postId) {
+        alert("Error: No se encontró el ID del post.");
+        return;
+    }
+
+    const texto = post.querySelector(".edit-text").value;
+    const removeMediaValue = post.querySelector('.remove-media-input')?.value || '[]';
+    const fileInput = post.querySelector('.edit-files');
+    
+    const datos = new FormData();
+    datos.append("post_id", postId);
+    datos.append("texto", texto);
+    datos.append("remove_media", removeMediaValue);
+    if (fileInput && fileInput.files.length) {
+        Array.from(fileInput.files).forEach(file => datos.append("media[]", file));
+    }
+
+    fetch("editar_post.php", {
+        method: "POST",
+        body: datos
+    })
+    .then(res => res.text())
+    .then(respuesta => {
+        if (respuesta.trim() === "ok") {
+            window.location.reload(); 
+        } else {
+            alert(respuesta);
+        }
+    })
+    .catch(err => {
+        console.error("Error al editar:", err);
+        alert("Hubo un problema al conectar con el servidor.");
+    });
+}
+function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null, fotoAutor = null, tags = []) {
+    const post = document.createElement("div");
+    post.className = "post-card";
+
+    const mediaCount = imgs.length;
+    const visibleMedia = mediaCount > 4 ? imgs.slice(0, 4) : imgs;
+    const gridClass = `post-images-grid media-count-${Math.min(mediaCount, 4)}${mediaCount > 4 ? " media-count-more" : ""}`;
+
+    let fechaFormateada = t("haceUnMomento");
+    if (fechaStr) {
+        const d = new Date(fechaStr);
+        fechaFormateada = d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ", " +
+                          d.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    let mediaHTML = visibleMedia.map((src, idx) => {
+        const extension = src.split('.').pop().toLowerCase();
+        const esVideo = ['mp4', 'webm', 'ogg', 'mov', 'avi', 'mkv'].includes(extension);
+        const mediaTag = esVideo
+            ? `<video src="${src}" controls class="post-video"></video>`
+            : `<img src="${src}" class="post-img" onclick="abrirLightbox(this.src)">`;
+        const overlay = (mediaCount > 4 && idx === 3) ? `<div class="more-overlay">+${mediaCount - 4}</div>` : "";
+        return `<div class="media-item">${mediaTag}${overlay}</div>`;
+    }).join('');
+
+    const principales = todosLosComentarios.filter(c => !c.padre_id || c.padre_id == 0);
+    const respuestas = todosLosComentarios.filter(c => c.padre_id > 0);
+
+    // -- AQUÍ CONSTRUIMOS LOS COMENTARIOS CON BOTÓN DE ELIMINAR --
+    let comentariosHTML = principales.map(c => {
+    const susRespuestas = respuestas.filter(r => r.padre_id == c.id).map(r => {
+    // Botón de tres puntos con menú desplegable (solo para autor o admin)
+    let menuOpcionesRespuesta = '';
+    if (miId == r.usuario_id || miRol === 'admin') {
+        menuOpcionesRespuesta = `
+            <div class="comment-menu" style="position:relative;">
+                <button class="comment-menu-btn" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-size:18px; padding:0 6px; border-radius:4px;" title="Opciones">⋮</button>
+                <div class="comment-dropdown" style="position:absolute; right:0; top:100%; background:var(--panel-strong); border:1px solid var(--border); border-radius:8px; display:none; z-index:100; min-width:100px; backdrop-filter:blur(8px); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                    <button class="delete-comment-btn" data-id="${r.id}" style="width:100%; background:transparent; border:none; color:var(--glitch-pink); padding:8px 12px; text-align:left; cursor:pointer; font-size:13px;">🗑️ Eliminar</button>
+                </div>
+            </div>
+        `;
+    }
+    return `
+        <div class="comment-item reply-item" style="margin-left: 30px; border-left: 2px solid var(--accent-2, #42d79a); padding-left:10px; margin-top:5px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="color:var(--accent-2, #42d79a);">${escapeHtml(r.nombre_autor || "Usuario")}:</strong>
+                ${menuOpcionesRespuesta}
+            </div>
+            <div class="comment-text" style="margin-top:6px;">${escapeHtml(r.comentario)}</div>
+        </div>
+    `;
+}).join('');
+
+    // Botón de tres puntos con menú desplegable (solo para autor o admin)
+    let menuOpciones = '';
+    if (miId == c.usuario_id || miRol === 'admin') {
+        menuOpciones = `
+            <div class="comment-menu" style="position:relative;">
+                <button class="comment-menu-btn" style="background:transparent; border:none; color:var(--muted); cursor:pointer; font-size:18px; padding:0 6px; border-radius:4px;" title="Opciones">⋮</button>
+                <div class="comment-dropdown" style="position:absolute; right:0; top:100%; background:var(--panel-strong); border:1px solid var(--border); border-radius:8px; display:none; z-index:100; min-width:100px; backdrop-filter:blur(8px); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+                    <button class="delete-comment-btn" data-id="${c.id}" style="width:100%; background:transparent; border:none; color:var(--glitch-pink); padding:8px 12px; text-align:left; cursor:pointer; font-size:13px;">🗑️ Eliminar</button>
+                </div>
+            </div>
+        `;
+    }
+
+    return `
+        <div class="comment-item" data-id="${c.id}" style="margin-bottom:10px; padding:12px; background: var(--panel-soft, rgba(255,255,255,0.04)); border-radius:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="color:var(--accent, #76f3c2);">${escapeHtml(c.nombre_autor || "Usuario")}:</strong>
+                ${menuOpciones}
+            </div>
+            <div class="comment-text" style="margin-top:6px;">${escapeHtml(c.comentario)}</div>
+            <div class="comment-actions" style="margin-top:8px;">
+                <span onclick="prepararRespuesta(this)" style="color:var(--muted, #9dc7b8); cursor:pointer; font-size:12px; font-weight:600;">${t("responder")}</span>
+            </div>
+            <div class="reply-input-container"></div>
+            <div class="reply-list">${susRespuestas}</div>
+        </div>
+    `;
+}).join('');
+
+    const nombreFinal = nombreAutor || "Usuario";
+    const palabras = nombreFinal.trim().split(" ");
+    let inicial = palabras[0].charAt(0).toUpperCase();
+    if (palabras.length > 1) inicial += palabras[1].charAt(0).toUpperCase();
+
+    let opcionesHTML = "";
+    if (autorId == miId || miRol === 'admin') {
+        opcionesHTML = `
+            <div class="post-options-container">
+                <button class="options-btn" onclick="toggleMenu(this)">⋯</button>
+                <div class="options-menu">
+                    <button onclick="editarPost(this)">${t("editar")}</button>
+                    <button onclick="eliminarPost(this)" style="color:#ff7d92;">${t("eliminar")}</button>
+                </div>
+            </div>
+        `;
+    }
+
+    const avatarHtml = fotoAutor
+        ? `<img src="${fotoAutor}" class="profile-circle small" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">`
+        : `<div class="profile-circle small" style="width:40px; height:40px; border-radius:50%; background:var(--accent, #76f3c2); color:#000; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px;">${inicial}</div>`;
+
+    const tagsHtml = (tags && tags.length) 
+        ? `<div class="post-tags" style="margin: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px;">
+            ${tags.map(tag => `<span class="tag" data-tag="${tag}" style="background: var(--panel-soft); padding:4px 10px; border-radius:20px; font-size:11px; cursor:pointer;">#${escapeHtml(tag)}</span>`).join('')}
+           </div>`
+        : '';
+
+    post.innerHTML = `
+        <div class="post-header">
+            <div class="post-user" onclick="window.location.href='perfil?user_id=${autorId}'" style="cursor: pointer;">
+                ${avatarHtml}
+                <div>
+                    <h4 style="margin:0; color:var(--text, #fff); font-size:15px;">${escapeHtml(nombreFinal)}</h4>
+                    <span style="font-size:12px; color:var(--muted, #9dc7b8);">${fechaFormateada}</span>
+                </div>
+            </div>
+            ${opcionesHTML}
+        </div>
+        <div class="post-content" style="margin-top:15px;">
+            <p class="post-text">${escapeHtml(texto)}</p>
+            <div class="${gridClass}">${mediaHTML}</div>
+        </div>
+        ${tagsHtml}
+        <div class="post-actions" style="margin-top:15px; display:flex; gap:10px;">
+            <label class="like-btn-unibot ${miReaccion === 'like' ? 'active' : ''}" onclick="manejarReaccionUnibot(this, 'like')">
+                <div class="unibot-icon"></div>
+                <span class="count-number">${likes}</span>
+                <div class="fireworks-unibot"></div>
+            </label>
+            <label class="dislike-btn-unibot ${miReaccion === 'dislike' ? 'active' : ''}" onclick="manejarReaccionUnibot(this, 'dislike')">
+                <div class="unibot-icon"></div>
+                <span class="count-number">${dislikes}</span>
+                <div class="fireworks-unibot"></div>
+            </label>
+        </div>
+        <div class="comments-section" style="margin-top:15px;">
+            <div class="comments-list">${comentariosHTML}</div>
+            <div class="comment-input-row" style="margin-top:10px;">
+                <input type="text" placeholder="${t("escribeComentario")}"
+                    onkeypress="if(event.key==='Enter') enviarComentario(this.value, this.closest('.post-card').dataset.id, 0)"
+                    style="width: 100%; background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 14px; padding: 12px 14px; outline: none;">
+            </div>
+        </div>
+    `;
+    // Manejar menú de tres puntos en comentarios
+post.querySelectorAll('.comment-menu').forEach(menu => {
+    const btn = menu.querySelector('.comment-menu-btn');
+    const dropdown = menu.querySelector('.comment-dropdown');
+    if (btn && dropdown) {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // Cerrar otros dropdowns abiertos
+            document.querySelectorAll('.comment-dropdown').forEach(d => {
+                if (d !== dropdown) d.style.display = 'none';
+            });
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    }
+});
+
+// Cerrar dropdowns al hacer clic fuera (dentro del post)
+post.addEventListener('click', (e) => {
+    if (!e.target.closest('.comment-menu')) {
+        post.querySelectorAll('.comment-dropdown').forEach(d => d.style.display = 'none');
+    }
+});
+
+    post.querySelectorAll('.delete-comment-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const comentarioId = btn.dataset.id;
+        if (!confirm('¿Eliminar este comentario?')) return;
+
+        // Obtener el postId desde el post-card más cercano
+        const postCard = btn.closest('.post-card');
+        if (!postCard) {
+            alert('Error: no se pudo identificar la publicación.');
+            return;
+        }
+        const postId = postCard.dataset.id;
+
+        const formData = new FormData();
+        formData.append('comentario_id', comentarioId);
+        try {
+            const resp = await fetch('eliminar_comentario.php', { method: 'POST', body: formData });
+            const text = await resp.text();
+            if (text.includes('"status":"ok"') || text.includes('"ok"')) {
+                window.location.href = `menu?post_id=${postId}`;
+            } else {
+                alert('Error al eliminar comentario');
+            }
+        } catch (err) {
+            console.error('Fetch error:', err);
+            alert('Error de conexión');
+        }
+    });
+});
+
+    return post;
+}
+function crearPostCard(postData) {
+    const { id, texto, imagen, total_likes, total_dislikes, comentarios_data, nombre_autor, usuario_id, foto_autor } = postData;
+    
+    let mediaUrl = null;
+    let tieneImagen = false;
+    if (imagen) {
+        const archivos = imagen.split(",").map(s => s.trim());
+        if (archivos.length > 0 && archivos[0]) {
+            mediaUrl = "uploads/" + archivos[0];
+            tieneImagen = true;
+        }
+    }
+    
+    const card = document.createElement("div");
+    card.className = "post-card-grid";
+    if (tieneImagen) {
+        card.classList.add("has-image");
+    } else {
+        card.classList.add("no-image");
+    }
+    card.dataset.id = id;
+    
+    const inicial = nombre_autor ? nombre_autor.charAt(0).toUpperCase() : "U";
+    const avatarHtml = foto_autor 
+        ? `<img src="${foto_autor}" style="width:36px; height:36px; border-radius:50%; object-fit:cover;">`
+        : `<div style="width:36px; height:36px; border-radius:50%; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:bold;">${inicial}</div>`;
+    
+    let mediaHtml = "";
+    if (tieneImagen) {
+        const esVideo = mediaUrl.match(/\.(mp4|webm|ogg|mov)$/i);
+        mediaHtml = `<div class="post-content" style="aspect-ratio:16/9; background:#000;">
+                        ${esVideo ? `<video src="${mediaUrl}" style="width:100%; height:100%; object-fit:cover;"></video>` : `<img src="${mediaUrl}" style="width:100%; height:100%; object-fit:cover;">`}
+                     </div>`;
+    }
+    
+    const comentariosCount = comentarios_data?.length || 0;
+    // Sin escapeHtml: usamos directamente las variables (pero cuidado con caracteres especiales)
+    const nombreMostrar = nombre_autor || "Usuario";
+    const textoMostrar = texto || "";
+    // Dentro de crearPostCard, después de const textoMostrar = texto || "";
+// Generar HTML de tags
+const tagsHtml = (postData.tags && postData.tags.length) 
+    ? `<div class="post-tags" style="margin: 8px 12px; display: flex; flex-wrap: wrap; gap: 6px;">
+        ${postData.tags.map(tag => `<span class="tag" data-tag="${tag}" style="background: var(--panel-soft); padding:4px 10px; border-radius:20px; font-size:11px; cursor:pointer; transition:0.2s;">#${tag}</span>`).join('')}
+       </div>`
+    : '';
+
+// Luego, en el innerHTML, colócalo justo antes de <div class="post-stats">
+    
+    card.innerHTML = `
+    <div class="post-header">
+        ${avatarHtml}
+        <div>
+            <strong>${nombreMostrar}</strong>
+        </div>
+    </div>
+    ${mediaHtml}
+    <div class="post-text">
+        ${textoMostrar}
+    </div>
+    ${tagsHtml}   <!-- 👈 AHORA SÍ SE INSERTAN LOS TAGS -->
+    <div class="post-stats">
+        <span class="stat-like">
+            <img src="img/like.png" alt="like" style="width:20px; height:20px; vertical-align:middle; margin-right:4px;">
+            ${total_likes || 0}
+        </span>
+        <span class="stat-comment">
+            <img src="img/icon_mensajes.png" alt="comentarios" style="width:20px; height:20px; vertical-align:middle; margin-right:4px;">
+            ${comentariosCount}
+        </span>
+    </div>
+`;
+    card.querySelectorAll('.tag').forEach(tagEl => {
+    tagEl.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evitar abrir el modal
+        const tagName = tagEl.dataset.tag;
+        filtrarPorTag(tagName);
+    });
+});
+    
+    card.addEventListener("click", () => {
+        abrirModalPost(postData);
+    });
+    
+    return card;
+}
+
+        function manejarReaccion(btn, tipo) {
+            const postCard = btn.closest('.post-card');
+            const postId = postCard.dataset.id;
+            const likeBtn = postCard.querySelector('.like-btn');
+            const dislikeBtn = postCard.querySelector('.dislike-btn');
+
+            const datos = new FormData();
+            datos.append('post_id', postId);
+            datos.append('tipo', tipo);
+
+            fetch('reaccionar.php', { method: 'POST', body: datos })
+                .then(res => res.text())
+                .then(nuevoTotal => {
+                    btn.querySelector('.count-number').innerText = nuevoTotal;
+                    btn.classList.toggle('active');
+
+                    if (btn.classList.contains("active")) {
+                        if (tipo === 'like' && dislikeBtn && dislikeBtn.classList.contains("active")) {
+                            dislikeBtn.classList.remove("active");
+                            let count = parseInt(dislikeBtn.querySelector(".count-number").innerText);
+                            if (count > 0) dislikeBtn.querySelector(".count-number").innerText = count - 1;
+                        } else if (tipo === 'dislike' && likeBtn && likeBtn.classList.contains("active")) {
+                            likeBtn.classList.remove("active");
+                            let count = parseInt(likeBtn.querySelector(".count-number").innerText);
+                            if (count > 0) likeBtn.querySelector(".count-number").innerText = count - 1;
+                        }
+                    }
+                })
+                .catch(err => console.error("Error al reaccionar:", err));
+        }
+        function manejarReaccionUnibot(btn, tipo) {
+    const postCard = btn.closest('.post-card');
+    const postId = postCard.dataset.id;
+    const likeBtn = postCard.querySelector('.like-btn-unibot');
+    const dislikeBtn = postCard.querySelector('.dislike-btn-unibot');
+
+    // Efecto de partículas (opcional, pero mantenemos el que tenías)
+    const fireworks = btn.querySelector('.fireworks-unibot');
+    const colors = ['#ff006a', '#00ffaa', '#ffd900', '#00b7ff', '#ff00e6', '#55ff00', '#ff8400', '#7300ff'];
+    for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'fx-particle';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.left = Math.random() * 30 + 'px';
+        particle.style.top = Math.random() * 10 + 'px';
+        particle.style.animationDelay = Math.random() * 0.3 + 's';
+        fireworks.appendChild(particle);
+        setTimeout(() => particle.remove(), 700);
+    }
+
+    // Enviar reacción al servidor
+    const formData = new FormData();
+    formData.append('post_id', postId);
+    formData.append('tipo', tipo);
+
+    fetch('reaccionar.php', { method: 'POST', body: formData })
+        .then(res => res.text())
+        .then(nuevoTotal => {
+            // Actualizar el contador del botón clickeado
+            const countSpan = btn.querySelector('.count-number');
+            countSpan.innerText = nuevoTotal;
+            btn.classList.add('active');
+
+            // Si el otro botón estaba activo, lo desactivamos y restamos 1
+            if (tipo === 'like' && dislikeBtn.classList.contains('active')) {
+                dislikeBtn.classList.remove('active');
+                let currentDislike = parseInt(dislikeBtn.querySelector('.count-number').innerText);
+                if (currentDislike > 0) dislikeBtn.querySelector('.count-number').innerText = currentDislike - 1;
+            } else if (tipo === 'dislike' && likeBtn.classList.contains('active')) {
+                likeBtn.classList.remove('active');
+                let currentLike = parseInt(likeBtn.querySelector('.count-number').innerText);
+                if (currentLike > 0) likeBtn.querySelector('.count-number').innerText = currentLike - 1;
+            }
+        })
+        .catch(err => console.error("Error al reaccionar:", err));
+}
+
+        function prepararRespuesta(span) {
+            const contenedor = span.closest(".comment-item").querySelector(".reply-input-container");
+            if (contenedor.innerHTML !== "") return;
+
+            const input = document.createElement("input");
+            input.placeholder = t("escribeRespuesta");
+            input.style = "width: 90%; margin-left: 30px; margin-top: 10px; padding: 10px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06); background: var(--panel-soft, rgba(255,255,255,0.04)); color: var(--text, #ecfff6); outline: none;";
+
+            input.onkeypress = (e) => {
+                if (e.key === "Enter") {
+                    enviarComentario(input.value, span.closest(".post-card").dataset.id, span.closest(".comment-item").dataset.id);
+                }
+            };
+            contenedor.appendChild(input);
+            input.focus();
+        }
+
+       function cerrarModalPost() {
+    const modal = document.getElementById("postModal");
+    if (!modal) return;
+    // Pausar todos los videos dentro del modal
+    const videos = modal.querySelectorAll("video");
+    videos.forEach(video => {
+        video.pause();
+        video.currentTime = 0;
+    });
+    modal.classList.remove("active");
+}
+
+function abrirModalPost(postData) {
+    const postId = postData.id;
+    const postActualizado = postsDataGlobal.find(p => p.id == postId);
+    if (!postActualizado) {
+        console.error("Post no encontrado en postsDataGlobal");
+        return;
+    }
+    const modal = document.getElementById("postModal");
+    // Pausar cualquier video que se esté reproduciendo antes de abrir otro
+    const oldVideos = modal.querySelectorAll("video");
+    oldVideos.forEach(video => video.pause());
+    
+    const modalBody = document.getElementById("modalPostBody");
+    const imgArray = postActualizado.imagen ? postActualizado.imagen.split(",").map(src => src.trim()).filter(Boolean).map(src => "uploads/" + src) : [];
+    try {
+        const fullPost = crearPost(
+            postActualizado.texto || "",
+            imgArray,
+            postActualizado.total_likes || 0,
+            postActualizado.total_dislikes || 0,
+            postActualizado.comentarios_data || [],
+            postActualizado.mi_reaccion || null,
+            postActualizado.nombre_autor,
+            postActualizado.usuario_id,
+            window.miUsuarioId,
+            window.miRol,
+            postActualizado.fecha,
+            postActualizado.foto_perfil,
+            postActualizado.tags || []
+        );
+        fullPost.dataset.id = postActualizado.id;
+        modalBody.innerHTML = "";
+        modalBody.appendChild(fullPost);
+        modal.classList.add("active");
+    } catch (err) {
+        console.error("Error al crear el post:", err);
+        modalBody.innerHTML = `<div style="color:red; padding:20px;">Error al cargar el post: ${err.message}</div>`;
+        modal.classList.add("active");
+    }
+    // Asignar eventos de cierre correctamente
+    const closeSpan = modal.querySelector(".close-modal");
+    closeSpan.onclick = cerrarModalPost;          // ✅ ahora llama a cerrarModalPost
+    modal.onclick = (e) => {
+        if (e.target === modal) cerrarModalPost(); // ✅ también aquí
+    };
+}
+
+// Listener global para la tecla Escape
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+        cerrarModalPost();
+    }
+});
+
+
+
+
+    
+        function enviarComentario(texto, postId, padreId) {
+    if (!texto.trim()) return;
+    const fd = new FormData();
+    fd.append('post_id', postId);
+    fd.append('comentario', texto);
+    fd.append('padre_id', padreId || 0);
+
+    fetch('comentar.php', { method: 'POST', body: fd })
+        .then(() => {
+            window.location.href = `menu?post_id=${postId}`;
+        })
+        .catch(err => console.error("Error al comentar:", err));
+}
+
+        function abrirLightbox(src) {
+            const overlay = document.getElementById('lightboxOverlay');
+            const img = document.getElementById('lightboxImage');
+            img.src = src;
+            overlay.classList.add('active');
+        }
+
+        function cerrarLightbox() {
+            const overlay = document.getElementById('lightboxOverlay');
+            const img = document.getElementById('lightboxImage');
+            overlay.classList.remove('active');
+            img.src = '';
+        }
+
+        window.onload = async () => {
+    let miUsuarioId = null;
+    let miRol = null;
+
+    window.miUsuarioId = null;
+    window.miRol = null;
+
+    // 1. Cargamos la sesión
+    try {
+        const peticionSesion = await fetch("obtener_sesion.php");
+        const sesion = await peticionSesion.json();
+        miUsuarioId = sesion.usuario_id;
+        miRol = sesion.rol;
+        window.miUsuarioId = miUsuarioId;
+        window.miRol = miRol;
+
+        const adminMenuItem = document.getElementById("adminMenuItem");
+        if (adminMenuItem) {
+            adminMenuItem.style.display = (miRol === "admin") ? "inline-flex" : "none";
+        }
+
+        const saludoActual = document.getElementById("saludoUsuario");
+        if (sesion.nombre_completo) {
+            saludoActual.dataset.nombreActual = sesion.nombre_completo;
+        } else if (sesion.usuario) {
+            saludoActual.dataset.nombreActual = sesion.usuario;
+        }
+
+        const nombreActual = saludoActual.dataset.nombreActual || "";
+        const lang = localStorage.getItem("lang") || "es";
+
+        if (nombreActual) {
+            saludoActual.textContent = translations[lang].saludoUsuario.replace("{nombre}", nombreActual);
+            const palabras = nombreActual.trim().split(" ");
+            let iniciales = palabras[0].charAt(0).toUpperCase();
+            if (palabras.length > 1) iniciales += palabras[1].charAt(0).toUpperCase();
+            document.getElementById("profileInitial").textContent = iniciales;
+            document.getElementById("publishInitial").textContent = iniciales;
+        } else {
+            saludoActual.textContent = translations[lang].saludoInvitado;
+            const inicialInvitado = lang === "en" ? "G" : "I";
+            document.getElementById("profileInitial").textContent = inicialInvitado;
+            document.getElementById("publishInitial").textContent = inicialInvitado;
+        }
+    } catch (e) {
+        console.error("No se pudo cargar la sesión", e);
+    }
+
+    // 2. Traemos los posts y los mostramos en cuadrícula
+    fetch("obtener_posts.php")
+        .then(response => response.json())
+        .then(data => {
+            let resultado = document.getElementById("resultado");
+            if (!resultado) {
+                resultado = document.createElement("div");
+                resultado.id = "resultado";
+                document.querySelector(".main-content").appendChild(resultado);
+            }
+
+            if (data.error) {
+                console.error("❌ Error del servidor:", data.error);
+                resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">Error al cargar publicaciones: ${data.error}</div>`;
+                return;
+            }
+
+            resultado.innerHTML = "";
+            const postsData = [];
+
+            data.forEach(post => {
+                const postData = {
+                    id: post.id,
+                    texto: post.texto || "",
+                    imagen: post.imagen || null,
+                    total_likes: post.total_likes || 0,
+                    total_dislikes: post.total_dislikes || 0,
+                    comentarios_data: post.comentarios_data || [],
+                    mi_reaccion: post.mi_reaccion || null,
+                    nombre_autor: post.nombre_autor || "Usuario",
+                    usuario_id: post.usuario_id,
+                    fecha: post.fecha,
+                    foto_autor: post.foto_perfil || null,
+                    foto_perfil: post.foto_perfil || null,
+                    tags: post.tags || []
+                };
+                postsData.push(postData);
+                const card = crearPostCard(postData);
+                resultado.appendChild(card);
+            });
+            // Dentro de window.onload, después de const postsData = [] y del bucle forEach
+postsDataGlobal = postsData;
+
+            // 🔥 ABRIR POST DIRECTAMENTE DESDE URL (sin setInterval)
+            const urlParams = new URLSearchParams(window.location.search);
+            const postIdToOpen = urlParams.get('post_id');
+            if (postIdToOpen) {
+                const targetPost = postsData.find(p => p.id == postIdToOpen);
+                if (targetPost) {
+                    abrirModalPost(targetPost);
+                    // Limpiar la URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            }
+        })
+        .catch(err => {
+            console.error("❌ Error de red:", err);
+            const resultado = document.getElementById("resultado");
+            if (resultado) {
+                resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">Error de conexión al servidor.</div>`;
+            }
+        });
+};
+// ========== FUNCIONES PARA TAGS ==========
+let currentTagsList = [];
+
+// Cargar todos los tags existentes para autocompletado
+function cargarTagsDisponibles() {
+    fetch('obtener_tags.php')
+        .then(res => res.json())
+        .then(data => {
+            currentTagsList = data;
+        })
+        .catch(err => console.error("Error cargando tags:", err));
+}
+
+// Autocompletado para el campo de escribir tags (en publicación)
+function setupTagAutocomplete(inputId, suggestionsId, esFiltro = false) {
+    const input = document.getElementById(inputId);
+    const suggestionsDiv = document.getElementById(suggestionsId);
+    if (!input) return;
+    
+    input.addEventListener('input', function() {
+        const valor = this.value.trim().toLowerCase();
+        if (valor.length === 0) {
+            suggestionsDiv.style.display = 'none';
+            return;
+        }
+        // Buscar tags que contengan lo escrito
+        const coincidencias = currentTagsList.filter(tag => tag.includes(valor)).slice(0, 8);
+        if (coincidencias.length === 0) {
+            suggestionsDiv.style.display = 'none';
+            return;
+        }
+        suggestionsDiv.innerHTML = coincidencias.map(tag => 
+            `<div style="padding:8px 12px; cursor:pointer; border-bottom:1px solid var(--border);" data-tag="${tag}">#${tag}</div>`
+        ).join('');
+        suggestionsDiv.style.display = 'block';
+        
+        // Evento para cada sugerencia
+        suggestionsDiv.querySelectorAll('[data-tag]').forEach(el => {
+            el.addEventListener('click', () => {
+                const tagSeleccionado = el.dataset.tag;
+                if (esFiltro) {
+                    input.value = tagSeleccionado;
+                    filtrarPorTag(tagSeleccionado);
+                } else {
+                    // Para el campo de publicación, mantener los tags existentes + agregar
+                    const actual = input.value.trim();
+                    const tagsActuales = actual.split(',').map(s => s.trim()).filter(s => s);
+                    if (!tagsActuales.includes(tagSeleccionado)) {
+                        tagsActuales.push(tagSeleccionado);
+                        input.value = tagsActuales.join(', ');
+                    }
+                }
+                suggestionsDiv.style.display = 'none';
+            });
+        });
+    });
+    
+    input.addEventListener('blur', () => {
+        setTimeout(() => { suggestionsDiv.style.display = 'none'; }, 200);
+    });
+}
+
+// Filtrar posts por tag
+function filtrarPorTag(tag) {
+    // Mostrar notificación
+    showNotification(`Mostrando posts con tag: #${tag}`, 'info');
+    
+    fetch(`obtener_posts.php?tag=${encodeURIComponent(tag)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
+            const resultado = document.getElementById("resultado");
+            resultado.innerHTML = "";
+            data.forEach(post => {
+                const postData = {
+                    id: post.id,
+                    texto: post.texto || "",
+                    imagen: post.imagen || null,
+                    total_likes: post.total_likes || 0,
+                    total_dislikes: post.total_dislikes || 0,
+                    comentarios_data: post.comentarios_data || [],
+                    mi_reaccion: post.mi_reaccion || null,
+                    nombre_autor: post.nombre_autor || "Usuario",
+                    usuario_id: post.usuario_id,
+                    fecha: post.fecha,
+                    foto_autor: post.foto_perfil || null,
+                    foto_perfil: post.foto_perfil || null,
+                    tags: post.tags || []
+                };
+                const card = crearPostCard(postData);
+                resultado.appendChild(card);
+            });
+            
+            // Mostrar botón para limpiar filtro
+            if (!document.getElementById('clearFilterBtn')) {
+                const clearBtn = document.createElement('button');
+                clearBtn.id = 'clearFilterBtn';
+                clearBtn.textContent = '✕ Limpiar filtro';
+                clearBtn.style.cssText = 'position:fixed; bottom:20px; left:20px; background:var(--accent); color:#000; border:none; border-radius:30px; padding:10px 20px; cursor:pointer; z-index:1000; font-weight:bold;';
+                clearBtn.onclick = () => location.reload();
+                document.body.appendChild(clearBtn);
+            }
+        })
+        .catch(err => console.error("Error al filtrar:", err));
+}
+
+// Inicializar autocompletado cuando cargue la página
+cargarTagsDisponibles();
+setTimeout(() => {
+    setupTagAutocomplete('tagsInput', 'tagsSuggestions', false);
+    setupTagAutocomplete('searchTagsInput', 'searchSuggestions', true);
+}, 1000);
+
+// Al presionar Enter en el buscador
+document.getElementById('searchTagsInput')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const tag = e.target.value.trim();
+        if (tag) filtrarPorTag(tag);
+    }
+});
+
+// Detectar parámetro post_id en la URL
+const urlParamsMenu = new URLSearchParams(window.location.search);
+const postIdParam = urlParamsMenu.get('post_id');
+if (postIdParam) {
+  const checkPosts = setInterval(() => {
+    const postCard = document.querySelector(`.post-card-grid[data-id="${postIdParam}"]`);
+    if (postCard) {
+      clearInterval(checkPosts);
+      postCard.click(); // abre el modal
+      // Limpiar URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, 500);
+}
+    </script>
+    <div id="postModal" class="post-modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <div id="modalPostBody"></div>
+    </div>
+</div>
+
+</body>
+<!-- Contenedor de notificaciones -->
+<div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
+<!-- Aquí va el CSS y JavaScript de las notificaciones -->
+ <style>
+/* ========== NOTIFICACIONES ESTILO CYBERPUNK ========== */
+.notification-toast {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+    overflow: hidden;
+    padding: 14px 20px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(57, 197, 187, 0.2), 0 8px 24px rgba(0, 0, 0, 0.3);
+    animation: slideInRight 0.25s ease forwards;
+    min-width: 300px;
+    max-width: 400px;
+    font-family: 'Menlo', 'Roboto Mono', monospace;
+    border: 1px solid;
+    backdrop-filter: blur(8px);
+}
+
+.notification-toast.success {
+    background: linear-gradient(135deg, rgba(57, 197, 187, 0.12), rgba(15, 143, 135, 0.2));
+    border-color: #39c5bb;
+    color: #66fff0;
+}
+.notification-toast.success .notification-progress {
+    background: linear-gradient(90deg, #39c5bb, #66fff0);
+    box-shadow: 0 0 8px #39c5bb;
+}
+
+.notification-toast.error {
+    background: linear-gradient(135deg, rgba(255, 125, 146, 0.12), rgba(200, 60, 80, 0.2));
+    border-color: #ff7d92;
+    color: #ffb3c1;
+}
+.notification-toast.error .notification-progress {
+    background: linear-gradient(90deg, #ff7d92, #ff4d6a);
+    box-shadow: 0 0 8px #ff7d92;
+}
+
+.notification-toast.warning {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.12), rgba(255, 160, 0, 0.2));
+    border-color: #ffc107;
+    color: #ffe066;
+}
+.notification-toast.warning .notification-progress {
+    background: linear-gradient(90deg, #ffc107, #ffb300);
+    box-shadow: 0 0 8px #ffc107;
+}
+
+.notification-toast.info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(37, 99, 235, 0.2));
+    border-color: #3b82f6;
+    color: #93c5fd;
+}
+.notification-toast.info .notification-progress {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    box-shadow: 0 0 8px #3b82f6;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.8em;
+    flex: 1;
+    position: relative;
+}
+
+.notification-icon svg {
+    width: 22px;
+    height: 22px;
+    filter: drop-shadow(0 0 3px currentColor);
+}
+
+.notification-text {
+    font-size: 0.85em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    display: inline-block;
+    font-family: 'Menlo', 'Roboto Mono', monospace;
+    white-space: normal;
+    word-break: normal;
+}
+
+.glitch-char {
+    display: inline-block;
+    position: relative;
+    animation: glitchReveal 0.05s steps(2, end) forwards;
+    animation-delay: calc(var(--i, 0) * 0.008s);
+    opacity: 0;
+    white-space: normal;
+}
+
+@keyframes glitchReveal {
+    0% {
+        opacity: 0;
+        transform: scale(1.3);
+        filter: blur(1px);
+        text-shadow: -1px 0 #ff7d92, 1px 0 #39c5bb;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+        text-shadow: none;
+    }
+}
+
+.notification-close {
+    padding: 4px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 250ms;
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+}
+
+.notification-close:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.notification-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    animation: progressBar 3.5s linear forwards;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%) scale(0.9); opacity: 0; }
+    to { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    to { transform: translateX(100%) scale(0.9); opacity: 0; }
+}
+
+@keyframes progressBar {
+    0% { width: 100%; }
+    100% { width: 0%; }
+}
+</style>
+
+<script>
+// Símbolos random para el efecto glitch
+const glitchSymbols = ['#', '@', '$', '%', '&', '*', '?', '!', '=', '+', '~', '|', '/', '\\', '[', ']', '{', '}', '(', ')', '<', '>', '_', '-'];
+
+function getRandomSymbol() {
+    return glitchSymbols[Math.floor(Math.random() * glitchSymbols.length)];
+}
+
+function revealTextWithGlitch(element, originalMessage, duration = 1500) {
+    const chars = [];
+    for (let i = 0; i < originalMessage.length; i++) {
+        chars.push(originalMessage[i]);
+    }
+    
+    const totalChars = chars.length;
+    const startTime = Date.now();
+    const revealInterval = duration / totalChars;
+    
+    element.innerHTML = '';
+    for (let i = 0; i < totalChars; i++) {
+        if (chars[i] === ' ') {
+            const spaceSpan = document.createElement('span');
+            spaceSpan.className = 'glitch-char';
+            spaceSpan.style.setProperty('--i', i);
+            spaceSpan.textContent = ' ';
+            spaceSpan.style.minWidth = '4px';
+            spaceSpan.setAttribute('data-original', ' ');
+            element.appendChild(spaceSpan);
+        } else {
+            const span = document.createElement('span');
+            span.className = 'glitch-char';
+            span.style.setProperty('--i', i);
+            span.textContent = getRandomSymbol();
+            span.setAttribute('data-original', chars[i]);
+            element.appendChild(span);
+        }
+    }
+    
+    let currentRevealed = 0;
+    
+    function revealNext() {
+        if (currentRevealed >= totalChars) return;
+        
+        const elapsed = Date.now() - startTime;
+        const expectedRevealed = Math.min(totalChars, Math.floor(elapsed / revealInterval));
+        
+        if (expectedRevealed > currentRevealed) {
+            for (let i = currentRevealed; i < expectedRevealed && i < totalChars; i++) {
+                const span = element.children[i];
+                if (span) {
+                    const originalChar = span.getAttribute('data-original');
+                    span.textContent = originalChar;
+                    span.style.animation = 'none';
+                    span.offsetHeight;
+                    span.style.animation = 'glitchReveal 0.05s steps(2, end) forwards';
+                }
+            }
+            currentRevealed = expectedRevealed;
+        }
+        
+        if (currentRevealed < totalChars) {
+            requestAnimationFrame(revealNext);
+        }
+    }
+    
+    requestAnimationFrame(revealNext);
+}
+
+function showNotification(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = `notification-toast ${type}`;
+    
+    const icons = {
+        success: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>`,
+        error: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>`,
+        warning: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>`,
+        info: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>`
+    };
+    
+    const textSpan = document.createElement('span');
+    textSpan.className = 'notification-text';
+    
+    toast.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon">${icons[type]}</div>
+            <div class="notification-text-wrapper"></div>
+        </div>
+        <div class="notification-close">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </div>
+        <div class="notification-progress"></div>
+    `;
+    
+    const textWrapper = toast.querySelector('.notification-text-wrapper');
+    textWrapper.appendChild(textSpan);
+    
+    container.appendChild(toast);
+    
+    revealTextWithGlitch(textSpan, message, 1500);
+    
+    toast.querySelector('.notification-close').onclick = () => {
+        toast.style.animation = 'fadeOut 0.2s ease forwards';
+        setTimeout(() => toast.remove(), 200);
+    };
+    
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.style.animation = 'fadeOut 0.2s ease forwards';
+            setTimeout(() => toast.remove(), 200);
+        }
+    }, 3500);
+}
+// Procesar notificaciones desde la URL
+function processUrlNotification() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const msg = urlParams.get('msg');
+    const type = urlParams.get('type');
+    if (msg) {
+        showNotification(decodeURIComponent(msg), type || 'info');
+        // Limpiar la URL para que no se muestren los parámetros
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+    }
+}
+
+// Ejecutar cuando la página esté lista
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', processUrlNotification);
+} else {
+    processUrlNotification();
+}
+</script>
+</html>

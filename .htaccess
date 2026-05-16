@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /
+
+# URLs amigables
+RewriteRule ^inicio$ menu.html [L,NC]
+RewriteRule ^perfil$ perfil.html [L,NC]
+RewriteRule ^mensajes$ mensajes.html [L,NC]
+RewriteRule ^notificaciones$ notificaciones.html [L,NC]
+RewriteRule ^configuraciones$ configuraciones.html [L,NC]
+RewriteRule ^login$ Login.html [L,NC]

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniMarket - Notificaciones</title>
+  <link rel="stylesheet" href="notificaciones.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="sidebar-mascot">
+                <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
+            </div>
+            <div class="sidebar-brand">UniMarket</div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="menu" class="menu-item">
+                <span class="icon"><img src="img/Icon_inicio.png" alt="Inicio" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="inicio">Inicio</span>
+            </a>
+
+            <a href="perfil" class="menu-item">
+                <span class="icon"><img src="img/Icon_perfil.png" alt="Perfil" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="perfil">Perfil</span>
+            </a>
+
+            <a href="mensajes" class="menu-item">
+                <span class="icon"><img src="img/Icon_mensajes.png" alt="Mensajes" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="mensajes">Mensajes</span>
+            </a>
+
+            <a href="notificaciones" class="menu-item active">
+                <span class="icon"><img src="img/Icon_notificaciones.png" alt="Notificaciones" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="notificaciones">Notificaciones</span>
+            </a>
+
+            <a href="configuraciones" class="menu-item">
+                <span class="icon"><img src="img/Icon_ajustes.png" alt="Configuraciones" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="configuracion">Configuración</span>
+            </a>
+
+            <a href="cerrar_sesion.php" class="menu-item">
+                <span class="icon"><img src="img/Icon_cerrar_sesion.png" alt="Cerrar sesión" style="width:28px;height:28px;"></span>
+                <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
+            </a>
+
+            <label class="theme-switch modern-switch" aria-label="Cambiar tema">
+                <input type="checkbox" id="themeToggleInput">
+                <span class="slider">
+                    <div class="star star_1"></div>
+                    <div class="star star_2"></div>
+                    <div class="star star_3"></div>
+                    <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
+                        <path transform="matrix(.77976 0 0 .78395-299.99-418.63)" fill="#fff"
+                            d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
+                        </path>
+                    </svg>
+                </span>
+                <span class="theme-text" id="themeText">Dark Mode</span>
+            </label>
+        </nav>
+    </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="page-title-box">
+        <p class="mini-label" data-i18n="actividadReciente">Actividad reciente en UniMarket</p>
+        <h1 data-i18n="tituloNotif">Notificaciones</h1>
+      </div>
+      <div style="display: flex; gap: 12px;">
+  <button class="ghost-btn" id="marcarTodasBtn" data-i18n="marcarLeido">Marcar todo como leído</button>
+  <button class="ghost-btn" id="eliminarTodasBtn" style="color: var(--glitch-pink);">🗑️ Eliminar todas</button>
+</div>
+
+      
+    </header>
+
+    <section class="notifications-wrapper">
+      <div class="notifications-toolbar">
+        <button class="filter-chip active" data-filter="todas" data-i18n="todas">Todas</button>
+        <button class="filter-chip" data-filter="noLeidas" data-i18n="noLeidas">No leídas</button>
+        <button class="filter-chip" data-filter="comentarios" data-i18n="comentarios">Comentarios</button>
+        <button class="filter-chip" data-filter="reacciones" data-i18n="reacciones">Reacciones</button>
+        <button class="filter-chip" data-filter="mensajes" data-i18n="mensajes">Mensajes</button>
+      </div>
+
+      <div id="notificationsFeed" class="notifications-feed">
+        <!-- Aquí se cargarán dinámicamente las notificaciones reales -->
+        <div class="notifications-empty-box" style="margin-top:0;">
+          <div class="empty-icon">🔔</div>
+          <h2>Cargando notificaciones...</h2>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ==========================================
+    // 🌐 SISTEMA DE TRADUCCIÓN (mismo que ya tenías)
+    // ==========================================
+    const translationsNotif = {
+      es: {
+        inicio: "Inicio", perfil: "Perfil", mensajes: "Mensajes", notificaciones: "Notificaciones",
+        configuracion: "Configuración", cerrarSesion: "Cerrar sesión", darkMode: "Dark Mode", lightMode: "Light Mode",
+        actividadReciente: "Actividad reciente en UniMarket", tituloNotif: "Notificaciones", marcarLeido: "Marcar todo como leído",
+        todas: "Todas", noLeidas: "No leídas", comentarios: "Comentarios", reacciones: "Reacciones", mensajes: "Mensajes",
+        ahora: "Ahora", hacePoco: "Hace poco", proximamente: "Próximamente", sistema: "Sistema", sinActividad: "Sin actividad",
+        descripcionComentarios: "Cuando alguien comente una publicación, aparecerá aquí.",
+        descripcionReacciones: "Los likes y respuestas futuras se mostrarán en esta sección.",
+        descripcionMensajes: "También podrás ver avisos cuando recibas un mensaje nuevo.",
+        descripcionSistema: "Aquí aparecerán novedades o avisos importantes de UniMarket.",
+        centroListo: "Centro de notificaciones listo", baseVisual: "Esta sección ya tiene la base visual."
+      },
+      en: {
+        inicio: "Home", perfil: "Profile", mensajes: "Messages", notificaciones: "Notifications",
+        configuracion: "Settings", cerrarSesion: "Log out", darkMode: "Dark Mode", lightMode: "Light Mode",
+        actividadReciente: "Recent activity in UniMarket", tituloNotif: "Notifications", marcarLeido: "Mark all as read",
+        todas: "All", noLeidas: "Unread", comentarios: "Comments", reacciones: "Reactions", mensajes: "Messages",
+        ahora: "Now", hacePoco: "Recently", proximamente: "Coming soon", sistema: "System", sinActividad: "No activity",
+        descripcionComentarios: "When someone comments on a post, it will appear here.",
+        descripcionReacciones: "Future likes and replies will be shown in this section.",
+        descripcionMensajes: "You will also see alerts when you receive a new message.",
+        descripcionSistema: "News or important UniMarket alerts will appear here.",
+        centroListo: "Notification center ready", baseVisual: "This section already has the visual base."
+      }
+    };
+
+    function getLang() { return localStorage.getItem("lang") || "es"; }
+    function tNotif(key) { const lang = getLang(); return translationsNotif[lang]?.[key] || key; }
+    function aplicarIdiomaNotif() {
+      const lang = getLang();
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.dataset.i18n;
+        if (translationsNotif[lang]?.[key]) el.textContent = translationsNotif[lang][key];
+      });
+      actualizarTextoTema();
+    }
+    function actualizarTextoTema() {
+      if (themeText) themeText.textContent = document.body.classList.contains("light-mode") ? tNotif("lightMode") : tNotif("darkMode");
+    }
+
+    const themeToggleInput = document.getElementById("themeToggleInput");
+    const themeText = document.getElementById("themeText");
+    function aplicarTema(modo) {
+      const isLight = modo === "light";
+      document.body.classList.toggle("light-mode", isLight);
+      themeToggleInput.checked = isLight;
+      themeText.textContent = isLight ? tNotif("lightMode") : tNotif("darkMode");
+    }
+    const temaGuardado = localStorage.getItem("theme") || "dark";
+    aplicarTema(temaGuardado);
+    themeToggleInput.addEventListener("change", () => {
+      const nuevoTema = themeToggleInput.checked ? "light" : "dark";
+      localStorage.setItem("theme", nuevoTema);
+      aplicarTema(nuevoTema);
+    });
+    new MutationObserver(() => actualizarTextoTema()).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+    // ==========================================
+    // 🔔 NOTIFICACIONES REALES (POLLING)
+    // ==========================================
+    let currentFilter = 'todas';
+
+    function formatFechaNoti(fechaISO) {
+      const date = new Date(fechaISO);
+      const ahora = new Date();
+      const diffMs = ahora - date;
+      const diffMin = Math.floor(diffMs / 60000);
+      if (diffMin < 1) return tNotif("ahora");
+      if (diffMin < 60) return `Hace ${diffMin} min`;
+      const diffHoras = Math.floor(diffMin / 60);
+      if (diffHoras < 24) return `Hace ${diffHoras} h`;
+      const diffDias = Math.floor(diffHoras / 24);
+      if (diffDias === 1) return 'Ayer';
+      return date.toLocaleDateString();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str.replace(/[&<>]/g, m => {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    async function cargarNotificaciones() {
+  try {
+    const resp = await fetch('obtener_notificaciones.php');
+    const notis = await resp.json();
+    const feedDiv = document.getElementById('notificationsFeed');
+    if (!feedDiv) return;
+
+    let filtradas = notis;
+    if (currentFilter === 'noLeidas') filtradas = notis.filter(n => n.leida == 0);
+    else if (currentFilter === 'comentarios') filtradas = notis.filter(n => n.tipo === 'comentario' || n.tipo === 'respuesta');
+    else if (currentFilter === 'reacciones') filtradas = notis.filter(n => n.tipo === 'like');
+    else if (currentFilter === 'mensajes') filtradas = notis.filter(n => n.tipo === 'mensaje');
+
+    if (filtradas.length === 0) {
+      feedDiv.innerHTML = `<div class="notifications-empty-box" style="margin-top:0;">
+        <div class="empty-icon">🔔</div>
+        <h2>${tNotif("centroListo")}</h2>
+        <p>${tNotif("baseVisual")}</p>
+      </div>`;
+      return;
+    }
+
+    feedDiv.innerHTML = filtradas.map(noti => {
+      let texto = '';
+      let url = '';
+      switch (noti.tipo) {
+        case 'like': 
+          texto = `❤️ le dio like a tu publicación: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+          url = `menu.html?post_id=${noti.post_id}`;
+          break;
+        case 'comentario': 
+          texto = `💬 comentó en tu publicación: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+          url = `menu.html?post_id=${noti.post_id}`;
+          break;
+        case 'respuesta': 
+          texto = `↩️ respondió a tu comentario: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+          url = `menu.html?post_id=${noti.post_id}`;
+          break;
+        case 'mensaje': 
+          texto = `✉️ te envió un mensaje: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+          url = `mensajes.html?user_id=${noti.emisor_id}`;
+          break;
+        default: texto = 'Nueva actividad';
+      }
+      const avatarHtml = noti.emisor_foto 
+        ? `<img src="${noti.emisor_foto}" style="width:58px; height:58px; border-radius:18px; object-fit:cover;">` 
+        : `<div class="notification-avatar">${noti.tipo === 'like' ? '❤️' : (noti.tipo === 'mensaje' ? '💬' : '💬')}</div>`;
+      return `
+        <article class="notification-card ${noti.leida == 0 ? 'unread' : ''}" data-id="${noti.id}" data-url="${url}">
+          <div class="notification-avatar">${avatarHtml}</div>
+          <div class="notification-content">
+            <div class="notification-top">
+              <h3>${escapeHtml(noti.emisor_nombre)}</h3>
+              <span>${formatFechaNoti(noti.creado)}</span>
+            </div>
+            <p>${texto}</p>
+          </div>
+          ${noti.leida == 0 ? '<div class="notification-dot"></div>' : ''}
+          <button class="delete-notif-btn" data-id="${noti.id}" title="Eliminar notificación">🗑️</button>
+        </article>
+      `;
+    }).join('');
+
+    // ===== EVENTOS =====
+    // 1. Redirigir al hacer clic en la tarjeta (excepto en el botón eliminar)
+    document.querySelectorAll('.notification-card').forEach(card => {
+      card.addEventListener('click', async (e) => {
+        // Si el clic fue en el botón de eliminar, no redirigimos
+        if (e.target.classList.contains('delete-notif-btn')) return;
+        const id = card.dataset.id;
+        const url = card.dataset.url;
+        if (!url) return;
+        if (id && card.classList.contains('unread')) {
+          await fetch('marcar_leida.php', { method: 'POST', body: new URLSearchParams({id}) });
+        }
+        window.location.href = url;
+      });
+    });
+
+    // 2. Eliminar notificación individual (con confirmación)
+    document.querySelectorAll('.delete-notif-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation(); // evita que también se dispare el clic de la tarjeta
+        const id = btn.dataset.id;
+        if (confirm('¿Eliminar esta notificación permanentemente?')) {
+          const formData = new FormData();
+          formData.append('id', id);
+          const resp = await fetch('eliminar_notificaciones.php', { method: 'POST', body: formData });
+          if (resp.ok) {
+            cargarNotificaciones(); // recargar la lista
+          } else {
+            alert('Error al eliminar');
+          }
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error('Error cargando notificaciones', err);
+    document.getElementById('notificationsFeed').innerHTML = `<div class="notifications-empty-box"><p>Error al cargar notificaciones.</p></div>`;
+  }
+}
+
+document.getElementById('eliminarTodasBtn')?.addEventListener('click', async () => {
+  if (confirm('¿Eliminar TODAS las notificaciones? Esta acción no se puede deshacer.')) {
+    await fetch('eliminar_todas_notificaciones.php', { method: 'POST' });
+    cargarNotificaciones();
+  }
+});
+
+    // Filtros
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.getAttribute('data-filter');
+        cargarNotificaciones();
+      });
+    });
+
+    // Marcar todas como leídas
+    document.getElementById('marcarTodasBtn')?.addEventListener('click', async () => {
+      await fetch('marcar_todas_leidas.php', { method: 'POST' });
+      cargarNotificaciones();
+    });
+
+
+    // Polling cada 10 segundos
+    cargarNotificaciones();
+    setInterval(cargarNotificaciones, 10000);
+    aplicarIdiomaNotif();
+  </script>
+</body>
+</html>
