@@ -16,7 +16,7 @@ const translationsPerfil = {
     metaActual: "Meta actual", metaActualLabel: "Meta actual:", estilo: "Estilo", estiloLabel: "Estilo:",
     gustosSeparados: "Gustos separados por coma", placeholderTags: "retro web, uni vibes, creative",
     editandoPerfil: "Editando perfil", tags: "Tags", tagsHelp: "Separados por coma",
-    detalles: "Detalles", vibraActual: "Vibra actual", enLinea: "En línea"
+    detalles: "Detalles", vibraActual: "Vibra actual", enLinea: "En línea",desconectado: "Desconectado",
   },
   en: {
     inicio: "Home", perfil: "Profile", mensajes: "Messages", notificaciones: "Notifications",
@@ -31,7 +31,7 @@ const translationsPerfil = {
     metaActual: "Current goal", metaActualLabel: "Current goal:", estilo: "Style", estiloLabel: "Style:",
     gustosSeparados: "Likes separated by comma", placeholderTags: "retro web, uni vibes, creative",
     editandoPerfil: "Editing profile", tags: "Tags", tagsHelp: "Separated by commas",
-    detalles: "Details", vibraActual: "Current vibe", enLinea: "Online"
+    detalles: "Details", vibraActual: "Current vibe", enLinea: "Online",     desconectado: "Offline",
   }
 };
 
@@ -83,7 +83,8 @@ const defaultProfile = {
   color: "Sin color favorito.",
   meta: "Sin meta actual.",
   estilo: "Sin estilo.",
-  foto_perfil: null
+  foto_perfil: null,
+  is_online: 0   // ✅ añade esta línea
 };
 
 // ========== DETECTAR SI ES PERFIL PROPIO ==========
@@ -243,7 +244,23 @@ function renderProfile(profile) {
   if (viewMeta) viewMeta.textContent = profile.meta;
   const viewEstilo = document.getElementById("viewEstilo");
   if (viewEstilo) viewEstilo.textContent = profile.estilo;
-
+  // Actualizar estado en línea / desconectado
+  // Actualizar estado en línea / desconectado usando el campo is_online del servidor
+const statusBadge = document.getElementById("statusBadge");
+if (statusBadge) {
+    const online = profile.is_online == 1;   // ✅ viene del servidor
+    const dot = statusBadge.querySelector(".status-dot");
+    const textSpan = statusBadge.querySelector("span:not(.status-dot)");
+    if (online) {
+        dot.style.background = "#2ecc71";
+        dot.style.animation = "pulse-dot 2s ease-in-out infinite";
+        if (textSpan) textSpan.textContent = t("enLinea");
+    } else {
+        dot.style.background = "#7f8c8d";
+        dot.style.animation = "none";
+        if (textSpan) textSpan.textContent = t("desconectado");
+    }
+}
   // Ocultar loader y mostrar contenido
   const loader = document.getElementById('profileLoader');
   const content = document.getElementById('profileContent');
@@ -410,6 +427,35 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     }
   }
+    // Actualizar estado en línea cada 30 segundos
+async function actualizarEstadoOnline() {
+    let url = 'obtener_perfil.php';
+    if (perfilUserId) url += '?id=' + perfilUserId;
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.is_online !== undefined) {   // ✅ ahora usamos is_online
+            const online = data.is_online == 1;
+            const statusBadge = document.getElementById("statusBadge");
+            if (statusBadge) {
+                const dot = statusBadge.querySelector(".status-dot");
+                const textSpan = statusBadge.querySelector("span:not(.status-dot)");
+                if (online) {
+                    dot.style.background = "#2ecc71";
+                    dot.style.animation = "pulse-dot 2s ease-in-out infinite";
+                    if (textSpan) textSpan.textContent = t("enLinea");
+                } else {
+                    dot.style.background = "#7f8c8d";
+                    dot.style.animation = "none";
+                    if (textSpan) textSpan.textContent = t("desconectado");
+                }
+            }
+        }
+    } catch (err) {
+        console.error("Error actualizando estado online", err);
+    }
+}
+  setInterval(actualizarEstadoOnline, 30000);
 });
 
 // ========== UTILIDADES ==========
