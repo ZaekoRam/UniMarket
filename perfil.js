@@ -16,7 +16,7 @@ const translationsPerfil = {
     metaActual: "Meta actual", metaActualLabel: "Meta actual:", estilo: "Estilo", estiloLabel: "Estilo:",
     gustosSeparados: "Gustos separados por coma", placeholderTags: "retro web, uni vibes, creative",
     editandoPerfil: "Editando perfil", tags: "Tags", tagsHelp: "Separados por coma",
-    detalles: "Detalles", vibraActual: "Vibra actual", enLinea: "En línea",desconectado: "Desconectado",
+    detalles: "Detalles", vibraActual: "Vibra actual", enLinea: "En línea",desconectado: "Desconectado", enviarMensaje: "Enviar mensaje",
   },
   en: {
     inicio: "Home", perfil: "Profile", mensajes: "Messages", notificaciones: "Notifications",
@@ -31,7 +31,7 @@ const translationsPerfil = {
     metaActual: "Current goal", metaActualLabel: "Current goal:", estilo: "Style", estiloLabel: "Style:",
     gustosSeparados: "Likes separated by comma", placeholderTags: "retro web, uni vibes, creative",
     editandoPerfil: "Editing profile", tags: "Tags", tagsHelp: "Separated by commas",
-    detalles: "Details", vibraActual: "Current vibe", enLinea: "Online",     desconectado: "Offline",
+    detalles: "Details", vibraActual: "Current vibe", enLinea: "Online",     desconectado: "Offline",enviarMensaje: "Send message",
   }
 };
 
@@ -94,29 +94,68 @@ let esMiPerfil = true;
 let miUsuarioId = null;
 
 // Obtener el ID del usuario logueado
+// Obtener el ID del usuario logueado
 fetch('obtener_sesion.php')
   .then(res => res.json())
   .then(data => {
     miUsuarioId = data.usuario_id;
+    const editBtn = document.getElementById('editBtn');
+    const sendMsgBtn = document.getElementById('sendMsgBtn');
+
+    // Si el usuario no está logueado (invitado)
+    if (!miUsuarioId) {
+        esMiPerfil = false;
+        if (editBtn) editBtn.style.display = 'none';
+        if (sendMsgBtn) sendMsgBtn.style.display = 'none';
+        // Ocultar paneles de edición
+        document.getElementById('editPanel')?.classList.add('hidden');
+        document.getElementById('editDetails')?.classList.add('hidden');
+        document.getElementById('editSobreMiWrap')?.classList.add('hidden');
+        document.getElementById('editGustosWrap')?.classList.add('hidden');
+        document.getElementById('editMoodGrid')?.classList.add('hidden');
+        return;
+    }
+
+    // Si hay un user_id en URL y es diferente al mío -> perfil ajeno
     if (perfilUserId && perfilUserId != miUsuarioId) {
-      esMiPerfil = false;
-      // Ocultar botones de edición y paneles de edición
-      const editBtn = document.getElementById('editBtn');
-      if (editBtn) editBtn.style.display = 'none';
-      const saveBtn = document.getElementById('saveBtn');
-      if (saveBtn) saveBtn.style.display = 'none';
-      const cancelBtn = document.getElementById('cancelBtn');
-      if (cancelBtn) cancelBtn.style.display = 'none';
-      const editPanel = document.getElementById('editPanel');
-      if (editPanel) editPanel.classList.add('hidden');
-      // También ocultar cualquier campo de edición suelto si está visible
-      document.getElementById('editDetails')?.classList.add('hidden');
-      document.getElementById('editSobreMiWrap')?.classList.add('hidden');
-      document.getElementById('editGustosWrap')?.classList.add('hidden');
-      document.getElementById('editMoodGrid')?.classList.add('hidden');
+        esMiPerfil = false;
+        // Ocultar botón de editar y mostrar botón de enviar mensaje
+        if (editBtn) editBtn.style.display = 'none';
+        if (sendMsgBtn) {
+            sendMsgBtn.style.display = 'flex';
+            // Al hacer clic, redirigir a mensajes con el ID del usuario
+            sendMsgBtn.onclick = () => {
+                window.location.href = `mensajes?user_id=${perfilUserId}`;
+            };
+        }
+        // Ocultar todos los paneles de edición
+        const editPanel = document.getElementById('editPanel');
+        if (editPanel) editPanel.classList.add('hidden');
+        document.getElementById('editDetails')?.classList.add('hidden');
+        document.getElementById('editSobreMiWrap')?.classList.add('hidden');
+        document.getElementById('editGustosWrap')?.classList.add('hidden');
+        document.getElementById('editMoodGrid')?.classList.add('hidden');
+    } else {
+        // Es mi propio perfil
+        esMiPerfil = true;
+        if (editBtn) editBtn.style.display = 'flex';
+        if (sendMsgBtn) sendMsgBtn.style.display = 'none';
     }
   })
-  .catch(() => {});
+  .catch(() => {
+    // Si hay error (por ejemplo, no hay sesión), asumimos invitado
+    miUsuarioId = null;
+    esMiPerfil = false;
+    const editBtn = document.getElementById('editBtn');
+    const sendMsgBtn = document.getElementById('sendMsgBtn');
+    if (editBtn) editBtn.style.display = 'none';
+    if (sendMsgBtn) sendMsgBtn.style.display = 'none';
+    document.getElementById('editPanel')?.classList.add('hidden');
+    document.getElementById('editDetails')?.classList.add('hidden');
+    document.getElementById('editSobreMiWrap')?.classList.add('hidden');
+    document.getElementById('editGustosWrap')?.classList.add('hidden');
+    document.getElementById('editMoodGrid')?.classList.add('hidden');
+  });
 
 // ========== OBTENER PERFIL (acepta ID externo) ==========
 async function getProfile() {
@@ -284,8 +323,14 @@ function fillEditInputs(profile) {
   if (inputEmprendimientos) inputEmprendimientos.value = profile.emprendimientos;
   const inputEstado = document.getElementById("inputEstado");
   if (inputEstado) inputEstado.value = profile.estado;
-  const inputSobreMi = document.getElementById("inputSobreMi");
-  if (inputSobreMi) inputSobreMi.value = profile.sobreMi;
+const inputSobreMi = document.getElementById("inputSobreMi");
+if (inputSobreMi) {
+  inputSobreMi.value = profile.sobreMi;
+  // Actualizar contador después de asignar el valor
+  if (typeof updateCharCounter === 'function') {
+    updateCharCounter();
+  }
+}
   const inputGustos = document.getElementById("inputGustos");
   if (inputGustos) inputGustos.value = profile.gustos ? profile.gustos.join(", ") : "";
   const inputMood = document.getElementById("inputMood");
@@ -455,9 +500,37 @@ async function actualizarEstadoOnline() {
         console.error("Error actualizando estado online", err);
     }
 }
+initCharCounter();
   setInterval(actualizarEstadoOnline, 30000);
 });
+// ========== CONTADOR DE CARACTERES PARA "SOBRE MÍ" ==========
+let updateCharCounter = null; 
 
+function initCharCounter() {
+  const textarea = document.getElementById('inputSobreMi');
+  const counterSpan = document.querySelector('#editSobreMiWrap .char-counter');
+  if (!textarea || !counterSpan) return;
+
+  const max = 500;
+
+  function updateCounter() {
+    const length = textarea.value.length;
+    counterSpan.textContent = `${length}/${max}`;
+    if (length > max) {
+      counterSpan.style.color = '#ff7d92';
+      textarea.value = textarea.value.slice(0, max);
+      counterSpan.textContent = `${max}/${max}`;
+    } else {
+      counterSpan.style.color = '';
+    }
+  }
+
+  // Guardamos la función para usarla después
+  updateCharCounter = updateCounter;
+
+  textarea.addEventListener('input', updateCounter);
+  updateCounter(); // inicial
+}
 // ========== UTILIDADES ==========
 function escapeHtml(str) {
   if (!str) return '';

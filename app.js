@@ -94,7 +94,7 @@ const translations = {
     password: "Contraseña",
     account: "Número de cuenta",
     email: "Correo institucional",
-    aboutApp: "UniMarket es un sistema web creado para un entorno universitario con la finalidad de brindarle las herramientas de difución adecuadas a futuros o actuales emprendedores y poder hacer llegar a más personas sobre sus productos."
+    aboutApp: "UniMarket es un sistema web creado para un entorno universitario con la finalidad de brindarle las herramientas de difusión adecuadas a futuros o actuales emprendedores y poder hacer llegar a más personas sobre sus productos."
   },
   en: {
     back: "Home",
@@ -114,7 +114,7 @@ const translations = {
     password: "Password",
     account: "Student ID",
     email: "Institutional email",
-    aboutApp: "UniMarket is a web system created for a university environment with the purpose of providing appropriate marketing tools to future or current entrepreneurs, allowing them to reach more people with their products."
+    aboutApp: "UniMarket is a web system created for a university environment with the purpose of providing appropriate dissemination tools to future or current entrepreneurs and to reach more people about their products."
   }
 };
 
@@ -127,11 +127,6 @@ function setLanguage(lang) {
       el.textContent = translations[lang][key];
     }
   });
-  // Actualizar "Olvidó su contraseña" manualmente
-  const forgotEl = document.querySelector(".recordar");
-  if (forgotEl) {
-    forgotEl.textContent = translations[lang].forgot;
-  }
 
   const glitchHome = document.querySelector(".glitch-home-glitch");
   if (glitchHome) {

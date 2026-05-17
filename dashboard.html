@@ -54,7 +54,7 @@
                         <div class="card-icon blue"><i class="fas fa-users"></i></div>
                         <div class="card-info">
                             <h3 data-i18n="usuariosConectados">Usuarios Conectados</h3>
-                            <p>150</p>
+                            <p id="active-users-count">--</p>
                             <span class="trend positive"><i class="fas fa-arrow-up"></i> <span data-i18n="vsAyer">+12% vs ayer</span></span>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <div class="card-icon orange"><i class="fas fa-eye"></i></div>
                         <div class="card-info">
                             <h3 data-i18n="visitasHoy">Visitas Hoy</h3>
-                            <p>1,500</p>
+                            <p id="visits-today-count">--</p>
                             <span class="trend negative"><i class="fas fa-arrow-down"></i> <span data-i18n="vsAyer2">-2% vs ayer</span></span>
                         </div>
                     </div>
@@ -81,35 +81,15 @@
                         <h3><i class="fas fa-chart-line"></i> <span data-i18n="graficosUsuarios">Gráfico de Usuarios</span></h3>
                         <p class="section-desc" data-i18n="monitoreo24h">Monitoreo de tráfico activo de las últimas 24
                             horas.</p>
-                        <div class="chart-container">
-                            <span class="chart-placeholder" data-i18n="graficoDinamico">[Gráfico Dinámico: 150 Conectados / 340 Totales]</span>
+                        <div class="chart-container" style="position:relative; height:220px;">
+                            <canvas id="usuariosChart"></canvas>
                         </div>
                     </section>
 
                     <section class="card stats-sidebar">
-                        <h3><i class="fas fa-server"></i> <span data-i18n="estadoServidor">Estado del Servidor</span></h3>
-                        <div class="server-status">
-                            <div class="status-item">
-                                <span data-i18n="usoCpu">Uso de CPU</span>
-                                <div class="progress-bar">
-                                    <div class="progress" style="width: 42%;"></div>
-                                </div>
-                                <span class="val">42%</span>
-                            </div>
-                            <div class="status-item">
-                                <span data-i18n="memoriaRam">Memoria RAM</span>
-                                <div class="progress-bar">
-                                    <div class="progress orange-bg" style="width: 78%;"></div>
-                                </div>
-                                <span class="val">78%</span>
-                            </div>
-                            <div class="status-item">
-                                <span data-i18n="espacioDisco">Espacio en Disco</span>
-                                <div class="progress-bar">
-                                    <div class="progress green-bg" style="width: 15%;"></div>
-                                </div>
-                                <span class="val">15%</span>
-                            </div>
+                        <h3><i class="fas fa-clock"></i> Últimos Conectados</h3>
+                        <div id="ultimos-conectados-lista" style="display:flex; flex-direction:column; gap:14px; margin-top:10px;">
+                            <span style="color:var(--text-muted); font-size:13px;">Cargando...</span>
                         </div>
                     </section>
                 </div>
@@ -202,7 +182,7 @@
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <script src="dashboard.js"></script>
 </body>
 
