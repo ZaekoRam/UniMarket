@@ -638,3 +638,133 @@ function showToast(message, type) {
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3500);
 }
+// ==================== STATS EN TIEMPO REAL ====================
+
+let chartInstance = null;
+
+function actualizarStatsInicio() {
+    // --- Usuarios conectados ---
+    fetch('usuarios_activos.php')
+        .then(r => r.text())
+        .then(n => {
+            const el = document.getElementById('active-users-count');
+            if (el) el.textContent = n;
+        })
+        .catch(() => {});
+
+    // --- Visitas hoy ---
+    fetch('visitas_hoy.php')
+        .then(r => r.text())
+        .then(n => {
+            const el = document.getElementById('visits-today-count');
+            if (el) el.textContent = parseInt(n).toLocaleString();
+        })
+        .catch(() => {});
+
+    // --- Gráfico conectados vs desconectados ---
+    fetch('stats_grafico.php')
+        .then(r => r.json())
+        .then(data => {
+            const canvas = document.getElementById('usuariosChart');
+            if (!canvas) return;
+
+            // También actualiza el total de la card "Usuarios Totales"
+            const totalEl = document.getElementById('total-users-count');
+            if (totalEl) totalEl.textContent = data.totales;
+
+            const chartData = {
+                labels: ['Conectados', 'Desconectados'],
+                datasets: [{
+                    data: [data.conectados, data.desconectados],
+                    backgroundColor: ['#35dcd4', '#444c5e'],
+                    borderColor:     ['#35dcd4', '#444c5e'],
+                    borderWidth: 1
+                }]
+            };
+
+            if (chartInstance) {
+                // Actualizar datos sin redibujar desde cero
+                chartInstance.data.datasets[0].data = [data.conectados, data.desconectados];
+                chartInstance.update();
+            } else {
+                chartInstance = new Chart(canvas, {
+                    type: 'doughnut',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { color: '#cdd6f4', font: { size: 13 } }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => ` ${ctx.label}: ${ctx.parsed}`
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        })
+        .catch(() => {});
+}
+
+// Arrancar al cargar y refrescar cada 30 s (sincronizado con actividad.js)
+document.addEventListener('DOMContentLoaded', () => {
+    actualizarStatsInicio();
+    setInterval(actualizarStatsInicio, 30000);
+});
+
+// ==================== ÚLTIMOS CONECTADOS ====================
+
+function tiempoRelativo(fechaStr) {
+    const ahora = new Date();
+    const fecha = new Date(fechaStr);
+    const diff = Math.floor((ahora - fecha) / 1000);
+    if (diff < 60) return 'hace un momento';
+    if (diff < 3600) return `hace ${Math.floor(diff / 60)} min`;
+    if (diff < 86400) return `hace ${Math.floor(diff / 3600)} h`;
+    return `hace ${Math.floor(diff / 86400)} días`;
+}
+
+function actualizarUltimosConectados() {
+    const lista = document.getElementById('ultimos-conectados-lista');
+    if (!lista) return;
+
+    fetch('ultimos_conectados.php')
+        .then(r => r.json())
+        .then(usuarios => {
+            if (!usuarios.length) {
+                lista.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">Sin actividad reciente</span>';
+                return;
+            }
+            lista.innerHTML = usuarios.map(u => {
+                const online = u.is_online == 1;
+                const foto = u.foto_perfil
+                     ? `<img src="${u.foto_perfil}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid ${online ? '#35dcd4' : '#444c5e'}">`
+                    : `<div style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;border:2px solid ${online ? '#35dcd4' : '#444c5e'}">${(u.nombre_completo || u.usuario || '?')[0].toUpperCase()}</div>`;
+
+                const dot = u.is_online == 1
+                    ? '<span style="width:8px;height:8px;border-radius:50%;background:#35dcd4;display:inline-block;margin-right:5px;"></span>'
+                    : '<span style="width:8px;height:8px;border-radius:50%;background:#444c5e;display:inline-block;margin-right:5px;"></span>';
+
+                return `
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        ${foto}
+                        <div style="flex:1;min-width:0;">
+                            <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${u.nombre_completo || u.usuario}</div>
+                            <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${dot}${u.is_online == 1? 'En línea' : tiempoRelativo(u.last_activity)}</div>
+                        </div>
+                    </div>`;
+            }).join('');
+        })
+        .catch(() => {});
+}
+
+// Arrancar y refrescar cada 30s
+document.addEventListener('DOMContentLoaded', () => {
+    actualizarUltimosConectados();
+    setInterval(actualizarUltimosConectados, 30000);
+});
