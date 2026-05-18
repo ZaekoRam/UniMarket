@@ -13,7 +13,26 @@
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 ![Estado](https://img.shields.io/badge/Estado-Terminado-4CAF50?style=for-the-badge)
 
+<table>
+  <thead>
+    <tr>
+      <th colspan="2" style="background-color: #007FFF; color: white; text-align: center;">Idioma</th>
+    </tr>
+    <tr>
+      <th style="background-color: #007FFF; color: white; text-align: center;">English</th>
+      <th style="background-color: #007FFF; color: white; text-align: center;">Español</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><img width="60" height="60" alt="Image" src="https://github.com/user-attachments/assets/06fd3235-fd04-41ed-84a7-d795d13dc578" /></td>
+      <td align="center"><img width="60" height="60" alt="Image" src="https://github.com/user-attachments/assets/e472f7cd-4213-4fc6-b93c-effd068913b3" /></td>
+    </tr>
+  </tbody>
+</table>
+
 </div>
+
 
 ---
 
@@ -35,6 +54,92 @@
 * Sistema de interacciones (likes, dislikes y comentarios).
 * Comunicación en tiempo real a través de chat privado.
 * Gestión de perfil y sistema de notificaciones.
+
+---
+
+# 🎯 Objetivo General
+
+Desarrollar una plataforma web accesible y funcional que permita a los estudiantes emprendedores publicar, promocionar y comercializar productos o servicios dentro de la comunidad universitaria de manera organizada, moderna y segura.
+
+---
+
+# 📌 Problemática
+
+Actualmente muchos estudiantes venden productos y servicios mediante grupos de mensajería o redes sociales desorganizadas, lo que provoca:
+
+- Pérdida de visibilidad de publicaciones.
+- Dificultad para encontrar productos.
+- Falta de organización comercial.
+- Escasa interacción entre compradores y vendedores.
+- Limitadas oportunidades para emprendimientos estudiantiles.
+
+UniMarket surge como una solución digital para centralizar y facilitar el comercio universitario.
+
+---
+
+# 🌎 Objetivo de Desarrollo Sostenible
+
+UniMarket está inspirado en el:
+
+## ODS 8 — Trabajo Decente y Crecimiento Económico
+
+La plataforma busca impulsar el emprendimiento estudiantil, promover oportunidades económicas y facilitar el crecimiento de pequeños negocios dentro de la comunidad universitaria.
+
+---
+
+# 🧠 Justificación
+
+UniMarket fue desarrollado con el propósito de apoyar a estudiantes emprendedores mediante herramientas digitales modernas que permitan mejorar la visibilidad de sus productos y facilitar la interacción comercial dentro de la universidad.
+
+El proyecto busca fomentar:
+
+- El emprendimiento universitario.
+- La innovación tecnológica.
+- La organización comercial.
+- El crecimiento económico estudiantil.
+
+---
+
+# 🎯 Objetivos Específicos
+
+- Diseñar una plataforma web accesible y funcional para estudiantes emprendedores.
+- Implementar un sistema de gestión y publicación de productos con imágenes, precios y datos de contacto.
+- Promover la visibilidad de los emprendimientos universitarios dentro de la plataforma.
+- Desarrollar un sistema de búsqueda y categorización para encontrar productos por tipo, precio o categoría.
+
+---
+
+# 🔍 Sistema de Búsqueda y Organización
+
+La plataforma incorpora herramientas para:
+
+- Buscar productos rápidamente.
+- Filtrar publicaciones.
+- Organizar productos por categorías.
+- Mejorar la experiencia del usuario.
+
+---
+
+# 🚀 Impacto Esperado
+
+Con UniMarket se espera:
+
+- Incrementar la visibilidad de emprendimientos estudiantiles.
+- Facilitar la comercialización de productos y servicios.
+- Fortalecer habilidades emprendedoras.
+- Impulsar la economía dentro de la comunidad universitaria.
+- Crear una plataforma organizada y accesible para todos los estudiantes.
+
+---
+
+# 📚 Metodología
+
+El desarrollo de UniMarket se realizó utilizando un enfoque mixto:
+
+- 📊 Cuantitativo: análisis de usuarios, publicaciones y uso del sistema.
+- 🧠 Cualitativo: experiencia de usuario, accesibilidad y percepción de utilidad.
+
+La plataforma fue diseñada considerando la interacción, facilidad de uso y necesidades reales de los estudiantes.
 
 ---
 
@@ -162,6 +267,18 @@
 
 ---
 
+# 💻 Requisitos del Sistema
+
+| Requisito | Versión Recomendada |
+|---|---|
+| PHP | 8.0 o superior |
+| MySQL | 5.7 o superior |
+| XAMPP / Laragon | Última versión |
+| Navegador | Chrome, Edge, Firefox |
+| Sistema Operativo | Windows 10/11 |
+
+---
+
 ## 📁 Estructura del Proyecto
 
 ```text
@@ -227,3 +344,21 @@ UniMarket-Carlo/
 │       └── ...
 └── 📁 uploads/
     └── (archivos subidos por usuarios)
+```
+---
+# 🙌 Créditos y agradecimientos
+
+- Proyecto desarrollado para mejorar la organización de compra y venta dentro de la comunidad universitaria.
+- Agradecimiento especial a nuestros profesores y compañeros por sus ideas, retroalimentación y apoyo durante el desarrollo de UniMarket.
+- Gracias a todas las personas que probaron las primeras versiones de la plataforma y ayudaron a mejorar la experiencia del usuario.
+- Diseño, interfaz y funcionalidades desarrolladas especialmente para este proyecto académico.
+- UniMarket fue creado con el objetivo de ofrecer una alternativa más moderna y organizada a los grupos tradicionales de mensajería.
+
+---
+
+# 📜 Licencia
+
+Este proyecto está distribuido bajo la licencia MIT.
+
+Esto significa que eres libre de utilizar, estudiar, modificar y compartir el código del proyecto, siempre que se incluya el crédito correspondiente a los autores originales.
+
