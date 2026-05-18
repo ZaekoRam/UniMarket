@@ -2,15 +2,22 @@
 
 ![Animación UniMarket](https://github.com/user-attachments/assets/fd0c5c57-7753-4d22-ba7e-c09b98430794)
 
+<br>
+
 [![ODS 8](https://img.shields.io/badge/ODS-8%20Trabajo%20Decente%20y%20Crecimiento%20Económico-1b6fd1?style=for-the-badge)](https://www.un.org/sustainabledevelopment/es/economic-growth/)
 ![Tipo](https://img.shields.io/badge/Tipo-Red%20Social%20Universitaria-3e8e41?style=for-the-badge)
 ![Público](https://img.shields.io/badge/Público-Comunidad%20Universitaria-d97b32?style=for-the-badge)
+
+<br>
 
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+
+<br>
+
 ![Estado](https://img.shields.io/badge/Estado-Terminado-4CAF50?style=for-the-badge)
 
 <table>
@@ -32,7 +39,6 @@
 </table>
 
 </div>
-
 
 ---
 
