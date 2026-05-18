@@ -1,3 +1,101 @@
+<?php
+session_start();
+require 'credenciales.php';
+
+// ========== 1. PROCESAR FORMULARIO ==========
+$mensaje = '';
+$tipo_mensaje = 'error';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $correo = trim($_POST['correo'] ?? '');
+    
+    if (empty($correo)) {
+        $mensaje = "❌ Por favor ingresa tu correo electrónico.";
+        $tipo_mensaje = "error";
+    } else {
+        // Conectar a la base de datos
+        $conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
+        if (!$conexion) {
+            $mensaje = "❌ Error de conexión a la base de datos.";
+            $tipo_mensaje = "error";
+        } else {
+            // Buscar usuario por correo
+            $correo_escape = mysqli_real_escape_string($conexion, $correo);
+            $query = "SELECT id, usuario, nombre_completo FROM usuarios WHERE cuenta = '$correo_escape'";
+            $result = mysqli_query($conexion, $query);
+            
+            if (mysqli_num_rows($result) === 0) {
+                $mensaje = "❌ No existe una cuenta con ese correo electrónico.";
+                $tipo_mensaje = "error";
+            } else {
+                $user = mysqli_fetch_assoc($result);
+                $usuario_id = $user['id'];
+                $usuario_nombre = $user['nombre_completo'];
+                $usuario_login = $user['usuario'];
+                
+                // Generar token único (64 caracteres)
+                $token = bin2hex(random_bytes(32));
+                $expiracion = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+                
+                // Guardar token en la base de datos
+                $update = "UPDATE usuarios SET token_recuperacion = '$token', token_expira = '$expiracion' WHERE id = $usuario_id";
+                if (mysqli_query($conexion, $update)) {
+                    // Enviar correo
+                    require 'PHPMailer/src/Exception.php';
+                    require 'PHPMailer/src/PHPMailer.php';
+                    require 'PHPMailer/src/SMTP.php';
+                    
+                    $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+                    try {
+                        $mail->isSMTP();
+                        $mail->Host       = 'smtp.gmail.com';
+                        $mail->SMTPAuth   = true;
+                        $mail->Username   = $mi_correo; // tu correo
+                        $mail->Password   = $mi_password_correo; // tu contraseña de aplicación
+                        $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+                        $mail->Port       = 465;
+                        
+                        $mail->setFrom('unibot1940@gmail.com', 'UniMarket Oficial');
+                        $mail->addAddress($correo, $usuario_nombre);
+                        
+                        $enlace = "http://" . $_SERVER['HTTP_HOST'] . "/restablecer.php?token=" . $token;
+                        
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Recuperación de contraseña - UniMarket';
+                        $mail->Body    = "
+                            <div style='font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #f4f4f4; border-radius: 10px;'>
+                                <h2 style='color: #0f8f87;'>¡Hola $usuario_nombre!</h2>
+                                <p style='color: #333; font-size: 16px;'>Recibimos una solicitud para restablecer tu contraseña.</p>
+                                <p style='color: #333; font-size: 16px;'>Haz clic en el siguiente enlace para crear una nueva contraseña (válido por 10 minutos):</p>
+                                <a href='$enlace' style='display: inline-block; background: #39c5bb; color: #082016; padding: 12px 24px; text-decoration: none; border-radius: 30px; font-weight: 800; margin: 20px 0;'>Restablecer contraseña</a>
+                                <p style='color: #777; font-size: 12px;'>Si no solicitaste este cambio, ignora este correo.</p>
+                                <hr style='margin: 20px 0;'>
+                                <p style='color: #999; font-size: 11px;'>El enlace expirará en 10 minutos.</p>
+                            </div>
+                        ";
+                        
+                        $mail->send();
+                        $mensaje = "✅ Se ha enviado un enlace de recuperación a tu correo electrónico. Revisa tu bandeja de entrada (y spam).";
+                        $tipo_mensaje = "success";
+                    } catch (Exception $e) {
+                        $mensaje = "❌ Error al enviar el correo. Intenta nuevamente más tarde.";
+                        $tipo_mensaje = "error";
+                    }
+                } else {
+                    $mensaje = "❌ Error al generar el enlace de recuperación.";
+                    $tipo_mensaje = "error";
+                }
+            }
+            mysqli_close($conexion);
+        }
+    }
+    
+    // Redirigir con mensaje
+    header("Location: recuperar.php?msg=" . urlencode($mensaje) . "&type=" . $tipo_mensaje);
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,12 +105,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg-main: linear-gradient(135deg, #051312, #081f1d, #03100f);
             --accent: #39c5bb;
@@ -25,8 +118,9 @@
             --shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
             --radius: 28px;
             --border-glow: rgba(102, 255, 240, 0.25);
+            --error-red: #ff3366;
+            --success-green: #39c5bb;
         }
-
         body.light-mode {
             --bg-main: linear-gradient(135deg, #dffcf9, #c9f6f0, #eefefd);
             --accent: #39c5bb;
@@ -37,8 +131,8 @@
             --panel-soft: rgba(6, 27, 26, 0.05);
             --shadow: 0 18px 45px rgba(20, 70, 50, 0.12);
             --border-glow: rgba(15, 143, 135, 0.25);
+            --error-red: #e63950;
         }
-
         body {
             font-family: 'Space Grotesk', 'Inter', sans-serif;
             background: var(--bg-main);
@@ -50,8 +144,6 @@
             overflow-x: hidden;
             transition: background 0.5s ease, color 0.5s ease;
         }
-
-        /* Efecto CRT scanlines */
         body::before {
             content: '';
             position: fixed;
@@ -64,13 +156,10 @@
             z-index: 997;
             animation: scanlines 8s linear infinite;
         }
-
         @keyframes scanlines {
             from { background-position: 0 0; }
             to { background-position: 0 20px; }
         }
-
-        /* Fondo animado */
         body::after {
             content: '';
             position: fixed;
@@ -83,42 +172,11 @@
             z-index: 996;
             animation: bgPulse 4s ease-in-out infinite;
         }
-
         @keyframes bgPulse {
             0%, 100% { opacity: 0.5; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.05); }
         }
-
-        /* Partículas flotantes */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 995;
-        }
-
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: var(--accent);
-            border-radius: 50%;
-            opacity: 0.4;
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            from { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            to { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
-        }
-
-        /* Tarjeta principal */
-        .recovery-card {
+        .reset-card {
             position: relative;
             z-index: 10;
             background: var(--panel);
@@ -133,20 +191,16 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             animation: cardReveal 0.6s ease;
         }
-
         @keyframes cardReveal {
             from { opacity: 0; transform: translateY(30px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
-        .recovery-card:hover {
+        .reset-card:hover {
             border-color: var(--accent);
             box-shadow: var(--shadow), 0 0 40px rgba(57, 197, 187, 0.2);
             transform: translateY(-5px);
         }
-
-        /* Icono */
-        .lock-icon {
+        .key-icon {
             width: 80px;
             height: 80px;
             margin: 0 auto 20px;
@@ -160,13 +214,10 @@
             border: 2px solid rgba(57, 197, 187, 0.3);
             animation: iconPulse 2s ease-in-out infinite;
         }
-
         @keyframes iconPulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(57, 197, 187, 0.4); }
             50% { box-shadow: 0 0 0 15px rgba(57, 197, 187, 0); }
         }
-
-        /* Título */
         h1 {
             font-size: 32px;
             font-weight: 800;
@@ -177,33 +228,44 @@
             color: transparent;
             margin-bottom: 12px;
         }
-
         .subtitle {
             color: var(--muted);
             font-size: 14px;
             margin-bottom: 30px;
             line-height: 1.6;
         }
-
-        /* Campo de email */
         .input-group {
             position: relative;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
+            text-align: left;
         }
-
-        .input-group i {
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--accent-2);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: monospace;
+        }
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .input-icon {
             position: absolute;
             left: 18px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--accent);
-            font-size: 18px;
+            font-size: 16px;
             z-index: 2;
+            pointer-events: none;
         }
-
-        .input-group input {
+        .input-wrapper input {
             width: 100%;
-            padding: 16px 20px 16px 50px;
+            padding: 16px 50px 16px 45px;
             background: var(--panel-soft);
             border: 2px solid rgba(102, 255, 240, 0.15);
             border-radius: 50px;
@@ -213,24 +275,11 @@
             transition: all 0.3s;
             outline: none;
         }
-
-        body.light-mode .input-group input {
-            border-color: rgba(15, 143, 135, 0.2);
-        }
-
-        .input-group input:focus {
+        .input-wrapper input:focus {
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(57, 197, 187, 0.15);
         }
-
-        .input-group input::placeholder {
-            color: var(--muted);
-            opacity: 0.5;
-            font-family: monospace;
-        }
-
-        /* Botón */
-        .btn-send {
+        .btn-update {
             position: relative;
             width: 100%;
             padding: 16px;
@@ -243,10 +292,9 @@
             cursor: pointer;
             overflow: hidden;
             transition: all 0.3s;
-            margin-bottom: 24px;
+            margin-top: 16px;
         }
-
-        .btn-send::before {
+        .btn-update::before {
             content: '';
             position: absolute;
             top: 0;
@@ -256,21 +304,13 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s;
         }
-
-        .btn-send:hover::before {
+        .btn-update:hover::before {
             left: 100%;
         }
-
-        .btn-send:hover {
+        .btn-update:hover {
             transform: translateY(-2px);
             box-shadow: 0 0 25px var(--accent);
         }
-
-        .btn-send:active {
-            transform: translateY(0);
-        }
-
-        /* Enlace de vuelta */
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -283,19 +323,13 @@
             padding: 8px 16px;
             border-radius: 40px;
             background: rgba(255, 255, 255, 0.03);
+            margin-top: 24px;
         }
-
-        body.light-mode .back-link {
-            background: rgba(0, 0, 0, 0.03);
-        }
-
         .back-link:hover {
             color: var(--accent-2);
             background: rgba(57, 197, 187, 0.1);
             gap: 12px;
         }
-
-        /* Home chip */
         .home-chip {
             position: fixed;
             top: 20px;
@@ -315,13 +349,10 @@
             transition: all 0.3s;
             z-index: 100;
         }
-
         .home-chip:hover {
             transform: translateY(-2px);
             box-shadow: 0 14px 30px rgba(0, 0, 0, .28), 0 0 22px rgba(102, 255, 240, 0.30);
         }
-
-        /* Toast de notificación */
         .toast-container {
             position: fixed;
             bottom: 30px;
@@ -330,7 +361,6 @@
             z-index: 9999;
             text-align: center;
         }
-
         .toast {
             padding: 12px 24px;
             background: var(--panel);
@@ -342,47 +372,50 @@
             backdrop-filter: blur(10px);
             animation: toastSlide 0.3s ease;
         }
-
         @keyframes toastSlide {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Responsive */
         @media (max-width: 550px) {
-            .recovery-card { padding: 32px 24px; }
+            .reset-card { padding: 32px 24px; }
             h1 { font-size: 26px; }
-            .lock-icon { width: 65px; height: 65px; font-size: 32px; }
+            .key-icon { width: 65px; height: 65px; font-size: 32px; }
             .home-chip { padding: 8px 16px; font-size: 12px; }
         }
     </style>
 </head>
 <body>
-    <!-- Partículas flotantes -->
-    <div class="particles" id="particles"></div>
-
-    <!-- Botón home -->
     <a href="index" class="home-chip">
         <i class="fas fa-arrow-left"></i> Volver al inicio
     </a>
 
-    <div class="recovery-card">
-        <div class="lock-icon">
-            <i class="fas fa-unlock-alt"></i>
+    <div class="reset-card">
+        <div class="key-icon">
+            <i class="fas fa-envelope"></i>
         </div>
         <h1>Recuperar contraseña</h1>
-        <p class="subtitle">Ingresa tu correo institucional y te enviaremos un enlace para crear una nueva contraseña.</p>
+        <p class="subtitle">Te enviaremos un enlace para restablecer tu contraseña.</p>
         
-        <form action="enviar_recuperacion.php" method="POST" id="recoveryForm">
-            <div class="input-group">
-                <i class="fas fa-envelope"></i>
-                <input type="email" name="email" placeholder="tucorreo@ucol.mx" required autocomplete="off">
+        <?php if (isset($_GET['msg']) && isset($_GET['type'])): ?>
+            <div class="toast" style="margin-bottom: 24px; <?php echo $_GET['type'] === 'success' ? 'border-color: var(--success-green); color: var(--success-green);' : 'border-color: var(--error-red); color: var(--error-red);' ?>">
+                <i class="fas <?php echo $_GET['type'] === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'; ?>"></i>
+                <?php echo htmlspecialchars($_GET['msg']); ?>
             </div>
-            <button type="submit" class="btn-send">
+        <?php endif; ?>
+
+        <form action="recuperar.php" method="POST">
+            <div class="input-group">
+                <label>📧 CORREO ELECTRÓNICO</label>
+                <div class="input-wrapper">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" name="correo" placeholder="tu@correo.com" required>
+                </div>
+            </div>
+            <button type="submit" class="btn-update">
                 <i class="fas fa-paper-plane"></i> Enviar enlace
             </button>
         </form>
-        
+
         <a href="index" class="back-link">
             <i class="fas fa-arrow-left"></i> Volver al inicio
         </a>
@@ -391,7 +424,6 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ========== TEMA (LEE EL TEMA GUARDADO DEL USUARIO) ==========
         function applySavedTheme() {
             const savedTheme = localStorage.getItem("theme");
             if (savedTheme === "light") {
@@ -400,11 +432,7 @@
                 document.body.classList.remove("light-mode");
             }
         }
-        
-        // Aplicar tema al cargar
         applySavedTheme();
-        
-        // Escuchar cambios de tema (por si el usuario cambia en otra pestaña)
         window.addEventListener("storage", (e) => {
             if (e.key === "theme") {
                 if (e.newValue === "light") {
@@ -415,69 +443,21 @@
             }
         });
 
-        // ========== PARTÍCULAS ==========
-        function createParticles() {
-            const container = document.getElementById("particles");
-            const particleCount = 50;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement("div");
-                particle.className = "particle";
-                particle.style.left = Math.random() * 100 + "%";
-                particle.style.width = Math.random() * 4 + 2 + "px";
-                particle.style.height = particle.style.width;
-                particle.style.animationDelay = Math.random() * 15 + "s";
-                particle.style.animationDuration = Math.random() * 10 + 10 + "s";
-                particle.style.opacity = Math.random() * 0.4 + 0.2;
-                container.appendChild(particle);
-            }
-        }
-        createParticles();
-
-        // ========== TOAST ==========
-        function showToast(message, type = "error") {
-            const container = document.getElementById("toastContainer");
-            const toast = document.createElement("div");
-            toast.className = "toast";
-            toast.innerHTML = `<i class="fas ${type === "error" ? "fa-exclamation-triangle" : "fa-check-circle"}"></i> ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
-        }
-
-        // ========== PROCESAR MENSAJE DE URL ==========
         function processUrlMessage() {
             const urlParams = new URLSearchParams(window.location.search);
             const msg = urlParams.get('msg');
             const type = urlParams.get('type');
             if (msg) {
-                showToast(decodeURIComponent(msg), type || "error");
+                const container = document.getElementById("toastContainer");
+                const toast = document.createElement("div");
+                toast.className = "toast";
+                toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${decodeURIComponent(msg)}`;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 5000);
                 const newUrl = window.location.pathname;
                 window.history.replaceState({}, document.title, newUrl);
             }
         }
-
-        // ========== VALIDACIÓN DEL FORMULARIO ==========
-        const form = document.getElementById("recoveryForm");
-        form.addEventListener("submit", (e) => {
-            const emailInput = form.querySelector("input[name='email']");
-            const email = emailInput.value.trim();
-            
-            if (!email) {
-                e.preventDefault();
-                showToast("❌ Ingresa tu correo institucional", "error");
-                emailInput.focus();
-                return;
-            }
-            
-            if (!email.includes("@") || !email.includes(".")) {
-                e.preventDefault();
-                showToast("❌ Ingresa un correo válido", "error");
-                emailInput.focus();
-                return;
-            }
-        });
-
-        // Inicializar
         processUrlMessage();
     </script>
 </body>

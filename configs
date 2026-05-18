@@ -133,77 +133,10 @@
     .modal-btn.confirm:hover, .modal-btn.cancel:hover {
       transform: translateY(-2px);
     }
-
-    /* ========== NOTIFICACIONES ESTILO GLITCH ========== */
-    .notification-toast {
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1em;
-      overflow: hidden;
-      padding: 14px 20px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(57, 197, 187, 0.2), 0 8px 24px rgba(0, 0, 0, 0.3);
-      animation: slideInRight 0.25s ease forwards;
-      min-width: 300px;
-      max-width: 400px;
-      font-family: 'Menlo', 'Roboto Mono', monospace;
-      border: 1px solid;
-      backdrop-filter: blur(8px);
-    }
-    .notification-toast.success {
-      background: linear-gradient(135deg, rgba(57, 197, 187, 0.12), rgba(15, 143, 135, 0.2));
-      border-color: #39c5bb;
-      color: #66fff0;
-    }
-    .notification-toast.success .notification-progress {
-      background: linear-gradient(90deg, #39c5bb, #66fff0);
-      box-shadow: 0 0 8px #39c5bb;
-    }
-    .notification-toast.error {
-      background: linear-gradient(135deg, rgba(255, 125, 146, 0.12), rgba(200, 60, 80, 0.2));
-      border-color: #ff7d92;
-      color: #ffb3c1;
-    }
-    .notification-toast.error .notification-progress {
-      background: linear-gradient(90deg, #ff7d92, #ff4d6a);
-      box-shadow: 0 0 8px #ff7d92;
-    }
-    .notification-toast.warning {
-      background: linear-gradient(135deg, rgba(255, 193, 7, 0.12), rgba(255, 160, 0, 0.2));
-      border-color: #ffc107;
-      color: #ffe066;
-    }
-    .notification-toast.warning .notification-progress {
-      background: linear-gradient(90deg, #ffc107, #ffb300);
-      box-shadow: 0 0 8px #ffc107;
-    }
-    .notification-toast.info {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(37, 99, 235, 0.2));
-      border-color: #3b82f6;
-      color: #93c5fd;
-    }
-    .notification-toast.info .notification-progress {
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
-      box-shadow: 0 0 8px #3b82f6;
-    }
-    .notification-content { display: flex; align-items: center; gap: 0.8em; flex: 1; position: relative; }
-    .notification-icon svg { width: 22px; height: 22px; filter: drop-shadow(0 0 3px currentColor); }
-    .notification-text { font-size: 0.85em; font-weight: 600; letter-spacing: 0.5px; font-family: 'Menlo', 'Roboto Mono', monospace; white-space: normal; word-break: normal; }
-    .glitch-char { display: inline-block; animation: glitchReveal 0.05s steps(2, end) forwards; animation-delay: calc(var(--i, 0) * 0.008s); opacity: 0; white-space: normal; }
-    @keyframes glitchReveal { 0% { opacity: 0; transform: scale(1.3); filter: blur(1px); text-shadow: -1px 0 #ff7d92, 1px 0 #39c5bb; } 100% { opacity: 1; transform: scale(1); filter: blur(0); text-shadow: none; } }
-    .notification-close { padding: 4px; border-radius: 5px; cursor: pointer; transition: all 250ms; display: flex; align-items: center; opacity: 0.6; }
-    .notification-close:hover { opacity: 1; background-color: rgba(255, 255, 255, 0.1); transform: scale(1.1); }
-    .notification-progress { position: absolute; bottom: 0; left: 0; height: 2px; width: 100%; animation: progressBar 3.5s linear forwards; }
-    @keyframes slideInRight { from { transform: translateX(100%) scale(0.9); opacity: 0; } to { transform: translateX(0) scale(1); opacity: 1; } }
-    @keyframes fadeOut { to { transform: translateX(100%) scale(0.9); opacity: 0; } }
-    @keyframes progressBar { 0% { width: 100%; } 100% { width: 0%; } }
   </style>
 </head>
 <body>
-   <aside class="sidebar">
+  <aside class="sidebar">
     <div class="sidebar-top">
       <div class="sidebar-mascot">
         <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
@@ -382,11 +315,10 @@
       </div>
     </div>
   </div>
-  <!-- Contenedor de notificaciones -->
-<div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+
   <script>
     // ==========================================
-    // 🌐 TRADUCCIONES COMPLETAS (igual que antes)
+    // 🌐 TRADUCCIONES COMPLETAS
     // ==========================================
     const translationsConfig = {
       es: {
@@ -457,7 +389,6 @@
       }
     };
 
-
     function getLang() { return localStorage.getItem("lang") || "es"; }
     function tConfig(key) { return (translationsConfig[getLang()] && translationsConfig[getLang()][key]) || key; }
 
@@ -472,15 +403,15 @@
     }
 
     // ==========================================
-    // TEMA OSCURO/CLARO (igual)
+    // TEMA OSCURO/CLARO
     // ==========================================
     const themeSwitchCard = document.getElementById("themeSwitchCard");
+
     function aplicarTema() {
       const isDark = localStorage.getItem("theme") === "dark";
       document.body.classList.toggle("light-mode", !isDark);
       themeSwitchCard.checked = isDark;
     }
-    // ...
 
     const temaGuardado = localStorage.getItem("theme") || "dark";
     localStorage.setItem("theme", temaGuardado);
@@ -504,7 +435,8 @@
       });
       cargarDatosUsuario(); // recargar para traducir "invitado" etc.
     }
-document.querySelectorAll(".lang-btn").forEach(btn => {
+
+    document.querySelectorAll(".lang-btn").forEach(btn => {
       btn.addEventListener("click", () => setLanguage(btn.dataset.lang));
     });
 
@@ -546,99 +478,9 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
         document.getElementById('displayEmail').innerHTML = `<strong>${tConfig('sinCorreo')}</strong>`;
       }
     }
-    // ==========================================
-    // NOTIFICACIONES GLITCH (copiadas de menu.html)
-    // ==========================================
-    const glitchSymbols = ['#', '@', '$', '%', '&', '*', '?', '!', '=', '+', '~', '|', '/', '\\', '[', ']', '{', '}', '(', ')', '<', '>', '_', '-'];
-    function getRandomSymbol() { return glitchSymbols[Math.floor(Math.random() * glitchSymbols.length)]; }
-
-    function revealTextWithGlitch(element, originalMessage, duration = 1500) {
-      const chars = [];
-      for (let i = 0; i < originalMessage.length; i++) chars.push(originalMessage[i]);
-      const totalChars = chars.length;
-      const startTime = Date.now();
-      const revealInterval = duration / totalChars;
-      element.innerHTML = '';
-      for (let i = 0; i < totalChars; i++) {
-        if (chars[i] === ' ') {
-          const spaceSpan = document.createElement('span');
-          spaceSpan.className = 'glitch-char';
-          spaceSpan.style.setProperty('--i', i);
-          spaceSpan.textContent = ' ';
-          spaceSpan.style.minWidth = '4px';
-          spaceSpan.setAttribute('data-original', ' ');
-          element.appendChild(spaceSpan);
-        } else {
-          const span = document.createElement('span');
-          span.className = 'glitch-char';
-          span.style.setProperty('--i', i);
-          span.textContent = getRandomSymbol();
-          span.setAttribute('data-original', chars[i]);
-          element.appendChild(span);
-        }
-      }
-      let currentRevealed = 0;
-      function revealNext() {
-        if (currentRevealed >= totalChars) return;
-        const elapsed = Date.now() - startTime;
-        const expectedRevealed = Math.min(totalChars, Math.floor(elapsed / revealInterval));
-        if (expectedRevealed > currentRevealed) {
-          for (let i = currentRevealed; i < expectedRevealed && i < totalChars; i++) {
-            const span = element.children[i];
-            if (span) {
-              const originalChar = span.getAttribute('data-original');
-              span.textContent = originalChar;
-              span.style.animation = 'none';
-              span.offsetHeight;
-              span.style.animation = 'glitchReveal 0.05s steps(2, end) forwards';
-            }
-          }
-          currentRevealed = expectedRevealed;
-        }
-        if (currentRevealed < totalChars) requestAnimationFrame(revealNext);
-      }
-      requestAnimationFrame(revealNext);
-    }
-
-    function showNotification(message, type = 'info') {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
-      const toast = document.createElement('div');
-      toast.className = `notification-toast ${type}`;
-      const icons = {
-        success: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`,
-        error: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`,
-        warning: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>`,
-        info: `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
-      };
-      const textSpan = document.createElement('span');
-      textSpan.className = 'notification-text';
-      toast.innerHTML = `
-        <div class="notification-content">
-          <div class="notification-icon">${icons[type]}</div>
-          <div class="notification-text-wrapper"></div>
-        </div>
-        <div class="notification-close"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></div>
-        <div class="notification-progress"></div>
-      `;
-      const textWrapper = toast.querySelector('.notification-text-wrapper');
-      textWrapper.appendChild(textSpan);
-      container.appendChild(toast);
-      revealTextWithGlitch(textSpan, message, 1500);
-      toast.querySelector('.notification-close').onclick = () => {
-        toast.style.animation = 'fadeOut 0.2s ease forwards';
-        setTimeout(() => toast.remove(), 200);
-      };
-      setTimeout(() => {
-        if (toast.parentElement) {
-          toast.style.animation = 'fadeOut 0.2s ease forwards';
-          setTimeout(() => toast.remove(), 200);
-        }
-      }, 3500);
-    }
 
     // ==========================================
-    // MODAL CAMBIAR NOMBRE DE USUARIO (con showNotification)
+    // MODAL CAMBIAR NOMBRE DE USUARIO
     // ==========================================
     const usernameModal = document.getElementById('usernameModal');
     const openUsernameBtn = document.getElementById('changeUsernameBtn');
@@ -666,11 +508,11 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
     confirmUsernameBtn.addEventListener('click', async () => {
       const newUsername = document.getElementById('newUsername').value.trim();
       if (!newUsername) {
-        showNotification(tConfig('completarCampos') || 'Completa el campo', 'error');
+        alert(tConfig('completarCampos') || 'Completa el campo');
         return;
       }
       if (newUsername.length < 3) {
-        showNotification('El nombre de usuario debe tener al menos 3 caracteres', 'error');
+        alert('El nombre de usuario debe tener al menos 3 caracteres');
         return;
       }
       const formData = new FormData();
@@ -679,19 +521,19 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
         const res = await fetch('cambiar_usuario.php', { method: 'POST', body: formData });
         const data = await res.json();
         if (data.success) {
-          showNotification(tConfig('usuarioActualizado') || 'Usuario actualizado', 'success');
+          alert(tConfig('usuarioActualizado') || 'Usuario actualizado');
           document.getElementById('displayUsername').innerHTML = `<strong>${data.usuario}</strong>`;
           usernameModal.style.display = 'none';
         } else {
-          showNotification(tConfig('error') + ': ' + data.error, 'error');
+          alert(tConfig('error') + ': ' + data.error);
         }
       } catch (err) {
-        showNotification(tConfig('errorConexion') || 'Error de conexión', 'error');
+        alert(tConfig('errorConexion') || 'Error de conexión');
       }
     });
 
     // ==========================================
-    // MODAL CAMBIAR CONTRASEÑA (con showNotification)
+    // MODAL CAMBIAR CONTRASEÑA
     // ==========================================
     const passwordModal = document.getElementById('passwordModal');
     const openPasswordBtn = document.getElementById('changePasswordBtn');
@@ -719,29 +561,17 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
       const confirm = document.getElementById('confirmPass').value;
       
       if (!current || !newPass || !confirm) {
-        showNotification(tConfig('completarCampos') || 'Completa todos los campos', 'error');
+        alert(tConfig('completarCampos') || 'Completa todos los campos');
         return;
       }
       if (newPass !== confirm) {
-        showNotification(tConfig('passNoCoinciden') || 'Las nuevas contraseñas no coinciden', 'error');
+        alert(tConfig('passNoCoinciden') || 'Las nuevas contraseñas no coinciden');
         return;
       }
-      if (newPass.length < 8) {
-    showNotification('La nueva contraseña debe tener al menos 8 caracteres', 'error');
-    return;
-}
-if (!/[A-Z]/.test(newPass)) {
-    showNotification('La nueva contraseña debe contener al menos una mayúscula', 'error');
-    return;
-}
-if (!/[a-z]/.test(newPass)) {
-    showNotification('La nueva contraseña debe contener al menos una minúscula', 'error');
-    return;
-}
-if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPass)) {
-    showNotification('La nueva contraseña debe contener al menos un carácter especial', 'error');
-    return;
-}
+      if (newPass.length < 4) {
+        alert(tConfig('passCorta') || 'La nueva contraseña debe tener al menos 4 caracteres');
+        return;
+      }
       
       const formData = new FormData();
       formData.append('password_actual', current);
@@ -751,13 +581,13 @@ if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPass)) {
         const res = await fetch('cambiar_password.php', { method: 'POST', body: formData });
         const data = await res.json();
         if (data.success) {
-          showNotification(tConfig('passActualizada') || 'Contraseña actualizada correctamente', 'success');
+          alert(tConfig('passActualizada') || 'Contraseña actualizada correctamente');
           passwordModal.style.display = 'none';
         } else {
-          showNotification(tConfig('error') + ': ' + data.error, 'error');
+          alert(tConfig('error') + ': ' + data.error);
         }
       } catch (err) {
-        showNotification(tConfig('errorConexion') || 'Error de conexión', 'error');
+        alert(tConfig('errorConexion') || 'Error de conexión');
       }
     });
 
@@ -773,73 +603,6 @@ if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPass)) {
     // ==========================================
     aplicarIdiomaConfig();
     cargarDatosUsuario();
-
-    // ========== TRADUCCIÓN DE NOTIFICACIONES ==========
-const notificationTranslations = {
-  es: {
-    "La contraseña debe tener al menos 8 caracteres.": "❌ La contraseña debe tener al menos 8 caracteres.",
-    "La contraseña debe contener al menos una letra mayúscula.": "❌ La contraseña debe contener al menos una letra mayúscula.",
-    "La contraseña debe contener al menos una letra minúscula.": "❌ La contraseña debe contener al menos una letra minúscula.",
-    "La contraseña debe contener al menos un carácter especial (!@#$%^&* etc.).": "❌ La contraseña debe contener al menos un carácter especial (!@#$%^&* etc.).",
-    "El usuario, correo o número de cuenta ya existen.": "❌ El usuario, correo o número de cuenta ya existen.",
-    "¡Registro casi listo! Te hemos enviado un código de 6 dígitos a tu correo.": "✅ ¡Registro casi listo! Te hemos enviado un código de 6 dígitos a tu correo.",
-    "Error al enviar el correo. Contacta al administrador.": "❌ Error al enviar el correo. Contacta al administrador.",
-    "Error en la Base de Datos: ": "❌ Error en la Base de Datos: ",
-    "El nombre completo debe tener al menos 3 letras.": "❌ El nombre completo debe tener al menos 3 letras.",
-    "El correo electrónico no es válido.": "❌ El correo electrónico no es válido.",
-    "El nombre de usuario no puede tener espacios.": "❌ El nombre de usuario no puede tener espacios.",
-    "Usuario o contraseña incorrectos": "❌ Usuario o contraseña incorrectos",
-    "Cuenta no verificada. Revisa tu correo.": "⚠️ Cuenta no verificada. Revisa tu correo.",
-    "Sesión iniciada correctamente": "✅ Sesión iniciada correctamente"
-  },
-  en: {
-    "La contraseña debe tener al menos 8 caracteres.": "❌ Password must be at least 8 characters.",
-    "La contraseña debe contener al menos una letra mayúscula.": "❌ Password must contain at least one uppercase letter.",
-    "La contraseña debe contener al menos una letra minúscula.": "❌ Password must contain at least one lowercase letter.",
-    "La contraseña debe contener al menos un carácter especial (!@#$%^&* etc.).": "❌ Password must contain at least one special character (!@#$%^&* etc.).",
-    "El usuario, correo o número de cuenta ya existen.": "❌ Username, email or student ID already exists.",
-    "¡Registro casi listo! Te hemos enviado un código de 6 dígitos a tu correo.": "✅ Registration almost ready! We have sent a 6-digit code to your email.",
-    "Error al enviar el correo. Contacta al administrador.": "❌ Error sending email. Contact the administrator.",
-    "Error en la Base de Datos: ": "❌ Database error: ",
-    "El nombre completo debe tener al menos 3 letras.": "❌ Full name must be at least 3 letters.",
-    "El correo electrónico no es válido.": "❌ Email is not valid.",
-    "El nombre de usuario no puede tener espacios.": "❌ Username cannot contain spaces.",
-    "Usuario o contraseña incorrectos": "❌ Incorrect username or password",
-    "Cuenta no verificada. Revisa tu correo.": "⚠️ Unverified account. Check your email.",
-    "Sesión iniciada correctamente": "✅ Successfully logged in"
-  }
-};
-
-function translateNotificationMessage(message, lang) {
-  if (!message) return message;
-  // Buscar traducción exacta
-  if (notificationTranslations[lang] && notificationTranslations[lang][message]) {
-    return notificationTranslations[lang][message];
-  }
-  // Si no, devolver el original (puede que tenga variables, intentamos reemplazar partes)
-  // Por si el mensaje contiene un error dinámico como "Error en la Base de Datos: algo"
-  for (const [key, value] of Object.entries(notificationTranslations[lang] || {})) {
-    if (message.includes(key)) {
-      return message.replace(key, value);
-    }
-  }
-  return message;
-}
-
-// Modificar processUrlNotification para traducir
-function processUrlNotification() {
-  const urlParams = new URLSearchParams(window.location.search);
-  let msg = urlParams.get('msg');
-  const type = urlParams.get('type');
-  if (msg) {
-    const lang = getLang();
-    msg = decodeURIComponent(msg);
-    const translatedMsg = translateNotificationMessage(msg, lang);
-    showNotification(translatedMsg, type || 'info');
-    const newUrl = window.location.pathname;
-    window.history.replaceState({}, document.title, newUrl);
-  }
-}
   </script>
 </body>
 </html>

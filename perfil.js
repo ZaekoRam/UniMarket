@@ -323,8 +323,14 @@ function fillEditInputs(profile) {
   if (inputEmprendimientos) inputEmprendimientos.value = profile.emprendimientos;
   const inputEstado = document.getElementById("inputEstado");
   if (inputEstado) inputEstado.value = profile.estado;
-  const inputSobreMi = document.getElementById("inputSobreMi");
-  if (inputSobreMi) inputSobreMi.value = profile.sobreMi;
+const inputSobreMi = document.getElementById("inputSobreMi");
+if (inputSobreMi) {
+  inputSobreMi.value = profile.sobreMi;
+  // Actualizar contador después de asignar el valor
+  if (typeof updateCharCounter === 'function') {
+    updateCharCounter();
+  }
+}
   const inputGustos = document.getElementById("inputGustos");
   if (inputGustos) inputGustos.value = profile.gustos ? profile.gustos.join(", ") : "";
   const inputMood = document.getElementById("inputMood");
@@ -494,9 +500,37 @@ async function actualizarEstadoOnline() {
         console.error("Error actualizando estado online", err);
     }
 }
+initCharCounter();
   setInterval(actualizarEstadoOnline, 30000);
 });
+// ========== CONTADOR DE CARACTERES PARA "SOBRE MÍ" ==========
+let updateCharCounter = null; 
 
+function initCharCounter() {
+  const textarea = document.getElementById('inputSobreMi');
+  const counterSpan = document.querySelector('#editSobreMiWrap .char-counter');
+  if (!textarea || !counterSpan) return;
+
+  const max = 500;
+
+  function updateCounter() {
+    const length = textarea.value.length;
+    counterSpan.textContent = `${length}/${max}`;
+    if (length > max) {
+      counterSpan.style.color = '#ff7d92';
+      textarea.value = textarea.value.slice(0, max);
+      counterSpan.textContent = `${max}/${max}`;
+    } else {
+      counterSpan.style.color = '';
+    }
+  }
+
+  // Guardamos la función para usarla después
+  updateCharCounter = updateCounter;
+
+  textarea.addEventListener('input', updateCounter);
+  updateCounter(); // inicial
+}
 // ========== UTILIDADES ==========
 function escapeHtml(str) {
   if (!str) return '';

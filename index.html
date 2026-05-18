@@ -283,13 +283,13 @@
     </div>
   </div>
   <div class="item-hints">
-            <div class="hint" data-position="1">
-                <span class="hint-dot">?</span>
-                <div class="hint-content">
-                    <p>UniMarket es una web que apoya a los emprendimientos universitarios.</p>
-                </div>
-            </div>
-        </div>
+  <div class="hint" data-position="1">
+    <span class="hint-dot">?</span>
+    <div class="hint-content">
+      <p data-i18n="aboutApp">UniMarket es un sistema web creado para un entorno universitario con la finalidad de brindarle las herramientas de difusión adecuadas a futuros o actuales emprendedores y poder hacer llegar a más personas sobre sus productos.</p>
+    </div>
+  </div>
+</div>
 
   <div id="modalVerificacion" class="modal-overlay" style="display: none;">
     <div class="modal-content">
@@ -459,16 +459,134 @@ function showNotification(message, type = 'info') {
   toast.querySelector('.notification-close').onclick = () => { toast.style.animation = 'fadeOut 0.2s ease forwards'; setTimeout(() => toast.remove(), 200); };
   setTimeout(() => { if (toast.parentElement) { toast.style.animation = 'fadeOut 0.2s ease forwards'; setTimeout(() => toast.remove(), 200); } }, 3500);
 }
+// ========== TRADUCCIÓN DE NOTIFICACIONES ==========
+const notificationTranslations = {
+  es: {
+    "La contraseña debe tener al menos 8 caracteres.": "❌ La contraseña debe tener al menos 8 caracteres.",
+    "La contraseña debe contener al menos una letra mayúscula.": "❌ La contraseña debe contener al menos una letra mayúscula.",
+    "La contraseña debe contener al menos una letra minúscula.": "❌ La contraseña debe contener al menos una letra minúscula.",
+    "La contraseña debe contener al menos un carácter especial (!@#$%^&* etc.).": "❌ La contraseña debe contener al menos un carácter especial (!@#$%^&* etc.).",
+    "El usuario, correo o número de cuenta ya existen.": "❌ El usuario, correo o número de cuenta ya existen.",
+    "¡Registro casi listo! Te hemos enviado un código de 6 dígitos a tu correo.": "✅ ¡Registro casi listo! Te hemos enviado un código de 6 dígitos a tu correo.",
+    "Error al enviar el correo. Contacta al administrador.": "❌ Error al enviar el correo. Contacta al administrador.",
+    "Error en la Base de Datos: ": "❌ Error en la Base de Datos: ",
+    "El nombre completo debe tener al menos 3 letras.": "❌ El nombre completo debe tener al menos 3 letras.",
+    "El correo electrónico no es válido.": "❌ El correo electrónico no es válido.",
+    "El nombre de usuario no puede tener espacios.": "❌ El nombre de usuario no puede tener espacios.",
+    "Usuario o contraseña incorrectos": "❌ Usuario o contraseña incorrectos",
+    "Cuenta no verificada. Revisa tu correo.": "⚠️ Cuenta no verificada. Revisa tu correo.",
+    "Sesión iniciada correctamente": "✅ Sesión iniciada correctamente"
+  },
+  en: {
+    "La contraseña debe tener al menos 8 caracteres.": "❌ Password must be at least 8 characters.",
+    "La contraseña debe contener al menos una letra mayúscula.": "❌ Password must contain at least one uppercase letter.",
+    "La contraseña debe contener al menos una letra minúscula.": "❌ Password must contain at least one lowercase letter.",
+    "La contraseña debe contener al menos un carácter especial (!@#$%^&* etc.).": "❌ Password must contain at least one special character (!@#$%^&* etc.).",
+    "El usuario, correo o número de cuenta ya existen.": "❌ Username, email or student ID already exists.",
+    "¡Registro casi listo! Te hemos enviado un código de 6 dígitos a tu correo.": "✅ Registration almost ready! We have sent a 6-digit code to your email.",
+    "Error al enviar el correo. Contacta al administrador.": "❌ Error sending email. Contact the administrator.",
+    "Error en la Base de Datos: ": "❌ Database error: ",
+    "El nombre completo debe tener al menos 3 letras.": "❌ Full name must be at least 3 letters.",
+    "El correo electrónico no es válido.": "❌ Email is not valid.",
+    "El nombre de usuario no puede tener espacios.": "❌ Username cannot contain spaces.",
+    "Usuario o contraseña incorrectos": "❌ Incorrect username or password",
+    "Cuenta no verificada. Revisa tu correo.": "⚠️ Unverified account. Check your email.",
+    "Sesión iniciada correctamente": "✅ Successfully logged in"
+  }
+};
+
+function translateNotificationMessage(message, lang) {
+  if (!message) return message;
+  // Buscar traducción exacta
+  if (notificationTranslations[lang] && notificationTranslations[lang][message]) {
+    return notificationTranslations[lang][message];
+  }
+  // Si no, devolver el original (puede que tenga variables, intentamos reemplazar partes)
+  // Por si el mensaje contiene un error dinámico como "Error en la Base de Datos: algo"
+  for (const [key, value] of Object.entries(notificationTranslations[lang] || {})) {
+    if (message.includes(key)) {
+      return message.replace(key, value);
+    }
+  }
+  return message;
+}
+function getLang() {
+    return localStorage.getItem("lang") || "es";
+}
+
+// Modificar processUrlNotification para traducir
 function processUrlNotification() {
   const urlParams = new URLSearchParams(window.location.search);
-  const msg = urlParams.get('msg');
+  let msg = urlParams.get('msg');
   const type = urlParams.get('type');
   if (msg) {
-    showNotification(decodeURIComponent(msg), type || 'info');
+    const lang = getLang();
+    msg = decodeURIComponent(msg);
+    const translatedMsg = translateNotificationMessage(msg, lang);
+    showNotification(translatedMsg, type || 'info');
     const newUrl = window.location.pathname;
     window.history.replaceState({}, document.title, newUrl);
   }
 }
+// ========== VALIDACIÓN DE CAMPOS VACÍOS (CLIENTE) ==========
+function validarFormulario(event) {
+    const form = event.target;
+    const formId = form.id; // los formularios no tienen id, usaremos class o acción
+    let camposVacios = [];
+    
+    // Determinar si es login o registro
+    if (form.classList.contains('full-login')) {
+        const usuario = form.querySelector('#loginUsuario');
+        const password = form.querySelector('#passwordLogin');
+        if (!usuario.value.trim()) camposVacios.push('Nombre de usuario');
+        if (!password.value.trim()) camposVacios.push('Contraseña');
+        if (camposVacios.length > 0) {
+            event.preventDefault();
+            const lang = getLang();
+            const msg = lang === 'es' ? '⚠️ Por favor completa los siguientes campos: ' + camposVacios.join(', ') : '⚠️ Please fill in the following fields: ' + camposVacios.join(', ');
+            showNotification(msg, 'warning');
+            return false;
+        }
+    } 
+    else if (form.classList.contains('full-register')) {
+    const nombre = form.querySelector('#registerNombreCompleto');
+    const usuario = form.querySelector('#registerUsuario');
+    const num = form.querySelector('#registerNum');
+    const correo = form.querySelector('#registerCorreo');
+    const password = form.querySelector('#passwordRegister');
+    
+    // Validar nombre completo
+    if (!nombre.value.trim()) {
+        camposVacios.push('Nombre completo');
+    } else if (nombre.value.trim().length < 3) {
+        event.preventDefault();
+        const lang = getLang();
+        const msg = lang === 'es' ? '⚠️ El nombre completo debe tener al menos 3 caracteres.' : '⚠️ Full name must be at least 3 characters.';
+        showNotification(msg, 'warning');
+        return false;
+    }
+    
+    if (!usuario.value.trim()) camposVacios.push('Nombre de usuario');
+    if (!num.value.trim()) camposVacios.push('Número de cuenta');
+    if (!correo.value.trim()) camposVacios.push('Correo institucional');
+    if (!password.value.trim()) camposVacios.push('Contraseña');
+    
+    if (camposVacios.length > 0) {
+        event.preventDefault();
+        const lang = getLang();
+        const msg = lang === 'es' ? '⚠️ Por favor completa los siguientes campos: ' + camposVacios.join(', ') : '⚠️ Please fill in the following fields: ' + camposVacios.join(', ');
+        showNotification(msg, 'warning');
+        return false;
+    }
+
+    }
+    return true;
+}
+
+// Asignar eventos a los formularios
+document.querySelectorAll('.full-login, .full-register').forEach(form => {
+    form.addEventListener('submit', validarFormulario);
+});
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', processUrlNotification);
 else processUrlNotification();
 </script>
