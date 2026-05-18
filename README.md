@@ -152,13 +152,13 @@
 
 ## 🖼️ Capturas de Pantalla
 
-| Pantalla de Login | Inicio (Dashboard) | Perfil de Usuario |
+| Pantalla de Login | Inicio (Feed principal) | Perfil de Usuario |
 |:---:|:---:|:---:|
-| ![Login](img/login.png) | ![Inicio](img/dashboard.png) | ![Perfil](img/perfil.png) |
+| ![Login](https://github.com/user-attachments/assets/a626a741-c570-48ba-b7bf-c22ff3d3067e) | ![Inicio](https://github.com/user-attachments/assets/e452863b-be26-4bc9-a446-b0e12aa0da89) | ![Perfil](https://github.com/user-attachments/assets/a11f0881-bf1d-42bf-8f80-c408bbb88a78) |
 
 | Mensajería (Chat) | Notificaciones | Configuraciones |
 |:---:|:---:|:---:|
-| ![Mensajes](img/mensajes.png) | ![Notificaciones](img/notificaciones.png) | ![Configuraciones](img/configuraciones.png) |
+| ![Mensajes](https://github.com/user-attachments/assets/562fdeca-55aa-4955-a437-1b57c3320a52) | ![Notificaciones](https://github.com/user-attachments/assets/6eb2c1a7-1ead-40c8-8307-02dbd2aba9e4) | ![Configuraciones](https://github.com/user-attachments/assets/347e40e6-c9c1-4955-b8c2-81998646fea0) |
 
 ---
 
