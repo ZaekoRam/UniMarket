@@ -216,7 +216,6 @@
 .edit-post-header .edit-icon {
     animation: bounce 2s infinite;
 }
-<<<<<<< HEAD
 /* ========== FORZAR TEMA EN PANEL DE EDICIÓN ========== */
 .edit-post-box {
     background: var(--panel-strong) !important;
@@ -290,8 +289,6 @@ body.light-mode .edit-post-box .btn-cancel {
     border-color: #b8ccc8 !important;
     color: #2c5a4f !important;
 }
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
@@ -468,25 +465,7 @@ body.light-mode .edit-post-box .btn-cancel {
                 <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
             </a>
 
-<<<<<<< HEAD
             
-=======
-            <label class="theme-switch modern-switch" aria-label="Cambiar tema">
-                <input type="checkbox" id="themeToggleInput">
-                <span class="slider">
-                    <div class="star star_1"></div>
-                    <div class="star star_2"></div>
-                    <div class="star star_3"></div>
-
-                    <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
-                        <path transform="matrix(.77976 0 0 .78395-299.99-418.63)" fill="#fff"
-                            d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
-                        </path>
-                    </svg>
-                </span>
-                <span class="theme-text" id="themeText">Dark Mode</span>
-            </label>
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         </nav>
     </aside>
 
@@ -514,11 +493,7 @@ body.light-mode .edit-post-box .btn-cancel {
             <span class="divider-line"></span>
         </div>
  <div class="search-tags-bar" style="max-width:820px; margin:0 auto 20px; position:relative;">
-<<<<<<< HEAD
     <input type="text" id="searchTagsInput" class="search-tags-input" data-i18n-placeholder="buscarTags" placeholder="🔎 Buscar por tags...">
-=======
-    <input type="text" id="searchTagsInput" class="search-tags-input" placeholder="🔎 Buscar por tags...">
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     <div id="searchSuggestions" class="tags-suggestions" style="position:absolute; top:100%; left:0; right:0; background:var(--panel); border-radius:12px; border:1px solid var(--border); display:none; z-index:100; max-height:200px; overflow-y:auto;"></div>
 </div>
 
@@ -537,10 +512,7 @@ body.light-mode .edit-post-box .btn-cancel {
         </div>
 
         <form id="contenidoForm" action="menu.php" method="POST" enctype="multipart/form-data">
-<<<<<<< HEAD
             <input type="hidden" name="lang" id="formLang" value="">
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
             <div class="textarea-wrapper">
                 <textarea id="texto" name="texto" placeholder="¿Qué vamos a emprender hoy?"></textarea>
                 <label class="camera-btn" title="Agregar imagen o video">
@@ -550,11 +522,7 @@ body.light-mode .edit-post-box .btn-cancel {
             </div>
             <!-- Dentro de <form id="contenidoForm">, antes del botón btn-publicar -->
 <div class="tags-input-wrapper" style="position:relative; margin-top:12px;">
-<<<<<<< HEAD
     <input type="text" id="tagsInput" name="tags" class="tags-input" data-i18n-placeholder="tagsPlaceholder" placeholder="Ej: tecnología, unibot, web (separados por comas)">
-=======
-    <input type="text" id="tagsInput" name="tags" class="tags-input" placeholder="Ej: tecnología, unibot, web (separados por comas)">
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     <div id="tagsSuggestions" class="tags-suggestions" style="position:absolute; top:100%; left:0; right:0; background:var(--panel); border-radius:12px; border:1px solid var(--border); display:none; z-index:100; max-height:200px; overflow-y:auto;"></div>
 </div>
             <div id="previewContainer" class="post-images-grid preview-grid"></div>
@@ -573,10 +541,7 @@ body.light-mode .edit-post-box .btn-cancel {
         <img id="lightboxImage" src="" alt="Vista ampliada">
     </div>
 
-<<<<<<< HEAD
     <script src="global.js"></script>
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     <script>
         // Después de las variables globales (currentTagsList, etc.), agrega:
 let postsDataGlobal = [];
@@ -591,11 +556,7 @@ function escapeHtml(str) {
     });
 }
         const body = document.body;
-<<<<<<< HEAD
         
-=======
-        const themeToggleInput = document.getElementById("themeToggleInput");
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         const themeText = document.getElementById("themeText");
 
         const translations = {
@@ -636,7 +597,6 @@ function escapeHtml(str) {
                 errorEliminar: "No se pudo eliminar la publicación.",
                 errorIdPost: "No se encontró el ID de la publicación.",
                 cargando: "Cargando...",   
-<<<<<<< HEAD
                 buscarTags: "🔎 Buscar por tags...",
 tagsPlaceholder: "Ej: tecnología, unibot, web (separados por comas)",
 limpiarFiltro: "✕ Limpiar filtro",
@@ -651,8 +611,6 @@ errorCargarPublicaciones: "Error al cargar publicaciones: {error}",
 errorConexionServidorCarga: "Error de conexión al servidor.",
 confirmarEliminarComentario: "¿Eliminar este comentario?",
 errorIdentificarPublicacion: "Error: no se pudo identificar la publicación."
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
             },
             en: {
                 inicio: "Home",
@@ -690,7 +648,6 @@ errorIdentificarPublicacion: "Error: no se pudo identificar la publicación."
                 confirmarEliminar: "Are you sure you want to delete this post?",
                 errorEliminar: "Could not delete the post.",
                 errorIdPost: "Post ID was not found.",
-<<<<<<< HEAD
                 cargando: "Loading...",
                 buscarTags: "🔎 Search by tags...",
 tagsPlaceholder: "Ex: technology, unibot, web (separated by commas)",
@@ -706,9 +663,6 @@ errorCargarPublicaciones: "Error loading posts: {error}",
 errorConexionServidorCarga: "Connection error to the server.",
 confirmarEliminarComentario: "Delete this comment?",
 errorIdentificarPublicacion: "Error: could not identify the post."
-=======
-                cargando: "Loading..."
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
             }
         };
 
@@ -731,15 +685,12 @@ errorIdentificarPublicacion: "Error: could not identify the post."
                     el.textContent = translations[lang][key];
                 }
             });
-<<<<<<< HEAD
             document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
     const key = el.dataset.i18nPlaceholder;
     if (translations[lang][key]) {
         el.placeholder = translations[lang][key];
     }
 });
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
             const textoEl = document.getElementById("texto");
 if (textoEl) textoEl.placeholder = translations[lang].placeholderTexto;
@@ -759,7 +710,6 @@ if (nombreGuardado && nombreGuardado !== "") {
 }
         }
 
-<<<<<<< HEAD
         
 
         const temaGuardado = localStorage.getItem("theme") || "dark";
@@ -774,28 +724,6 @@ if (nombreGuardado && nombreGuardado !== "") {
         aplicarTema();
 
         
-=======
-        function aplicarTema(modo) {
-            if (modo === "light") {
-                body.classList.add("light-mode");
-                themeToggleInput.checked = true;
-                themeText.textContent = "Light Mode";
-            } else {
-                body.classList.remove("light-mode");
-                themeToggleInput.checked = false;
-                themeText.textContent = "Dark Mode";
-            }
-        }
-
-        const temaGuardado = localStorage.getItem("theme") || "dark";
-        aplicarTema(temaGuardado);
-
-        themeToggleInput.addEventListener("change", () => {
-            const nuevoTema = themeToggleInput.checked ? "light" : "dark";
-            localStorage.setItem("theme", nuevoTema);
-            aplicarTema(nuevoTema);
-        });
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
         const saludoUsuario = document.getElementById("saludoUsuario");
 
@@ -927,7 +855,6 @@ textarea.addEventListener('input', function() {
         }
 
         function editarPost(btn) {
-<<<<<<< HEAD
     const post = btn.closest(".post-card");
     const texto = post.querySelector(".post-text")?.innerText || "";
     const mediaContainer = post.querySelector(".post-images-grid");
@@ -990,59 +917,6 @@ textarea.addEventListener('input', function() {
         </div>
     `;
 }
-=======
-            const post = btn.closest(".post-card");
-            const texto = post.querySelector(".post-text")?.innerText || "";
-            const url = post.querySelector(".link-preview-card")?.href || "";
-            const mediaContainer = post.querySelector(".post-images-grid");
-            let mediaPreviewHTML = "";
-
-            if (mediaContainer) {
-                const mediaElements = mediaContainer.querySelectorAll("img, video");
-                if (mediaElements.length > 0) {
-                    mediaPreviewHTML = `<div class="edit-media-list"><span class="edit-media-label">${t("archivoActual")}</span>`;
-                    mediaElements.forEach((mediaElement, index) => {
-                        const src = mediaElement.src;
-                        const tag = mediaElement.tagName.toLowerCase();
-                        mediaPreviewHTML += `
-                            <div class="edit-media-thumb" data-src="${src}">
-                                <button type="button" class="remove-media-btn" onclick="quitarMedia(this)">&times;</button>
-                                ${tag === 'video'
-                                    ? '<video src="' + src + '" muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>'
-                                    : '<img src="' + src + '" alt="' + t("archivoActual") + '" style="width:100%; height:100%; object-fit:cover;" />'}
-                            </div>
-                        `;
-                    });
-                    mediaPreviewHTML += `</div>`;
-                }
-            }
-
-           post.innerHTML = `
-    <div class="edit-post-box">
-        <div class="edit-post-header">
-            <span class="edit-icon">✏️</span>
-            <div>
-                <strong>${t("editarPublicacion")}</strong>
-                <span>${t("modificarContenido")}</span>
-            </div>
-        </div>
-        ${mediaPreviewHTML}
-        <textarea class="edit-text" placeholder="Escribe tu publicación...">${texto}</textarea>
-        <div class="edit-bottom-row">
-            <label class="edit-file-label">
-                <span>📁 ${t("seleccionarArchivo")}</span>
-                <input type="file" class="edit-files" name="media[]" multiple>
-            </label>
-            <div class="edit-actions">
-                <button type="button" class="btn-cancel" onclick="cancelarEdicion(this)">${t("cancelar")}</button>
-                <button type="button" class="btn-save" onclick="finalizarEdicion(this)">${t("guardar")}</button>
-            </div>
-        </div>
-        <input type="hidden" class="remove-media-input" name="remove_media" value="[]">
-    </div>
-`;
-        }
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
         function cancelarEdicion(btn) {
             window.location.reload();
@@ -1102,29 +976,19 @@ textarea.addEventListener('input', function() {
     const postId = post.dataset.id;
     
     if (!postId) {
-<<<<<<< HEAD
         alert(t("errorIdPostEdicion"));
-=======
-        alert("Error: No se encontró el ID del post.");
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         return;
     }
 
     const texto = post.querySelector(".edit-text").value;
-<<<<<<< HEAD
     const tagsInput = post.querySelector(".edit-tags-input").value; // 👈 obtener tags
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     const removeMediaValue = post.querySelector('.remove-media-input')?.value || '[]';
     const fileInput = post.querySelector('.edit-files');
     
     const datos = new FormData();
     datos.append("post_id", postId);
     datos.append("texto", texto);
-<<<<<<< HEAD
     datos.append("tags", tagsInput); // 👈 enviar tags
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     datos.append("remove_media", removeMediaValue);
     if (fileInput && fileInput.files.length) {
         Array.from(fileInput.files).forEach(file => datos.append("media[]", file));
@@ -1137,7 +1001,6 @@ textarea.addEventListener('input', function() {
     .then(res => res.text())
     .then(respuesta => {
         if (respuesta.trim() === "ok") {
-<<<<<<< HEAD
     // Redirigir a la misma página con el parámetro post_id para abrir el modal
     window.location.href = `menu?post_id=${postId}`;
 } else {
@@ -1147,16 +1010,6 @@ textarea.addEventListener('input', function() {
     .catch(err => {
         console.error("Error al editar:", err);
         alert(t("errorConexionServidor"));
-=======
-            window.location.reload(); 
-        } else {
-            alert(respuesta);
-        }
-    })
-    .catch(err => {
-        console.error("Error al editar:", err);
-        alert("Hubo un problema al conectar con el servidor.");
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     });
 }
 function crearPost(texto, imgs, likes = 0, dislikes = 0, todosLosComentarios = [], miReaccion = null, nombreAutor = "Anónimo", autorId = null, miId = null, miRol = null, fechaStr = null, fotoAutor = null, tags = []) {
@@ -1334,20 +1187,12 @@ post.addEventListener('click', (e) => {
     btn.addEventListener('click', async (e) => {
         e.stopPropagation();
         const comentarioId = btn.dataset.id;
-<<<<<<< HEAD
         if (!confirm(t("confirmarEliminarComentario"))) return;
-=======
-        if (!confirm('¿Eliminar este comentario?')) return;
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
         // Obtener el postId desde el post-card más cercano
         const postCard = btn.closest('.post-card');
         if (!postCard) {
-<<<<<<< HEAD
            alert(t("errorIdentificarPublicacion"));
-=======
-            alert('Error: no se pudo identificar la publicación.');
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
             return;
         }
         const postId = postCard.dataset.id;
@@ -1360,19 +1205,11 @@ post.addEventListener('click', (e) => {
             if (text.includes('"status":"ok"') || text.includes('"ok"')) {
                 window.location.href = `menu?post_id=${postId}`;
             } else {
-<<<<<<< HEAD
                 alert(t("errorEliminarComentario"));
             }
         } catch (err) {
             console.error('Fetch error:', err);
             alert(t("errorConexionServidor"));
-=======
-                alert('Error al eliminar comentario');
-            }
-        } catch (err) {
-            console.error('Fetch error:', err);
-            alert('Error de conexión');
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         }
     });
 });
@@ -1746,11 +1583,7 @@ document.addEventListener("keydown", function(e) {
 
             if (data.error) {
                 console.error("❌ Error del servidor:", data.error);
-<<<<<<< HEAD
                 resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">${t("errorCargarPublicaciones").replace("{error}", data.error)}</div>`;
-=======
-                resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">Error al cargar publicaciones: ${data.error}</div>`;
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
                 return;
             }
 
@@ -1796,11 +1629,7 @@ postsDataGlobal = postsData;
             console.error("❌ Error de red:", err);
             const resultado = document.getElementById("resultado");
             if (resultado) {
-<<<<<<< HEAD
                 resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">${t("errorConexionServidorCarga")}</div>`;
-=======
-                resultado.innerHTML = `<div style="color:#ff7d92; text-align:center; padding:20px;">Error de conexión al servidor.</div>`;
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
             }
         });
 };
@@ -1869,11 +1698,7 @@ function setupTagAutocomplete(inputId, suggestionsId, esFiltro = false) {
 // Filtrar posts por tag
 function filtrarPorTag(tag) {
     // Mostrar notificación
-<<<<<<< HEAD
     showNotification(t("mostrandoPostsTag").replace("{tag}", tag), 'info');
-=======
-    showNotification(`Mostrando posts con tag: #${tag}`, 'info');
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     
     fetch(`obtener_posts.php?tag=${encodeURIComponent(tag)}`)
         .then(res => res.json())
@@ -1908,11 +1733,7 @@ function filtrarPorTag(tag) {
             if (!document.getElementById('clearFilterBtn')) {
                 const clearBtn = document.createElement('button');
                 clearBtn.id = 'clearFilterBtn';
-<<<<<<< HEAD
                 clearBtn.textContent = t("limpiarFiltro");
-=======
-                clearBtn.textContent = '✕ Limpiar filtro';
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
                 clearBtn.style.cssText = 'position:fixed; bottom:20px; left:20px; background:var(--accent); color:#000; border:none; border-radius:30px; padding:10px 20px; cursor:pointer; z-index:1000; font-weight:bold;';
                 clearBtn.onclick = () => location.reload();
                 document.body.appendChild(clearBtn);
@@ -2238,7 +2059,6 @@ function showNotification(message, type = 'info') {
         }
     }, 3500);
 }
-<<<<<<< HEAD
 
 // ========== TRADUCCIÓN DE MENSAJES DEL SERVIDOR (menu.php) ==========
 const serverMessages = {
@@ -2292,19 +2112,6 @@ function processUrlNotification() {
     const newUrl = window.location.pathname;
     window.history.replaceState({}, document.title, newUrl);
   }
-=======
-// Procesar notificaciones desde la URL
-function processUrlNotification() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const msg = urlParams.get('msg');
-    const type = urlParams.get('type');
-    if (msg) {
-        showNotification(decodeURIComponent(msg), type || 'info');
-        // Limpiar la URL para que no se muestren los parámetros
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, document.title, newUrl);
-    }
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 }
 
 // Ejecutar cuando la página esté lista

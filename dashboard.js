@@ -64,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
             eliminar: "Eliminar",
             desbanear: "Desbanear",
             banear: "Banear",
-<<<<<<< HEAD
             sinArchivos: "Sin archivos",
             conectados: "Conectados",
             desconectados: "Desconectados",
@@ -77,9 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
             haceDias: "hace {dias} días",
             actualizadoAhora: "Actualizado ahora",
             actualizadoHace: "Actualizado hace {min} min"
-=======
-            sinArchivos: "Sin archivos"
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         },
         en: {
             inicio: "Home",
@@ -131,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
             eliminar: "Delete",
             desbanear: "Unban",
             banear: "Ban",
-<<<<<<< HEAD
             sinArchivos: "No files",
             conectados: "Connected",
             desconectados: "Disconnected",
@@ -145,9 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
             actualizadoAhora: "Just updated",
             actualizadoHace: "Updated {min} min ago",
 
-=======
-            sinArchivos: "No files"
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         }
     };
 
@@ -159,10 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const lang = getStoredLang();
         return translations[lang] && translations[lang][key] ? translations[lang][key] : key;
     }
-<<<<<<< HEAD
     window.tDash = tDash;
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
     function applyDashboardLanguage() {
         const lang = getStoredLang();
@@ -188,7 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const activeTabText = document.querySelector(".nav-link.active .nav-text")?.textContent;
         pageTitle.textContent = activeTabText || tDash("panelControl");
-<<<<<<< HEAD
 
         setTimeout(() => {
             if (typeof actualizarUltimosConectados === "function") {
@@ -199,8 +187,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (chartInstance) {
     chartInstance.data.labels = [window.tDash('conectados'), window.tDash('desconectados')];
     chartInstance.update();
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     }
 
     function applyDashboardTheme() {
@@ -208,14 +194,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.classList.toggle("light-mode", theme === "light");
     }
 
-<<<<<<< HEAD
     if (chartInstance) {
     chartInstance.destroy();
     chartInstance = null;
     }
     actualizarStatsInicio();
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     applyDashboardTheme();
     applyDashboardLanguage();
 
@@ -729,11 +712,7 @@ function actualizarStatsInicio() {
             if (totalEl) totalEl.textContent = data.totales;
 
             const chartData = {
-<<<<<<< HEAD
                 labels: [window.tDash('conectados'), window.tDash('desconectados')],
-=======
-                labels: ['Conectados', 'Desconectados'],
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
                 datasets: [{
                     data: [data.conectados, data.desconectados],
                     backgroundColor: ['#35dcd4', '#444c5e'],
@@ -756,13 +735,9 @@ function actualizarStatsInicio() {
                         plugins: {
                             legend: {
                                 position: 'bottom',
-<<<<<<< HEAD
                                 labels: { color: document.body.classList.contains('light-mode') ? '#0f2a26' : '#cdd6f4',
                                 font: { size: 13 } 
                             }
-=======
-                                labels: { color: '#cdd6f4', font: { size: 13 } }
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
                             },
                             tooltip: {
                                 callbacks: {
@@ -773,21 +748,15 @@ function actualizarStatsInicio() {
                     }
                 });
             }
-<<<<<<< HEAD
             window._lastStatsUpdate = Date.now();
             document.querySelectorAll('.trend').forEach(el => {
                 el.innerHTML = `<i class="fas fa-clock"></i> ${textoUltimaActualizacion()}`;
             });
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         })
         .catch(() => {});
 }
 
-<<<<<<< HEAD
 
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 // Arrancar al cargar y refrescar cada 30 s (sincronizado con actividad.js)
 document.addEventListener('DOMContentLoaded', () => {
     actualizarStatsInicio();
@@ -800,7 +769,6 @@ function tiempoRelativo(fechaStr) {
     const ahora = new Date();
     const fecha = new Date(fechaStr);
     const diff = Math.floor((ahora - fecha) / 1000);
-<<<<<<< HEAD
     
     if (diff < 60) return window.tDash('haceUnMomento');
     if (diff < 3600) return window.tDash('haceMin').replace('{min}', Math.floor(diff / 60));
@@ -812,12 +780,6 @@ function textoUltimaActualizacion() {
     const diff = Math.floor((Date.now() - window._lastStatsUpdate) / 60000);
     if (diff < 1) return window.tDash('actualizadoAhora');
     return window.tDash('actualizadoHace').replace('{min}', diff);
-=======
-    if (diff < 60) return 'hace un momento';
-    if (diff < 3600) return `hace ${Math.floor(diff / 60)} min`;
-    if (diff < 86400) return `hace ${Math.floor(diff / 3600)} h`;
-    return `hace ${Math.floor(diff / 86400)} días`;
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 }
 
 function actualizarUltimosConectados() {
@@ -828,12 +790,8 @@ function actualizarUltimosConectados() {
         .then(r => r.json())
         .then(usuarios => {
             if (!usuarios.length) {
-<<<<<<< HEAD
                 // Traducción del estado vacío
                 lista.innerHTML = `<span style="color:var(--text-muted);font-size:13px;">${window.tDash('sinActividad')}</span>`;
-=======
-                lista.innerHTML = '<span style="color:var(--text-muted);font-size:13px;">Sin actividad reciente</span>';
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
                 return;
             }
             lista.innerHTML = usuarios.map(u => {
@@ -842,7 +800,6 @@ function actualizarUltimosConectados() {
                      ? `<img src="${u.foto_perfil}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid ${online ? '#35dcd4' : '#444c5e'}">`
                     : `<div style="width:36px;height:36px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;border:2px solid ${online ? '#35dcd4' : '#444c5e'}">${(u.nombre_completo || u.usuario || '?')[0].toUpperCase()}</div>`;
 
-<<<<<<< HEAD
                 const dot = online
                     ? '<span style="width:8px;height:8px;border-radius:50%;background:#35dcd4;display:inline-block;margin-right:5px;"></span>'
                     : '<span style="width:8px;height:8px;border-radius:50%;background:#444c5e;display:inline-block;margin-right:5px;"></span>';
@@ -850,22 +807,12 @@ function actualizarUltimosConectados() {
                 // Traducción dinámica del estado (En línea vs Tiempo relativo)
                 const estadoTexto = online ? window.tDash('enLinea') : tiempoRelativo(u.last_activity);
 
-=======
-                const dot = u.is_online == 1
-                    ? '<span style="width:8px;height:8px;border-radius:50%;background:#35dcd4;display:inline-block;margin-right:5px;"></span>'
-                    : '<span style="width:8px;height:8px;border-radius:50%;background:#444c5e;display:inline-block;margin-right:5px;"></span>';
-
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
                 return `
                     <div style="display:flex;align-items:center;gap:12px;">
                         ${foto}
                         <div style="flex:1;min-width:0;">
                             <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${u.nombre_completo || u.usuario}</div>
-<<<<<<< HEAD
                             <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${dot}${estadoTexto}</div>
-=======
-                            <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${dot}${u.is_online == 1? 'En línea' : tiempoRelativo(u.last_activity)}</div>
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
                         </div>
                     </div>`;
             }).join('');

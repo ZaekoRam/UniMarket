@@ -46,13 +46,10 @@ body.light-mode {
     --danger-red: #ff7d92;
     background: var(--bg-gradient);
     color: var(--text-dark);
-<<<<<<< HEAD
     body.light-mode .chart-container canvas + * ,
     body.light-mode #usuariosChart {
         color: #0f2a26;
     }
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 }
 
 body.light-mode::after {
@@ -530,7 +527,6 @@ select:focus {
     background: rgba(57, 197, 187, 0.05) !important;
     box-shadow: 0 0 15px rgba(102, 255, 240, 0.2);
 }
-<<<<<<< HEAD
 select option {
     background-color: #0a1e1c;
     color: #eafffb;
@@ -540,8 +536,6 @@ body.light-mode select option {
     background-color: #ffffff;
     color: #0f2a26;
 }
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
 /* --- ESTADO DEL SERVIDOR --- */
 .server-status {
@@ -642,7 +636,3 @@ body.light-mode select option {
         opacity: 1;
     }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f

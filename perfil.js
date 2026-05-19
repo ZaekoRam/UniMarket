@@ -1,9 +1,5 @@
 // ========== TEMA Y TRADUCCIONES ==========
-<<<<<<< HEAD
 
-=======
-const themeToggleInput = document.getElementById("themeToggleInput");
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 const themeText = document.getElementById("themeText");
 
 const translationsPerfil = {
@@ -21,7 +17,6 @@ const translationsPerfil = {
     gustosSeparados: "Gustos separados por coma", placeholderTags: "retro web, uni vibes, creative",
     editandoPerfil: "Editando perfil", tags: "Tags", tagsHelp: "Separados por coma",
     detalles: "Detalles", vibraActual: "Vibra actual", enLinea: "En línea",desconectado: "Desconectado", enviarMensaje: "Enviar mensaje",
-<<<<<<< HEAD
     cargandoPerfil: "Cargando tu perfil...",
 ejCarrera: "Ej: Ingeniería en Software",
 ejCampus: "Ej: Campus Central",
@@ -57,8 +52,6 @@ invitado: "Invitado",
 invitadoUsuario: "@invitado",
 cropTitle: "Recortar foto de perfil",
 confirmar: "Confirmar",
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
   },
   en: {
     inicio: "Home", perfil: "Profile", mensajes: "Messages", notificaciones: "Notifications",
@@ -74,7 +67,6 @@ confirmar: "Confirmar",
     gustosSeparados: "Likes separated by comma", placeholderTags: "retro web, uni vibes, creative",
     editandoPerfil: "Editing profile", tags: "Tags", tagsHelp: "Separated by commas",
     detalles: "Details", vibraActual: "Current vibe", enLinea: "Online",     desconectado: "Offline",enviarMensaje: "Send message",
-<<<<<<< HEAD
     cargandoPerfil: "Loading your profile...",
 ejCarrera: "e.g., Software Engineering",
 ejCampus: "e.g., Central Campus",
@@ -110,8 +102,6 @@ invitado: "Guest",
 invitadoUsuario: "@guest",
 cropTitle: "Crop profile picture",
 confirmar: "Confirm",
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
   }
 };
 
@@ -133,24 +123,8 @@ function aplicarIdioma() {
 function actualizarTextoTema() {
   if (themeText) themeText.textContent = document.body.classList.contains("light-mode") ? t("lightMode") : t("darkMode");
 }
-<<<<<<< HEAD
 
 
-=======
-function aplicarTema(modo) {
-  const isLight = modo === "light";
-  document.body.classList.toggle("light-mode", isLight);
-  themeToggleInput.checked = isLight;
-  actualizarTextoTema();
-}
-const temaGuardado = localStorage.getItem("theme") || "dark";
-aplicarTema(temaGuardado);
-themeToggleInput.addEventListener("change", () => {
-  const nuevoTema = themeToggleInput.checked ? "light" : "dark";
-  localStorage.setItem("theme", nuevoTema);
-  aplicarTema(nuevoTema);
-});
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
 // ========== PERFIL - DATOS POR DEFECTO ==========
 const defaultProfile = {
@@ -173,7 +147,6 @@ const defaultProfile = {
 };
 
 // ========== DETECTAR SI ES PERFIL PROPIO ==========
-<<<<<<< HEAD
 
 
 // ========== OBTENER PERFIL (acepta ID externo) ==========
@@ -181,82 +154,6 @@ async function getProfile(userId = null) {
   let url = 'obtener_perfil.php';
   if (userId) {
     url += '?id=' + userId;
-=======
-const urlParams = new URLSearchParams(window.location.search);
-const perfilUserId = urlParams.get('user_id');
-let esMiPerfil = true;
-let miUsuarioId = null;
-
-// Obtener el ID del usuario logueado
-// Obtener el ID del usuario logueado
-fetch('obtener_sesion.php')
-  .then(res => res.json())
-  .then(data => {
-    miUsuarioId = data.usuario_id;
-    const editBtn = document.getElementById('editBtn');
-    const sendMsgBtn = document.getElementById('sendMsgBtn');
-
-    // Si el usuario no está logueado (invitado)
-    if (!miUsuarioId) {
-        esMiPerfil = false;
-        if (editBtn) editBtn.style.display = 'none';
-        if (sendMsgBtn) sendMsgBtn.style.display = 'none';
-        // Ocultar paneles de edición
-        document.getElementById('editPanel')?.classList.add('hidden');
-        document.getElementById('editDetails')?.classList.add('hidden');
-        document.getElementById('editSobreMiWrap')?.classList.add('hidden');
-        document.getElementById('editGustosWrap')?.classList.add('hidden');
-        document.getElementById('editMoodGrid')?.classList.add('hidden');
-        return;
-    }
-
-    // Si hay un user_id en URL y es diferente al mío -> perfil ajeno
-    if (perfilUserId && perfilUserId != miUsuarioId) {
-        esMiPerfil = false;
-        // Ocultar botón de editar y mostrar botón de enviar mensaje
-        if (editBtn) editBtn.style.display = 'none';
-        if (sendMsgBtn) {
-            sendMsgBtn.style.display = 'flex';
-            // Al hacer clic, redirigir a mensajes con el ID del usuario
-            sendMsgBtn.onclick = () => {
-                window.location.href = `mensajes?user_id=${perfilUserId}`;
-            };
-        }
-        // Ocultar todos los paneles de edición
-        const editPanel = document.getElementById('editPanel');
-        if (editPanel) editPanel.classList.add('hidden');
-        document.getElementById('editDetails')?.classList.add('hidden');
-        document.getElementById('editSobreMiWrap')?.classList.add('hidden');
-        document.getElementById('editGustosWrap')?.classList.add('hidden');
-        document.getElementById('editMoodGrid')?.classList.add('hidden');
-    } else {
-        // Es mi propio perfil
-        esMiPerfil = true;
-        if (editBtn) editBtn.style.display = 'flex';
-        if (sendMsgBtn) sendMsgBtn.style.display = 'none';
-    }
-  })
-  .catch(() => {
-    // Si hay error (por ejemplo, no hay sesión), asumimos invitado
-    miUsuarioId = null;
-    esMiPerfil = false;
-    const editBtn = document.getElementById('editBtn');
-    const sendMsgBtn = document.getElementById('sendMsgBtn');
-    if (editBtn) editBtn.style.display = 'none';
-    if (sendMsgBtn) sendMsgBtn.style.display = 'none';
-    document.getElementById('editPanel')?.classList.add('hidden');
-    document.getElementById('editDetails')?.classList.add('hidden');
-    document.getElementById('editSobreMiWrap')?.classList.add('hidden');
-    document.getElementById('editGustosWrap')?.classList.add('hidden');
-    document.getElementById('editMoodGrid')?.classList.add('hidden');
-  });
-
-// ========== OBTENER PERFIL (acepta ID externo) ==========
-async function getProfile() {
-  let url = 'obtener_perfil.php';
-  if (perfilUserId) {
-    url += '?id=' + perfilUserId;
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
   }
   console.log("🔄 Cargando perfil desde", url);
   try {
@@ -275,19 +172,11 @@ async function getProfile() {
     return defaultProfile;
   }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 // ========== GUARDAR PERFIL (solo si es mi perfil) ==========
 async function saveProfile(profile) {
   if (!esMiPerfil) {
     console.warn("No puedes editar un perfil ajeno");
-<<<<<<< HEAD
     showToast(t("noEditarPerfilAjeno"), "warning");
-=======
-    showToast("No puedes editar este perfil", "warning");
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     return;
   }
   console.log("💾 Guardando perfil en actualizar_perfil.php...", profile);
@@ -306,18 +195,13 @@ async function saveProfile(profile) {
     }
   } catch (e) {
     console.error("❌ Error de conexión:", e);
-<<<<<<< HEAD
     showToast(t("errorConexionPerfil"), "danger");
-=======
-    showToast("Error de conexión", "danger");
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
   }
 }
 
 // ========== RENDERIZAR PERFIL ==========
 function renderProfile(profile) {
   console.log("🎨 Renderizando perfil con datos:", profile);
-<<<<<<< HEAD
   
   // Hero
 // Traducir nombre si es "Invitado" o está vacío
@@ -346,24 +230,6 @@ if (profile.foto_perfil && profile.foto_perfil !== "") {
   const inicial = nombreMostrar ? nombreMostrar.trim().charAt(0).toUpperCase() : "U";
   avatarMain.innerHTML = `<span id="avatarInitial">${inicial}</span>`;
 }
-=======
-  // Hero
-  const displayName = document.getElementById("displayName");
-  if (displayName) displayName.innerHTML = `<span class="name-gradient">${escapeHtml(profile.nombre)}</span>`;
-  const displayUsername = document.getElementById("displayUsername");
-  if (displayUsername) displayUsername.innerHTML = `@${profile.usuario.replace('@', '')}`;
-  const displayBio = document.getElementById("displayBio");
-  if (displayBio) displayBio.innerHTML = `<span class="bio-icon"></span><span>${escapeHtml(profile.bio)}</span>`;
-
-  // Avatar: si hay foto, mostrarla; si no, mostrar iniciales
-  const avatarMain = document.getElementById("profileAvatarMain");
-  if (profile.foto_perfil && profile.foto_perfil !== "") {
-    avatarMain.innerHTML = `<img src="${profile.foto_perfil}" alt="Foto de perfil" style="width:100%; height:100%; object-fit:cover; border-radius:28px;">`;
-  } else {
-    const inicial = profile.nombre ? profile.nombre.trim().charAt(0).toUpperCase() : "U";
-    avatarMain.innerHTML = `<span id="avatarInitial">${inicial}</span>`;
-  }
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
   // Hero badges (tags)
   const heroBadges = document.getElementById("heroBadges");
@@ -377,17 +243,12 @@ if (profile.foto_perfil && profile.foto_perfil !== "") {
         heroBadges.appendChild(badge);
       });
     } else {
-<<<<<<< HEAD
       heroBadges.innerHTML = `<span class="badge-placeholder">${t("sinTags")}</span>`;
-=======
-      heroBadges.innerHTML = '<span class="badge-placeholder">Sin tags</span>';
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     }
   }
 
   // Sobre mí
   const viewSobreMi = document.getElementById("viewSobreMi");
-<<<<<<< HEAD
   if (viewSobreMi) {
     let sobreMiText = profile.sobreMi;
     if (!sobreMiText || sobreMiText === "Sin descripción.") {
@@ -424,19 +285,6 @@ if (profile.foto_perfil && profile.foto_perfil !== "") {
     if (!estado || estado === "Sin estado.") estado = t("sinEstado");
     viewEstado.innerHTML = escapeHtml(estado);
   }
-=======
-  if (viewSobreMi) viewSobreMi.innerHTML = `<p>${escapeHtml(profile.sobreMi)}</p>`;
-
-  // Detalles
-  const viewCarrera = document.getElementById("viewCarrera");
-  if (viewCarrera) viewCarrera.innerHTML = escapeHtml(profile.carrera);
-  const viewCampus = document.getElementById("viewCampus");
-  if (viewCampus) viewCampus.innerHTML = escapeHtml(profile.campus);
-  const viewEmprendimientos = document.getElementById("viewEmprendimientos");
-  if (viewEmprendimientos) viewEmprendimientos.innerHTML = escapeHtml(profile.emprendimientos);
-  const viewEstado = document.getElementById("viewEstado");
-  if (viewEstado) viewEstado.innerHTML = escapeHtml(profile.estado);
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
   // Gustos (nube de tags)
   const viewGustos = document.getElementById("viewGustos");
@@ -450,17 +298,12 @@ if (profile.foto_perfil && profile.foto_perfil !== "") {
         viewGustos.appendChild(span);
       });
     } else {
-<<<<<<< HEAD
       viewGustos.innerHTML = `<span class="tag-item empty-tag">${t("sinGustos")}</span>`;
-=======
-      viewGustos.innerHTML = '<span class="tag-item empty-tag">Sin gustos.</span>';
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     }
   }
 
   // Mood, color, meta, estilo
   const viewMood = document.getElementById("viewMood");
-<<<<<<< HEAD
   if (viewMood) {
     let mood = profile.mood;
     if (!mood || mood === "Sin mood.") mood = t("sinMood");
@@ -505,32 +348,6 @@ if (profile.foto_perfil && profile.foto_perfil !== "") {
     }
   }
 
-=======
-  if (viewMood) viewMood.textContent = profile.mood;
-  const viewColor = document.getElementById("viewColor");
-  if (viewColor) viewColor.textContent = profile.color;
-  const viewMeta = document.getElementById("viewMeta");
-  if (viewMeta) viewMeta.textContent = profile.meta;
-  const viewEstilo = document.getElementById("viewEstilo");
-  if (viewEstilo) viewEstilo.textContent = profile.estilo;
-  // Actualizar estado en línea / desconectado
-  // Actualizar estado en línea / desconectado usando el campo is_online del servidor
-const statusBadge = document.getElementById("statusBadge");
-if (statusBadge) {
-    const online = profile.is_online == 1;   // ✅ viene del servidor
-    const dot = statusBadge.querySelector(".status-dot");
-    const textSpan = statusBadge.querySelector("span:not(.status-dot)");
-    if (online) {
-        dot.style.background = "#2ecc71";
-        dot.style.animation = "pulse-dot 2s ease-in-out infinite";
-        if (textSpan) textSpan.textContent = t("enLinea");
-    } else {
-        dot.style.background = "#7f8c8d";
-        dot.style.animation = "none";
-        if (textSpan) textSpan.textContent = t("desconectado");
-    }
-}
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
   // Ocultar loader y mostrar contenido
   const loader = document.getElementById('profileLoader');
   const content = document.getElementById('profileContent');
@@ -540,43 +357,6 @@ if (statusBadge) {
   }
 }
 
-<<<<<<< HEAD
-=======
-// ========== RELLENAR INPUTS DE EDICIÓN ==========
-function fillEditInputs(profile) {
-  const inputBio = document.getElementById("inputBio");
-  if (inputBio) inputBio.value = profile.bio;
-  const inputTags = document.getElementById("inputTags");
-  if (inputTags) inputTags.value = profile.tags ? profile.tags.join(", ") : "";
-  const inputCarrera = document.getElementById("inputCarrera");
-  if (inputCarrera) inputCarrera.value = profile.carrera;
-  const inputCampus = document.getElementById("inputCampus");
-  if (inputCampus) inputCampus.value = profile.campus;
-  const inputEmprendimientos = document.getElementById("inputEmprendimientos");
-  if (inputEmprendimientos) inputEmprendimientos.value = profile.emprendimientos;
-  const inputEstado = document.getElementById("inputEstado");
-  if (inputEstado) inputEstado.value = profile.estado;
-const inputSobreMi = document.getElementById("inputSobreMi");
-if (inputSobreMi) {
-  inputSobreMi.value = profile.sobreMi;
-  // Actualizar contador después de asignar el valor
-  if (typeof updateCharCounter === 'function') {
-    updateCharCounter();
-  }
-}
-  const inputGustos = document.getElementById("inputGustos");
-  if (inputGustos) inputGustos.value = profile.gustos ? profile.gustos.join(", ") : "";
-  const inputMood = document.getElementById("inputMood");
-  if (inputMood) inputMood.value = profile.mood;
-  const inputColor = document.getElementById("inputColor");
-  if (inputColor) inputColor.value = profile.color;
-  const inputMeta = document.getElementById("inputMeta");
-  if (inputMeta) inputMeta.value = profile.meta;
-  const inputEstilo = document.getElementById("inputEstilo");
-  if (inputEstilo) inputEstilo.value = profile.estilo;
-}
-
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 // ========== MODO EDICIÓN (solo si es mi perfil) ==========
 let currentProfile = null;
 
@@ -658,11 +438,7 @@ async function subirFotoPerfil(file) {
     const res = await fetch('subir_foto_perfil.php', { method: 'POST', body: formData });
     const data = await res.json();
     if (data.success) {
-<<<<<<< HEAD
       showToast(t("fotoActualizada"), 'success');
-=======
-      showToast('Foto de perfil actualizada', 'success');
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
       // Recargar el perfil completo para mostrar la nueva foto
       const nuevoPerfil = await getProfile();
       renderProfile(nuevoPerfil);
@@ -672,7 +448,6 @@ async function subirFotoPerfil(file) {
     }
   } catch (e) {
     console.error(e);
-<<<<<<< HEAD
     showToast(t("errorFoto"), 'error');
   }
 }
@@ -716,17 +491,10 @@ function fillEditInputs(profile) {
   const inputEstilo = document.getElementById("inputEstilo");
   if (inputEstilo) inputEstilo.value = profile.estilo;
 }
-=======
-    showToast('Error al subir la foto', 'error');
-  }
-}
-
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 // ========== INICIALIZACIÓN ==========
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 Inicializando perfil...");
   aplicarIdioma();
-<<<<<<< HEAD
 
   // 1. Obtener sesión del usuario logueado
   let miUsuarioId = null;
@@ -884,22 +652,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (editBtn) editBtn.style.display = "flex";
     if (sendMsgBtn) sendMsgBtn.style.display = "none";
 
-=======
-  const profile = await getProfile();
-  renderProfile(profile);
-  currentProfile = profile;
-  
-  // Solo asignar eventos si es mi perfil
-  if (esMiPerfil) {
-    const editBtn = document.getElementById("editBtn");
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     const saveBtn = document.getElementById("saveBtn");
     const cancelBtn = document.getElementById("cancelBtn");
     if (editBtn) editBtn.addEventListener("click", () => setEditMode(true));
     if (saveBtn) saveBtn.addEventListener("click", guardarCambios);
     if (cancelBtn) cancelBtn.addEventListener("click", () => setEditMode(false));
 
-<<<<<<< HEAD
     // Evento para cambiar foto
     // Evento para cambiar foto (con recorte)
 const avatarMain = document.getElementById("profileAvatarMain");
@@ -1070,54 +828,6 @@ window.addEventListener("storage", (e) => {
   }
 });
   initCharCounter();
-=======
-    // Evento para cambiar foto de perfil (clic en el avatar)
-    const avatarMain = document.getElementById("profileAvatarMain");
-    if (avatarMain) {
-      avatarMain.style.cursor = "pointer";
-      avatarMain.addEventListener("click", () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = "image/jpeg,image/png,image/gif,image/webp";
-        input.onchange = (e) => {
-          if (e.target.files && e.target.files[0]) {
-            subirFotoPerfil(e.target.files[0]);
-          }
-        };
-        input.click();
-      });
-    }
-  }
-    // Actualizar estado en línea cada 30 segundos
-async function actualizarEstadoOnline() {
-    let url = 'obtener_perfil.php';
-    if (perfilUserId) url += '?id=' + perfilUserId;
-    try {
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.is_online !== undefined) {   // ✅ ahora usamos is_online
-            const online = data.is_online == 1;
-            const statusBadge = document.getElementById("statusBadge");
-            if (statusBadge) {
-                const dot = statusBadge.querySelector(".status-dot");
-                const textSpan = statusBadge.querySelector("span:not(.status-dot)");
-                if (online) {
-                    dot.style.background = "#2ecc71";
-                    dot.style.animation = "pulse-dot 2s ease-in-out infinite";
-                    if (textSpan) textSpan.textContent = t("enLinea");
-                } else {
-                    dot.style.background = "#7f8c8d";
-                    dot.style.animation = "none";
-                    if (textSpan) textSpan.textContent = t("desconectado");
-                }
-            }
-        }
-    } catch (err) {
-        console.error("Error actualizando estado online", err);
-    }
-}
-initCharCounter();
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
   setInterval(actualizarEstadoOnline, 30000);
 });
 // ========== CONTADOR DE CARACTERES PARA "SOBRE MÍ" ==========

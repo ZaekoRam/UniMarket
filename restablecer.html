@@ -524,15 +524,9 @@
     <div class="particles" id="particles"></div>
 
     <!-- Botón home -->
-<<<<<<< HEAD
     <a href="index" class="home-chip" id="homeChipLink">
     <i class="fas fa-arrow-left"></i> <span id="homeChipText">Volver al inicio</span>
 </a>
-=======
-    <a href="index" class="home-chip">
-        <i class="fas fa-arrow-left"></i> Volver al inicio
-    </a>
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
     <div class="reset-card">
         <div class="key-icon">
@@ -549,11 +543,7 @@
 
         <form id="resetForm" action="actualizar_password.php" method="POST">
             <div class="input-group">
-<<<<<<< HEAD
                 <label for="password">🔒 NUEVA CONTRASEÑA</label>
-=======
-                <label>🔒 NUEVA CONTRASEÑA</label>
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
                 <div class="input-wrapper">
                     <i class="fas fa-lock input-icon"></i>
                     <input type="password" name="password" id="password" placeholder="Mínimo 8 caracteres" required minlength="8">
@@ -568,11 +558,7 @@
                 </div>
             </div>
             <div class="input-group">
-<<<<<<< HEAD
                 <label for="confirm">🔁 CONFIRMAR CONTRASEÑA</label>
-=======
-                <label>🔁 CONFIRMAR CONTRASEÑA</label>
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
                 <div class="input-wrapper">
                     <i class="fas fa-lock input-icon"></i>
                     <input type="password" name="confirm_password" id="confirm" placeholder="Repite tu contraseña" required>
@@ -585,13 +571,9 @@
         </form>
 
         <a href="index" class="back-link">
-<<<<<<< HEAD
             <a href="index" class="home-chip" id="homeChipLink">
     
 </a>
-=======
-            <i class="fas fa-arrow-left"></i> Volver al inicio
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         </a>
     </div>
 
@@ -643,7 +625,6 @@
         const reqSpecial = document.getElementById("reqSpecial");
 
         function updateRequirements() {
-<<<<<<< HEAD
     const password = passwordInput.value;
     const t = window.translationsReset;
     if (!t) return;
@@ -688,54 +669,6 @@
         reqSpecial.innerHTML = `<i class="fas fa-circle"></i> ${t.reqSpecial}`;
     }
 }
-=======
-            const password = passwordInput.value;
-            
-            // Largo
-            if (password.length >= 8) {
-                reqLength.classList.add("valid");
-                reqLength.classList.remove("invalid");
-                reqLength.innerHTML = '<i class="fas fa-check-circle"></i> Mínimo 8 caracteres';
-            } else {
-                reqLength.classList.add("invalid");
-                reqLength.classList.remove("valid");
-                reqLength.innerHTML = '<i class="fas fa-circle"></i> Mínimo 8 caracteres';
-            }
-            
-            // Mayúscula
-            if (/[A-Z]/.test(password)) {
-                reqUpper.classList.add("valid");
-                reqUpper.classList.remove("invalid");
-                reqUpper.innerHTML = '<i class="fas fa-check-circle"></i> Mayúscula';
-            } else {
-                reqUpper.classList.add("invalid");
-                reqUpper.classList.remove("valid");
-                reqUpper.innerHTML = '<i class="fas fa-circle"></i> Mayúscula';
-            }
-            
-            // Minúscula
-            if (/[a-z]/.test(password)) {
-                reqLower.classList.add("valid");
-                reqLower.classList.remove("invalid");
-                reqLower.innerHTML = '<i class="fas fa-check-circle"></i> Minúscula';
-            } else {
-                reqLower.classList.add("invalid");
-                reqLower.classList.remove("valid");
-                reqLower.innerHTML = '<i class="fas fa-circle"></i> Minúscula';
-            }
-            
-            // Carácter especial
-            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-                reqSpecial.classList.add("valid");
-                reqSpecial.classList.remove("invalid");
-                reqSpecial.innerHTML = '<i class="fas fa-check-circle"></i> Carácter especial';
-            } else {
-                reqSpecial.classList.add("invalid");
-                reqSpecial.classList.remove("valid");
-                reqSpecial.innerHTML = '<i class="fas fa-circle"></i> Carácter especial';
-            }
-        }
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
         passwordInput.addEventListener("input", updateRequirements);
 
@@ -780,7 +713,6 @@
             errorDiv.style.display = "none";
             
             if (password !== confirm) {
-<<<<<<< HEAD
     e.preventDefault();
     errorText.textContent = window.translationsReset.errorMatch;
     errorDiv.style.display = "flex";
@@ -795,43 +727,18 @@ if (password.length < 8) {
     showToast(window.translationsReset.errorLength, "error");
     return;
 }
-=======
-                e.preventDefault();
-                errorText.textContent = "❌ Las contraseñas no coinciden";
-                errorDiv.style.display = "flex";
-                showToast("Las contraseñas no coinciden", "error");
-                return;
-            }
-            
-            if (password.length < 8) {
-                e.preventDefault();
-                errorText.textContent = "❌ La contraseña debe tener al menos 8 caracteres";
-                errorDiv.style.display = "flex";
-                showToast("La contraseña debe tener al menos 8 caracteres", "error");
-                return;
-            }
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
             
             const hasUpper = /[A-Z]/.test(password);
             const hasLower = /[a-z]/.test(password);
             const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
             
             if (!hasUpper || !hasLower || !hasSpecial) {
-<<<<<<< HEAD
     e.preventDefault();
     errorText.textContent = window.translationsReset.errorComplex;
     errorDiv.style.display = "flex";
     showToast(window.translationsReset.errorComplex, "error");
     return;
 }
-=======
-                e.preventDefault();
-                errorText.textContent = "⚠️ La contraseña debe tener: mayúscula, minúscula y carácter especial";
-                errorDiv.style.display = "flex";
-                showToast("La contraseña debe tener mayúscula, minúscula y carácter especial", "error");
-                return;
-            }
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         });
 
         // ========== PROCESAR MENSAJE DE URL ==========
@@ -848,7 +755,6 @@ if (password.length < 8) {
         
         processUrlMessage();
     </script>
-<<<<<<< HEAD
     <script src="global.js"></script>
 <script>
     // Forzar actualización de textos al cambiar idioma
@@ -917,7 +823,5 @@ if (password.length < 8) {
     });
     if (typeof updateRequirements === "function") updateRequirements();
 </script>
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 </body>
 </html>

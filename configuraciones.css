@@ -619,7 +619,6 @@ body.light-mode .ghost-btn {
     height: 28px;
     object-fit: contain;
     display: block;
-<<<<<<< HEAD
 }
 /* Switch más visible en modo claro */
 body.light-mode .switch .switch-slider {
@@ -632,6 +631,4 @@ body.light-mode .switch .switch-slider::before {
 }
 body.light-mode .switch input:checked + .switch-slider {
   background: linear-gradient(135deg, #0f8f87, #39c5bb);
-=======
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 }
