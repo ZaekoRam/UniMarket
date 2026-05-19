@@ -45,9 +45,14 @@
 ## 🌐 Sitio Web
 
 <p align="center">
+
   <a href="https://unimarket.mx" target="_blank">
-    <img src="https://img.shields.io/badge/🌐%20Visitar%20unimarket.mx-007FFF?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Sitio Web">
+    <img src="https://github.com/user-attachments/assets/4b4ef30c-67d5-4d04-9fd0-f94d16da8fe5" width="650">
   </a>
+
+ 
+
+
 </p>
 
 ---
@@ -367,4 +372,7 @@ UniMarket-Carlo/
 Este proyecto está distribuido bajo la licencia MIT.
 
 Esto significa que eres libre de utilizar, estudiar, modificar y compartir el código del proyecto, siempre que se incluya el crédito correspondiente a los autores originales.
+
+---
+![Animación UniMarket2](https://github.com/user-attachments/assets/c26d47e7-cc37-46ee-af4c-5e5e97d4b9d4)
 
