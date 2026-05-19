@@ -2,29 +2,19 @@
 
 ![Animación UniMarket](https://github.com/user-attachments/assets/fd0c5c57-7753-4d22-ba7e-c09b98430794)
 
-<<<<<<< HEAD
-=======
 <br>
 
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 [![ODS 8](https://img.shields.io/badge/ODS-8%20Trabajo%20Decente%20y%20Crecimiento%20Económico-1b6fd1?style=for-the-badge)](https://www.un.org/sustainabledevelopment/es/economic-growth/)
 ![Tipo](https://img.shields.io/badge/Tipo-Red%20Social%20Universitaria-3e8e41?style=for-the-badge)
 ![Público](https://img.shields.io/badge/Público-Comunidad%20Universitaria-d97b32?style=for-the-badge)
 
-<<<<<<< HEAD
-=======
 <br>
 
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-<<<<<<< HEAD
-![Estado](https://img.shields.io/badge/Estado-Terminado-4CAF50?style=for-the-badge)
-
-=======
 
 <br>
 
@@ -48,7 +38,6 @@
   </tbody>
 </table>
 
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 </div>
 
 ---
@@ -56,11 +45,6 @@
 ## 🌐 Sitio Web
 
 <p align="center">
-<<<<<<< HEAD
-  <a href="https://unimarket.mx" target="_blank">
-    <img src="https://img.shields.io/badge/🌐%20Visitar%20unimarket.mx-007FFF?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Sitio Web">
-  </a>
-=======
 
   <a href="https://unimarket.mx" target="_blank">
     <img src="https://github.com/user-attachments/assets/4b4ef30c-67d5-4d04-9fd0-f94d16da8fe5" width="650">
@@ -69,7 +53,6 @@
  
 
 
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 </p>
 
 ---
@@ -85,8 +68,6 @@
 
 ---
 
-<<<<<<< HEAD
-=======
 # 🎯 Objetivo General
 
 Desarrollar una plataforma web accesible y funcional que permita a los estudiantes emprendedores publicar, promocionar y comercializar productos o servicios dentro de la comunidad universitaria de manera organizada, moderna y segura.
@@ -173,7 +154,6 @@ La plataforma fue diseñada considerando la interacción, facilidad de uso y nec
 
 ---
 
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 ## 🎯 Funcionalidades Principales
 
 <table>
@@ -288,15 +268,6 @@ La plataforma fue diseñada considerando la interacción, facilidad de uso y nec
 
 ## 🖼️ Capturas de Pantalla
 
-<<<<<<< HEAD
-| Pantalla de Login | Inicio (Dashboard) | Perfil de Usuario |
-|:---:|:---:|:---:|
-| ![Login](img/login.png) | ![Inicio](img/dashboard.png) | ![Perfil](img/perfil.png) |
-
-| Mensajería (Chat) | Notificaciones | Configuraciones |
-|:---:|:---:|:---:|
-| ![Mensajes](img/mensajes.png) | ![Notificaciones](img/notificaciones.png) | ![Configuraciones](img/configuraciones.png) |
-=======
 | Pantalla de Login | Inicio (Feed principal) | Perfil de Usuario |
 |:---:|:---:|:---:|
 | ![Login](https://github.com/user-attachments/assets/a626a741-c570-48ba-b7bf-c22ff3d3067e) | ![Inicio](https://github.com/user-attachments/assets/e452863b-be26-4bc9-a446-b0e12aa0da89) | ![Perfil](https://github.com/user-attachments/assets/a11f0881-bf1d-42bf-8f80-c408bbb88a78) |
@@ -316,7 +287,6 @@ La plataforma fue diseñada considerando la interacción, facilidad de uso y nec
 | XAMPP / Laragon | Última versión |
 | Navegador | Chrome, Edge, Firefox |
 | Sistema Operativo | Windows 10/11 |
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
 ---
 
@@ -385,8 +355,6 @@ UniMarket-Carlo/
 │       └── ...
 └── 📁 uploads/
     └── (archivos subidos por usuarios)
-<<<<<<< HEAD
-=======
 ```
 ---
 # 🙌 Créditos y agradecimientos
@@ -408,4 +376,3 @@ Esto significa que eres libre de utilizar, estudiar, modificar y compartir el c�
 ---
 ![Animación UniMarket2](https://github.com/user-attachments/assets/c26d47e7-cc37-46ee-af4c-5e5e97d4b9d4)
 
->>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
