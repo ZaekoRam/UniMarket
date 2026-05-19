@@ -614,3 +614,21 @@ body.light-mode .ghost-btn {
     width: 100%;
   }
 }
+.menu-item .icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}
+/* Switch más visible en modo claro */
+body.light-mode .switch .switch-slider {
+  background: #d0e0dc; /* Fondo más oscuro cuando está desactivado */
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+body.light-mode .switch .switch-slider::before {
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+body.light-mode .switch input:checked + .switch-slider {
+  background: linear-gradient(135deg, #0f8f87, #39c5bb);
+}

@@ -1,18 +1,45 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario_id'])) exit();
+require 'credenciales.php';
 
-$conexion = mysqli_connect("localhost", "root", "", "sistema_login");
-$mi_id = $_SESSION['usuario_id'];
-
-$sql = "SELECT id, usuario, nombre_completo FROM usuarios WHERE id != '$mi_id'";
-$resultado = mysqli_query($conexion, $sql);
-
-$usuarios = [];
-while ($fila = mysqli_fetch_assoc($resultado)) {
-    $usuarios[] = $fila;
+if (!isset($_SESSION['usuario_id'])) {
+    echo json_encode([]);
+    exit();
 }
 
-echo json_encode($usuarios);
+$mi_id = (int)$_SESSION['usuario_id'];
+$mi_rol = $_SESSION['rol'] ?? '';
+
+if ($mi_rol === 'lector') {
+    echo json_encode([]);
+    exit();
+}
+
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
+if (!$conexion) {
+    echo json_encode([]);
+    exit();
+}
+
+$sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil, u.mostrar_estado,
+        (SELECT mensaje FROM mensajes 
+         WHERE (remitente_id = $mi_id AND destinatario_id = u.id)
+            OR (remitente_id = u.id AND destinatario_id = $mi_id)
+         ORDER BY fecha DESC LIMIT 1) as ultimo_mensaje,
+        (SELECT fecha FROM mensajes 
+         WHERE (remitente_id = $mi_id AND destinatario_id = u.id)
+            OR (remitente_id = u.id AND destinatario_id = $mi_id)
+         ORDER BY fecha DESC LIMIT 1) as ultima_fecha,
+        CASE 
+            WHEN u.mostrar_estado = 1 AND u.last_activity > DATE_SUB(NOW(), INTERVAL 5 MINUTE) THEN 1
+            ELSE 0
+        END as is_online
+        FROM usuarios u
+        WHERE u.id != $mi_id AND u.rol != 'lector'
+        ORDER BY ultima_fecha DESC, u.nombre_completo ASC";
+
+$resultado = mysqli_query($conexion, $sql);
+$contactos = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
+echo json_encode($contactos);
 mysqli_close($conexion);
 ?>

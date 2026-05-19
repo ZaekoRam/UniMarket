@@ -3,170 +3,469 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UniMarket - Notificaciones</title>
+  <title data-i18n="tituloPagina">UniMarket - Notificaciones</title>
   <link rel="stylesheet" href="notificaciones.css">
+  <style>
+    /* ========== MODAL PERSONALIZADO ========== */
+    .modal-overlay-custom {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(12px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 20000;
+    }
+    .modal-custom {
+      background: var(--panel-strong);
+      border: 1px solid var(--accent);
+      border-radius: 28px;
+      padding: 28px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 0 40px rgba(57, 197, 187, 0.3);
+      animation: modalGlow 0.3s ease-out;
+    }
+    .modal-custom h3 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      color: var(--accent);
+    }
+    .modal-custom p {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+    .modal-buttons-custom {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .modal-btn-custom {
+      padding: 10px 24px;
+      border-radius: 40px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+      border: none;
+    }
+    .modal-btn-custom.cancel {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .modal-btn-custom.confirm {
+    background: linear-gradient(135deg, var(--accent-2, #66fff0), var(--accent, #39c5bb)) !important;
+    color: #082016 !important;
+    font-weight: 800 !important;
+    box-shadow: 0 0 10px rgba(57, 197, 187, 0.5) !important;
+    border: none !important;
+}
+.modal-btn-custom.confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(57, 197, 187, 0.8) !important;
+}
+    .modal-btn-custom:hover {
+      transform: translateY(-2px);
+    }
+    @keyframes modalGlow {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
 </head>
 <body>
-  <aside class="sidebar">
-    <div class="sidebar-top">
-      <div class="sidebar-mascot">
-        <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
-      </div>
-      <div class="sidebar-brand">UniMarket</div>
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="sidebar-mascot">
+                <img src="img/UNI_EMOTE.png" alt="UniMarket Mascot">
+            </div>
+            <div class="sidebar-brand">UniMarket</div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="menu" class="menu-item">
+                <span class="icon"><img src="img/Icon_inicio.png" alt="Inicio"></span>
+                <span class="label" data-i18n="inicio">Inicio</span>
+            </a>
+            <a href="perfil" class="menu-item">
+                <span class="icon"><img src="img/Icon_perfil.png" alt="Perfil"></span>
+                <span class="label" data-i18n="perfil">Perfil</span>
+            </a>
+            <a href="mensajes" class="menu-item">
+                <span class="icon"><img src="img/Icon_mensajes.png" alt="Mensajes"></span>
+                <span class="label" data-i18n="mensajes">Mensajes</span>
+            </a>
+            <a href="notificaciones" class="menu-item active">
+                <span class="icon"><img src="img/Icon_notificaciones.png" alt="Notificaciones"></span>
+                <span class="label" data-i18n="notificaciones">Notificaciones</span>
+            </a>
+            <a href="configuraciones" class="menu-item">
+                <span class="icon"><img src="img/Icon_ajustes.png" alt="Configuraciones"></span>
+                <span class="label" data-i18n="configuracion">Configuración</span>
+            </a>
+            <a href="cerrar_sesion.php" class="menu-item">
+                <span class="icon"><img src="img/Icon_cerrar_sesion.png" alt="Cerrar sesión"></span>
+                <span class="label" data-i18n="cerrarSesion">Cerrar sesión</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="page-title-box">
+                <p class="mini-label" data-i18n="actividadReciente">Actividad reciente en UniMarket</p>
+                <h1 data-i18n="tituloNotif">Notificaciones</h1>
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="ghost-btn" id="marcarTodasBtn" data-i18n="marcarLeido">Marcar todo como leído</button>
+                <button class="ghost-btn" id="eliminarTodasBtn" data-i18n-title="eliminarTodasTitle" style="color: var(--glitch-pink);">🗑️ <span data-i18n="eliminarTodas">Eliminar todas</span></button>
+            </div>
+        </header>
+
+        <section class="notifications-wrapper">
+            <div class="notifications-toolbar">
+                <button class="filter-chip active" data-filter="todas" data-i18n="todas">Todas</button>
+                <button class="filter-chip" data-filter="noLeidas" data-i18n="noLeidas">No leídas</button>
+                <button class="filter-chip" data-filter="comentarios" data-i18n="comentarios">Comentarios</button>
+                <button class="filter-chip" data-filter="reacciones" data-i18n="reacciones">Reacciones</button>
+                <button class="filter-chip" data-filter="mensajes" data-i18n="mensajes">Mensajes</button>
+            </div>
+
+            <div id="notificationsFeed" class="notifications-feed">
+                <div class="notifications-empty-box" style="margin-top:0;">
+                    <div class="empty-icon">🔔</div>
+                    <h2 data-i18n="cargandoNotif">Cargando notificaciones...</h2>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL PERSONALIZADO -->
+    <div id="customModal" class="modal-overlay-custom">
+        <div class="modal-custom">
+            <h3 id="modalTitle" data-i18n="confirmar">Confirmar</h3>
+            <p id="modalMessage"></p>
+            <div class="modal-buttons-custom">
+                <button class="modal-btn-custom cancel" id="modalCancelBtn" data-i18n="cancelar">Cancelar</button>
+                <button class="modal-btn-custom confirm" id="modalConfirmBtn" data-i18n="confirmar">Confirmar</button>
+            </div>
+        </div>
     </div>
 
-    <nav class="sidebar-menu">
-      <a href="menu.html" class="menu-item">
-        <span class="icon">🏠</span>
-        <span class="label">Inicio</span>
-      </a>
+    <script>
+        // ==========================================
+        // 🌐 TRADUCCIONES COMPLETAS
+        // ==========================================
+        const translationsNotif = {
+            es: {
+                inicio: "Inicio", perfil: "Perfil", mensajes: "Mensajes", notificaciones: "Notificaciones",
+                configuracion: "Configuración", cerrarSesion: "Cerrar sesión", darkMode: "Dark Mode", lightMode: "Light Mode",
+                actividadReciente: "Actividad reciente en UniMarket", tituloNotif: "Notificaciones", marcarLeido: "Marcar todo como leído",
+                todas: "Todas", noLeidas: "No leídas", comentarios: "Comentarios", reacciones: "Reacciones", mensajes: "Mensajes",
+                ahora: "Ahora", hacePoco: "Hace poco", proximamente: "Próximamente", sistema: "Sistema", sinActividad: "Sin actividad",
+                descripcionComentarios: "Cuando alguien comente una publicación, aparecerá aquí.",
+                descripcionReacciones: "Los likes y respuestas futuras se mostrarán en esta sección.",
+                descripcionMensajes: "También podrás ver avisos cuando recibas un mensaje nuevo.",
+                descripcionSistema: "Aquí aparecerán novedades o avisos importantes de UniMarket.",
+                centroListo: "Centro de notificaciones listo", baseVisual: "Esta sección ya tiene la base visual.",
+                tituloPagina: "UniMarket - Notificaciones",
+                eliminarNotifConfirm: "¿Eliminar esta notificación permanentemente?",
+                errorEliminarNotif: "Error al eliminar",
+                eliminarTodasConfirm: "¿Eliminar TODAS las notificaciones? Esta acción no se puede deshacer.",
+                errorCargarNotif: "Error al cargar notificaciones.",
+                haceMin: "Hace {n} min",
+                haceHoras: "Hace {n} h",
+                ayer: "Ayer",
+                eliminarNotifTitle: "Eliminar notificación",
+                eliminarTodasTitle: "Eliminar todas las notificaciones",
+                cargandoNotif: "Cargando notificaciones...",
+                confirmar: "Confirmar",
+                cancelar: "Cancelar",
+                eliminando: "Eliminando...",
+                errorGenerico: "Error",
+                likeTexto: "le dio like a tu publicación",
+comentarioTexto: "comentó en tu publicación",
+respuestaTexto: "respondió a tu comentario",
+mensajeTexto: "te envió un mensaje",
+nuevaActividad: "Nueva actividad",
+eliminarTodas: "Eliminar todas",
 
-      <a href="perfil.html" class="menu-item">
-        <span class="icon">👤</span>
-        <span class="label">Perfil</span>
-      </a>
 
-      <a href="mensajes.html" class="menu-item">
-        <span class="icon">💬</span>
-        <span class="label">Mensajes</span>
-      </a>
+            },
+            en: {
+                inicio: "Home", perfil: "Profile", mensajes: "Messages", notificaciones: "Notifications",
+                configuracion: "Settings", cerrarSesion: "Log out", darkMode: "Dark Mode", lightMode: "Light Mode",
+                actividadReciente: "Recent activity in UniMarket", tituloNotif: "Notifications", marcarLeido: "Mark all as read",
+                todas: "All", noLeidas: "Unread", comentarios: "Comments", reacciones: "Reactions", mensajes: "Messages",
+                ahora: "Now", hacePoco: "Recently", proximamente: "Coming soon", sistema: "System", sinActividad: "No activity",
+                descripcionComentarios: "When someone comments on a post, it will appear here.",
+                descripcionReacciones: "Future likes and replies will be shown in this section.",
+                descripcionMensajes: "You will also see alerts when you receive a new message.",
+                descripcionSistema: "News or important UniMarket alerts will appear here.",
+                centroListo: "Notification center ready", baseVisual: "This section already has the visual base.",
+                tituloPagina: "UniMarket - Notifications",
+                eliminarNotifConfirm: "Delete this notification permanently?",
+                errorEliminarNotif: "Error deleting",
+                eliminarTodasConfirm: "Delete ALL notifications? This action cannot be undone.",
+                errorCargarNotif: "Error loading notifications.",
+                haceMin: "{n} min ago",
+                haceHoras: "{n} h ago",
+                ayer: "Yesterday",
+                eliminarNotifTitle: "Delete notification",
+                eliminarTodasTitle: "Delete all notifications",
+                cargandoNotif: "Loading notifications...",
+                confirmar: "Confirm",
+                cancelar: "Cancel",
+                eliminando: "Deleting...",
+                errorGenerico: "Error",
+                likeTexto: " liked your post",
+comentarioTexto: "commented on your post",
+respuestaTexto: "replied to your comment",
+mensajeTexto: "sent you a message",
+nuevaActividad: "New activity",
+eliminarTodas: "Delete all",
+            }
+        };
 
-      <a href="notificaciones.html" class="menu-item active">
-        <span class="icon">🔔</span>
-        <span class="label">Notificaciones</span>
-      </a>
+        function getLang() { return localStorage.getItem("lang") || "es"; }
+        function tNotif(key, params = {}) {
+            let text = translationsNotif[getLang()]?.[key] || key;
+            for (const [k, v] of Object.entries(params)) {
+                text = text.replace(`{${k}}`, v);
+            }
+            return text;
+        }
 
-      <a href="configuraciones.html" class="menu-item">
-        <span class="icon">⚙️</span>
-        <span class="label">Configuración</span>
-      </a>
+        function aplicarIdiomaNotif() {
+            const lang = getLang();
+            document.querySelectorAll("[data-i18n]").forEach(el => {
+                const key = el.dataset.i18n;
+                if (translationsNotif[lang]?.[key]) el.textContent = translationsNotif[lang][key];
+            });
+            document.querySelectorAll("[data-i18n-title]").forEach(el => {
+                const key = el.dataset.i18nTitle;
+                if (translationsNotif[lang]?.[key]) el.title = translationsNotif[lang][key];
+            });
+            actualizarTextoTema();
+        }
 
-      <a href="Login.html" class="menu-item">
-        <span class="icon">🚪</span>
-        <span class="label">Cerrar sesión</span>
-      </a>
+        function actualizarTextoTema() {
+            const themeText = document.getElementById("themeText");
+            if (themeText) themeText.textContent = document.body.classList.contains("light-mode") ? tNotif("lightMode") : tNotif("darkMode");
+        }
 
-      <label class="theme-switch modern-switch" aria-label="Cambiar tema">
-        <input type="checkbox" id="themeToggleInput">
-        <span class="slider">
-          <div class="star star_1"></div>
-          <div class="star star_2"></div>
-          <div class="star star_3"></div>
+        // Observar cambios de tema (si existe el elemento)
+        const themeTextEl = document.getElementById("themeText");
+        if (themeTextEl) {
+            new MutationObserver(() => actualizarTextoTema()).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        }
 
-          <svg viewBox="0 0 16 16" class="cloud cloud_1" aria-hidden="true">
-            <path
-              transform="matrix(.77976 0 0 .78395-299.99-418.63)"
-              fill="#fff"
-              d="m391.84 540.91c-.421-.329-.949-.524-1.523-.524-1.351 0-2.451 1.084-2.485 2.435-1.395.526-2.388 1.88-2.388 3.466 0 1.874 1.385 3.423 3.182 3.667v.034h12.73v-.006c1.775-.104 3.182-1.584 3.182-3.395 0-1.747-1.309-3.186-2.994-3.379.007-.106.011-.214.011-.322 0-2.707-2.271-4.901-5.072-4.901-2.073 0-3.856 1.202-4.643 2.925">
-            </path>
-          </svg>
-        </span>
-        <span class="theme-text" id="themeText">Dark Mode</span>
-      </label>
-    </nav>
-  </aside>
+        // ==========================================
+        // 🔔 MODAL PERSONALIZADO
+        // ==========================================
+        let modalResolve = null;
+        const modalOverlay = document.getElementById('customModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        const modalCancelBtn = document.getElementById('modalCancelBtn');
 
-  <main class="main-content">
-    <header class="topbar">
-      <div class="page-title-box">
-        <p class="mini-label">Actividad reciente en UniMarket</p>
-        <h1>Notificaciones</h1>
-      </div>
+        function showConfirmModal(message) {
+            return new Promise((resolve) => {
+                modalResolve = resolve;
+                modalMessage.textContent = message;
+                modalOverlay.style.display = 'flex';
+                // Traducir botones al momento
+                const lang = getLang();
+                modalConfirmBtn.textContent = tNotif("confirmar");
+                modalCancelBtn.textContent = tNotif("cancelar");
+            });
+        }
 
-      <button class="ghost-btn">Marcar todo como leído</button>
-    </header>
+        function closeModal(result) {
+            modalOverlay.style.display = 'none';
+            if (modalResolve) modalResolve(result);
+            modalResolve = null;
+        }
 
-    <section class="notifications-wrapper">
-      <div class="notifications-toolbar">
-        <button class="filter-chip active">Todas</button>
-        <button class="filter-chip">No leídas</button>
-        <button class="filter-chip">Comentarios</button>
-        <button class="filter-chip">Reacciones</button>
-        <button class="filter-chip">Mensajes</button>
-      </div>
+        modalConfirmBtn.onclick = () => closeModal(true);
+        modalCancelBtn.onclick = () => closeModal(false);
+        modalOverlay.onclick = (e) => { if (e.target === modalOverlay) closeModal(false); };
 
-      <section class="notifications-feed">
-        <article class="notification-card unread">
-          <div class="notification-avatar">💬</div>
-          <div class="notification-content">
-            <div class="notification-top">
-              <h3>Comentarios</h3>
-              <span>Ahora</span>
-            </div>
-            <p>Cuando alguien comente una publicación, aparecerá aquí.</p>
-          </div>
-          <div class="notification-dot"></div>
-        </article>
+        // ==========================================
+        // 🔔 NOTIFICACIONES REALES (POLLING)
+        // ==========================================
+        let currentFilter = 'todas';
 
-        <article class="notification-card">
-          <div class="notification-avatar">❤️</div>
-          <div class="notification-content">
-            <div class="notification-top">
-              <h3>Reacciones</h3>
-              <span>Hace poco</span>
-            </div>
-            <p>Los likes y respuestas futuras se mostrarán en esta sección.</p>
-          </div>
-        </article>
+        function formatFechaNoti(fechaISO) {
+            const date = new Date(fechaISO);
+            const ahora = new Date();
+            const diffMs = ahora - date;
+            const diffMin = Math.floor(diffMs / 60000);
+            if (diffMin < 1) return tNotif("ahora");
+            if (diffMin < 60) return tNotif("haceMin", { n: diffMin });
+            const diffHoras = Math.floor(diffMin / 60);
+            if (diffHoras < 24) return tNotif("haceHoras", { n: diffHoras });
+            const diffDias = Math.floor(diffHoras / 24);
+            if (diffDias === 1) return tNotif("ayer");
+            return date.toLocaleDateString();
+        }
 
-        <article class="notification-card">
-          <div class="notification-avatar">📩</div>
-          <div class="notification-content">
-            <div class="notification-top">
-              <h3>Mensajes</h3>
-              <span>Próximamente</span>
-            </div>
-            <p>También podrás ver avisos cuando recibas un mensaje nuevo.</p>
-          </div>
-        </article>
+        function escapeHtml(str) {
+            if (!str) return "";
+            return str.replace(/[&<>]/g, m => {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
 
-        <article class="notification-card">
-          <div class="notification-avatar">🔔</div>
-          <div class="notification-content">
-            <div class="notification-top">
-              <h3>Sistema</h3>
-              <span>Sin actividad</span>
-            </div>
-            <p>Aquí aparecerán novedades o avisos importantes de UniMarket.</p>
-          </div>
-        </article>
-      </section>
+        async function cargarNotificaciones() {
+            try {
+                const resp = await fetch('obtener_notificaciones.php');
+                const notis = await resp.json();
+                const feedDiv = document.getElementById('notificationsFeed');
+                if (!feedDiv) return;
 
-      <section class="notifications-empty-box">
-        <div class="empty-icon">✨</div>
-        <h2>Centro de notificaciones listo</h2>
-        <p>
-          Esta sección ya tiene la base visual. Cuando conecten el sistema,
-          aquí se mostrará toda la actividad real del usuario.
-        </p>
-      </section>
-    </section>
-  </main>
+                let filtradas = notis;
+                if (currentFilter === 'noLeidas') filtradas = notis.filter(n => n.leida == 0);
+                else if (currentFilter === 'comentarios') filtradas = notis.filter(n => n.tipo === 'comentario' || n.tipo === 'respuesta');
+                else if (currentFilter === 'reacciones') filtradas = notis.filter(n => n.tipo === 'like');
+                else if (currentFilter === 'mensajes') filtradas = notis.filter(n => n.tipo === 'mensaje');
 
-  <script>
-    const themeToggleInput = document.getElementById("themeToggleInput");
-    const themeText = document.getElementById("themeText");
+                if (filtradas.length === 0) {
+                    feedDiv.innerHTML = `<div class="notifications-empty-box" style="margin-top:0;">
+                        <div class="empty-icon">🔔</div>
+                        <h2>${tNotif("centroListo")}</h2>
+                        <p>${tNotif("baseVisual")}</p>
+                    </div>`;
+                    return;
+                }
 
-    function aplicarTema(modo) {
-      if (modo === "light") {
-        document.body.classList.add("light-mode");
-        themeToggleInput.checked = true;
-        themeText.textContent = "Light Mode";
-      } else {
-        document.body.classList.remove("light-mode");
-        themeToggleInput.checked = false;
-        themeText.textContent = "Dark Mode";
-      }
-    }
+                feedDiv.innerHTML = filtradas.map(noti => {
+                    let texto = '';
+                    let url = '';
+                    switch (noti.tipo) {
+                        case 'like': 
+                            texto = `❤️ ${tNotif("likeTexto") || "le dio like a tu publicación"}: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+                            url = `menu.html?post_id=${noti.post_id}`;
+                            break;
+                        case 'comentario': 
+                            texto = `💬 ${tNotif("comentarioTexto") || "comentó en tu publicación"}: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+                            url = `menu.html?post_id=${noti.post_id}`;
+                            break;
+                        case 'respuesta': 
+                            texto = `↩️ ${tNotif("respuestaTexto") || "respondió a tu comentario"}: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+                            url = `menu.html?post_id=${noti.post_id}`;
+                            break;
+                        case 'mensaje': 
+                            texto = `✉️ ${tNotif("mensajeTexto") || "te envió un mensaje"}: "${escapeHtml(noti.preview?.substring(0, 80))}"`;
+                            url = `mensajes.html?user_id=${noti.emisor_id}`;
+                            break;
+                        default: texto = tNotif("nuevaActividad") || 'Nueva actividad';
+                    }
+                    const avatarHtml = noti.emisor_foto 
+                        ? `<img src="${noti.emisor_foto}" style="width:58px; height:58px; border-radius:18px; object-fit:cover;">` 
+                        : `<div class="notification-avatar">${noti.tipo === 'like' ? '❤️' : (noti.tipo === 'mensaje' ? '💬' : '💬')}</div>`;
+                    return `
+                        <article class="notification-card ${noti.leida == 0 ? 'unread' : ''}" data-id="${noti.id}" data-url="${url}">
+                            <div class="notification-avatar">${avatarHtml}</div>
+                            <div class="notification-content">
+                                <div class="notification-top">
+                                    <h3>${escapeHtml(noti.emisor_nombre)}</h3>
+                                    <span>${formatFechaNoti(noti.creado)}</span>
+                                </div>
+                                <p>${texto}</p>
+                            </div>
+                            ${noti.leida == 0 ? '<div class="notification-dot"></div>' : ''}
+                            <button class="delete-notif-btn" data-id="${noti.id}" data-i18n-title="eliminarNotifTitle" title="Eliminar notificación">🗑️</button>
+                        </article>
+                    `;
+                }).join('');
 
-    const temaGuardado = localStorage.getItem("theme") || "dark";
-    aplicarTema(temaGuardado);
+                // Eventos después de inyectar HTML
+                document.querySelectorAll('.notification-card').forEach(card => {
+                    card.addEventListener('click', async (e) => {
+                        if (e.target.classList.contains('delete-notif-btn')) return;
+                        const id = card.dataset.id;
+                        const url = card.dataset.url;
+                        if (!url) return;
+                        if (id && card.classList.contains('unread')) {
+                            await fetch('marcar_leida.php', { method: 'POST', body: new URLSearchParams({id}) });
+                        }
+                        window.location.href = url;
+                    });
+                });
 
-    themeToggleInput.addEventListener("change", () => {
-      const nuevoTema = themeToggleInput.checked ? "light" : "dark";
-      localStorage.setItem("theme", nuevoTema);
-      aplicarTema(nuevoTema);
-    });
-  </script>
+                document.querySelectorAll('.delete-notif-btn').forEach(btn => {
+                    // traducir title
+                    const titleKey = btn.getAttribute('data-i18n-title');
+                    if (titleKey) btn.title = tNotif(titleKey);
+                    btn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        const id = btn.dataset.id;
+                        const confirmado = await showConfirmModal(tNotif("eliminarNotifConfirm"));
+                        if (confirmado) {
+                            const formData = new FormData();
+                            formData.append('id', id);
+                            const resp = await fetch('eliminar_notificaciones.php', { method: 'POST', body: formData });
+                            if (resp.ok) {
+                                cargarNotificaciones();
+                            } else {
+                                alert(tNotif("errorEliminarNotif"));
+                            }
+                        }
+                    });
+                });
+
+            } catch (err) {
+                console.error('Error cargando notificaciones', err);
+                document.getElementById('notificationsFeed').innerHTML = `<div class="notifications-empty-box"><p>${tNotif("errorCargarNotif")}</p></div>`;
+            }
+        }
+
+        document.getElementById('eliminarTodasBtn')?.addEventListener('click', async () => {
+            const confirmado = await showConfirmModal(tNotif("eliminarTodasConfirm"));
+            if (confirmado) {
+                await fetch('eliminar_todas_notificaciones.php', { method: 'POST' });
+                cargarNotificaciones();
+            }
+        });
+
+        // Filtros
+        document.querySelectorAll('.filter-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-filter');
+                cargarNotificaciones();
+            });
+        });
+
+        // Marcar todas como leídas
+        document.getElementById('marcarTodasBtn')?.addEventListener('click', async () => {
+            await fetch('marcar_todas_leidas.php', { method: 'POST' });
+            cargarNotificaciones();
+        });
+
+        // Inicializar
+        aplicarIdiomaNotif();
+        cargarNotificaciones();
+        setInterval(cargarNotificaciones, 10000);
+
+        // Escuchar cambios de idioma
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'lang') {
+                aplicarIdiomaNotif();
+                cargarNotificaciones();
+            }
+        });
+    </script>
+    <script src="global.js"></script>
 </body>
 </html>

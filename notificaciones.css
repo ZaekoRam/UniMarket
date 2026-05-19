@@ -573,3 +573,36 @@ body.light-mode .notifications-empty-box {
     display: none;
   }
 }
+.menu-item .icon img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    display: block;
+}
+.delete-notif-btn {
+  position: absolute;
+  right: 16px;
+  top: 18px;
+  background: rgba(255, 51, 102, 0.1);
+  border: none;
+  border-radius: 30px;
+  padding: 4px 10px;
+  cursor: pointer;
+  color: var(--glitch-pink);
+  font-size: 14px;
+  opacity: 0;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  z-index: 2;
+}
+.notification-card {
+  position: relative;
+}
+.notification-card:hover .delete-notif-btn {
+  opacity: 1;
+}
+.delete-notif-btn:hover {
+  background: var(--glitch-pink);
+  color: white;
+  transform: scale(1.05);
+}
