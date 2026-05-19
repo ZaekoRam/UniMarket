@@ -22,10 +22,11 @@
       font-weight: 600;
     }
     .lang-btn.active {
-      background: var(--accent-gradient);
-      color: #082016;
-      border-color: transparent;
-    }
+    background: linear-gradient(135deg, var(--accent-2, #66fff0), var(--accent, #39c5bb)) !important;
+    color: #082016 !important;
+    border-color: transparent !important;
+    box-shadow: 0 0 10px rgba(57, 197, 187, 0.6) !important;
+}
     .account-actions {
       display: flex;
       gap: 12px;
@@ -126,13 +127,16 @@
       color: var(--text);
     }
     .modal-btn.confirm {
-      background: var(--accent-gradient);
-      border: none;
-      color: #082016;
-    }
+    background: linear-gradient(135deg, #66fff0, #39c5bb) !important;
+    color: #082016 !important;
+    font-weight: 800 !important;
+    box-shadow: 0 0 10px rgba(57, 197, 187, 0.5) !important;
+    border: none !important;
+}
     .modal-btn.confirm:hover, .modal-btn.cancel:hover {
       transform: translateY(-2px);
     }
+    
 
     /* ========== NOTIFICACIONES ESTILO GLITCH ========== */
     .notification-toast {
@@ -200,6 +204,52 @@
     @keyframes slideInRight { from { transform: translateX(100%) scale(0.9); opacity: 0; } to { transform: translateX(0) scale(1); opacity: 1; } }
     @keyframes fadeOut { to { transform: translateX(100%) scale(0.9); opacity: 0; } }
     @keyframes progressBar { 0% { width: 100%; } 100% { width: 0%; } }
+    /* Selector personalizado */
+.select-box {
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 8px 32px 8px 18px;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2339c5bb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: 0.2s;
+}
+
+.select-box:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(57,197,187,0.2);
+}
+
+.select-box option {
+    background: var(--panel-strong);
+    color: var(--text);
+}
+/* Ajustes para el switch de tema en modo claro */
+body.light-mode .modern-switch .slider {
+    background-color: #d0e2df !important;
+    border: 1px solid rgba(15, 143, 135, 0.2);
+}
+
+body.light-mode .modern-switch .slider::before {
+    background: #fff;
+    box-shadow: inset 8px -4px 0px 0px #ffcf48 !important;
+}
+
+body.light-mode .modern-switch input:checked + .slider {
+    background: linear-gradient(135deg, #39c5bb, #0f8f87) !important;
+}
+
+body.light-mode .modern-switch input:checked + .slider::before {
+    transform: translateX(1.8em);
+    box-shadow: inset 15px -4px 0px 15px #ffcf48 !important;
+}
   </style>
 </head>
 <body>
@@ -294,32 +344,10 @@
           </div>
         </section>
 
-        <!-- TARJETA DE NOTIFICACIONES -->
-        <section class="settings-card">
-          <div class="card-head">
-            <div class="card-icon">🔔</div>
-            <div>
-              <h2 data-i18n="notificaciones">Notificaciones</h2>
-              <p data-i18n="controlaAvisos">Controla qué avisos quieres recibir.</p>
-            </div>
-          </div>
-          <div class="setting-row"><div class="setting-text"><h3 data-i18n="comentarios">Comentarios</h3><p data-i18n="alertaComentarios">Recibir alertas cuando comenten tus publicaciones.</p></div><label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label></div>
-          <div class="setting-row"><div class="setting-text"><h3 data-i18n="mensajes">Mensajes</h3><p data-i18n="mostrarAvisos">Mostrar avisos cuando llegue un mensaje nuevo.</p></div><label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label></div>
-          <div class="setting-row"><div class="setting-text"><h3 data-i18n="novedadesSistema">Novedades del sistema</h3><p data-i18n="enterate">Enterarte de funciones o cambios nuevos.</p></div><label class="switch"><input type="checkbox"><span class="switch-slider"></span></label></div>
-        </section>
+        
 
         <!-- TARJETA DE PRIVACIDAD -->
-        <section class="settings-card">
-          <div class="card-head">
-            <div class="card-icon">🔒</div>
-            <div>
-              <h2 data-i18n="privacidad">Privacidad</h2>
-              <p data-i18n="definePerfil">Define cómo te muestras en la plataforma.</p>
-            </div>
-          </div>
-          <div class="setting-row"><div class="setting-text"><h3 data-i18n="mostrarEstado">Mostrar estado</h3><p data-i18n="permitirVer">Permitir que otros vean si estás activo.</p></div><label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label></div>
-          <div class="setting-row"><div class="setting-text"><h3 data-i18n="perfilPublico">Perfil público</h3><p data-i18n="visibleOtros">Visible para otros usuarios dentro de UniMarket.</p></div><label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label></div>
-        </section>
+        
 
         <!-- TARJETA DE CUENTA -->
         <section class="settings-card">
@@ -340,6 +368,17 @@
             <span class="info-label" data-i18n="correo">Correo</span>
             <strong id="displayEmail" data-i18n="sinCorreo">Sin correo vinculado</strong>
           </div>
+          <!-- Mostrar estado -->
+<div class="setting-row">
+  <div class="setting-text">
+    <h3 data-i18n="mostrarEstado">Mostrar estado</h3>
+    <p data-i18n="permitirVer">Permitir que otros vean si estás activo.</p>
+  </div>
+  <label class="switch">
+    <input type="checkbox" id="showStatusSwitch">
+    <span class="switch-slider"></span>
+  </label>
+</div>
 
           <div class="account-actions">
             <button class="primary-btn" id="changeUsernameBtn" data-i18n="cambiarUsuario">Cambiar usuario</button>
@@ -357,7 +396,7 @@
       <h3 data-i18n="cambiarUsuario">Cambiar usuario</h3>
       <p data-i18n="ingresaNuevoUsuario">Ingresa tu nuevo nombre de usuario.</p>
       <label data-i18n="nuevoUsuario">Nuevo nombre de usuario</label>
-      <input type="text" id="newUsername" class="modal-input" placeholder="ej: marco_123">
+      <input type="text" id="newUsername" class="modal-input" data-i18n-placeholder="ejemploUsuario" placeholder="ej: usuario_123">
       <div class="modal-buttons">
         <button class="modal-btn cancel" id="closeUsernameModalBtn" data-i18n="cancelar">Cancelar</button>
         <button class="modal-btn confirm" id="confirmUsernameChangeBtn" data-i18n="guardar">Guardar</button>
@@ -371,19 +410,31 @@
       <h3 data-i18n="cambiarContraseña">Cambiar contraseña</h3>
       <p data-i18n="ingresaDatos">Ingresa tus credenciales para actualizar.</p>
       <label data-i18n="passActual">Contraseña actual</label>
-      <input type="password" id="currentPass" class="modal-input" placeholder="••••••••">
+      <input type="password" id="currentPass" class="modal-input" data-i18n-placeholder="placeholderPassActual" placeholder="••••••••">
       <label data-i18n="nuevaPass">Nueva contraseña</label>
-      <input type="password" id="newPass" class="modal-input" placeholder="••••••••">
+      <input type="password" id="newPass" class="modal-input" data-i18n-placeholder="placeholderNuevaPass" placeholder="••••••••">
       <label data-i18n="confirmarNuevaPass">Confirmar nueva contraseña</label>
-      <input type="password" id="confirmPass" class="modal-input" placeholder="••••••••">
+      <input type="password" id="confirmPass" class="modal-input" data-i18n-placeholder="placeholderConfirmarPass" placeholder="••••••••">
       <div class="modal-buttons">
         <button class="modal-btn cancel" id="closeModalBtn" data-i18n="cancelar">Cancelar</button>
         <button class="modal-btn confirm" id="confirmPassChangeBtn" data-i18n="guardar">Guardar</button>
       </div>
     </div>
   </div>
+  <!-- MODAL CONFIRMAR CERRAR SESIÓN -->
+<div id="logoutModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 data-i18n="cerrarSesionTitulo">Cerrar sesión</h3>
+        <p data-i18n="confirmarLogout">¿Seguro que deseas cerrar la sesión?</p>
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" id="cancelLogoutBtn" data-i18n="cancelar">Cancelar</button>
+            <button class="modal-btn confirm" id="confirmLogoutBtn" data-i18n="confirmar">Confirmar</button>
+        </div>
+    </div>
+</div>
   <!-- Contenedor de notificaciones -->
 <div id="toastContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;"></div>
+  <script src="global.js"></script>
   <script>
     // ==========================================
     // 🌐 TRADUCCIONES COMPLETAS (igual que antes)
@@ -420,7 +471,19 @@
         nuevoUsuario: "Nuevo nombre de usuario",
         error: "Error",
         errorConexion: "Error de conexión",
-        passCorta: "La nueva contraseña debe tener al menos 4 caracteres"
+        ejemploUsuario: "ej: usuario_123",
+placeholderPassActual: "Contraseña actual",
+placeholderNuevaPass: "Nueva contraseña",
+placeholderConfirmarPass: "Confirmar nueva contraseña",
+usuarioMinimo: "El nombre de usuario debe tener al menos 3 caracteres",
+preferenciaGuardada: "Preferencia guardada",
+errorConexionShort: "Error de conexión",
+passMinimo8: "La nueva contraseña debe tener al menos 8 caracteres",
+passMayuscula: "La nueva contraseña debe contener al menos una mayúscula",
+passMinuscula: "La nueva contraseña debe contener al menos una minúscula",
+passEspecial: "La nueva contraseña debe contener al menos un carácter especial",
+cerrarSesionTitulo: "Cerrar sesión",
+confirmarLogout: "¿Seguro que deseas cerrar la sesión?",
       },
       en: {
         inicio: "Home", perfil: "Profile", mensajes: "Messages", notificaciones: "Notifications",
@@ -453,7 +516,20 @@
         nuevoUsuario: "New username",
         error: "Error",
         errorConexion: "Connection error",
-        passCorta: "The new password must be at least 4 characters"
+        ejemploUsuario: "e.g., user_123",
+placeholderPassActual: "Current password",
+placeholderNuevaPass: "New password",
+placeholderConfirmarPass: "Confirm new password",
+usuarioMinimo: "Username must be at least 3 characters",
+preferenciaGuardada: "Preference saved",
+errorConexionShort: "Connection error",
+passMinimo8: "New password must be at least 8 characters",
+passMayuscula: "New password must contain at least one uppercase letter",
+passMinuscula: "New password must contain at least one lowercase letter",
+passEspecial: "New password must contain at least one special character",
+cerrarSesionTitulo: "Log out",
+confirmarLogout: "Are you sure you want to log out?",
+        
       }
     };
 
@@ -469,6 +545,12 @@
           el.textContent = translationsConfig[lang][key];
         }
       });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (translationsConfig[lang][key]) {
+        el.placeholder = translationsConfig[lang][key];
+    }
+});
     }
 
     // ==========================================
@@ -511,20 +593,28 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
     const currentLang = getLang();
     document.querySelectorAll(`.lang-btn[data-lang="${currentLang}"]`).forEach(btn => btn.classList.add("active"));
 
-    // ==========================================
-    // TAMAÑO DE TEXTO
-    // ==========================================
     const textSizeSelect = document.getElementById("textSizeSelect");
-    function aplicarTamanioTexto() {
-      const size = localStorage.getItem("fontSize") || "medium";
-      textSizeSelect.value = size;
-      document.body.style.fontSize = size === "small" ? "14px" : (size === "large" ? "18px" : "16px");
-    }
-    textSizeSelect.addEventListener("change", () => {
-      localStorage.setItem("fontSize", textSizeSelect.value);
-      aplicarTamanioTexto();
-    });
+
+function aplicarTamanioTexto() {
+    const size = textSizeSelect.value;
+    localStorage.setItem("fontSize", size);
+    let fontSize = "16px";
+    if (size === "small") fontSize = "13px";
+    if (size === "medium") fontSize = "16px";
+    if (size === "large") fontSize = "20px";
+    document.body.style.fontSize = fontSize;
+}
+
+// Cargar el valor guardado
+const savedSize = localStorage.getItem("fontSize") || "medium";
+textSizeSelect.value = savedSize;
+aplicarTamanioTexto();
+
+textSizeSelect.addEventListener("change", () => {
     aplicarTamanioTexto();
+    // Opcional: forzar evento storage para sincronizar otras pestañas
+    window.dispatchEvent(new StorageEvent("storage", { key: "fontSize", newValue: textSizeSelect.value }));
+});
 
     // ==========================================
     // CARGAR DATOS REALES DEL USUARIO
@@ -638,6 +728,43 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
     }
 
     // ==========================================
+// MOSTRAR ESTADO (switch)
+// ==========================================
+async function cargarPreferenciaEstado() {
+  try {
+    const res = await fetch('obtener_preferencia_estado.php');
+    const data = await res.json();
+    const switchEl = document.getElementById('showStatusSwitch');
+    if (switchEl) switchEl.checked = data.mostrar_estado == 1;
+  } catch (e) {
+    console.error('Error al cargar preferencia de estado', e);
+  }
+}
+
+const statusSwitch = document.getElementById('showStatusSwitch');
+if (statusSwitch) {
+  statusSwitch.addEventListener('change', async (e) => {
+    const valor = e.target.checked ? 1 : 0;
+    const formData = new FormData();
+    formData.append('mostrar_estado', valor);
+    try {
+      const res = await fetch('actualizar_preferencia_estado.php', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.success) {
+        showNotification(tConfig('preferenciaGuardada'), 'success');
+      } else {
+        showNotification('Error: ' + data.error, 'error');
+      }
+    } catch (err) {
+      showNotification(tConfig('errorConexionShort'), 'error');
+    }
+  });
+}
+
+// Cargar la preferencia al iniciar
+cargarPreferenciaEstado();
+
+    // ==========================================
     // MODAL CAMBIAR NOMBRE DE USUARIO (con showNotification)
     // ==========================================
     const usernameModal = document.getElementById('usernameModal');
@@ -670,7 +797,7 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
         return;
       }
       if (newUsername.length < 3) {
-        showNotification('El nombre de usuario debe tener al menos 3 caracteres', 'error');
+        showNotification(tConfig('usuarioMinimo'), 'error');
         return;
       }
       const formData = new FormData();
@@ -727,19 +854,19 @@ document.querySelectorAll(".lang-btn").forEach(btn => {
         return;
       }
       if (newPass.length < 8) {
-    showNotification('La nueva contraseña debe tener al menos 8 caracteres', 'error');
+    showNotification(tConfig('passMinimo8'), 'error');
     return;
 }
 if (!/[A-Z]/.test(newPass)) {
-    showNotification('La nueva contraseña debe contener al menos una mayúscula', 'error');
+    showNotification(tConfig('passMayuscula'), 'error');
     return;
 }
 if (!/[a-z]/.test(newPass)) {
-    showNotification('La nueva contraseña debe contener al menos una minúscula', 'error');
+    showNotification(tConfig('passMinuscula'), 'error');
     return;
 }
 if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPass)) {
-    showNotification('La nueva contraseña debe contener al menos un carácter especial', 'error');
+    showNotification(tConfig('passEspecial'), 'error');
     return;
 }
       
@@ -764,9 +891,25 @@ if (!/[!@#$%^&*(),.?":{}|<>]/.test(newPass)) {
     // ==========================================
     // CERRAR SESIÓN
     // ==========================================
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      window.location.href = 'cerrar_sesion.php';
-    });
+    // Modal de confirmación para logout
+const logoutModal = document.getElementById('logoutModal');
+const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    logoutModal.style.display = 'flex';
+});
+
+cancelLogoutBtn.addEventListener('click', () => {
+    logoutModal.style.display = 'none';
+});
+
+confirmLogoutBtn.addEventListener('click', () => {
+    window.location.href = 'cerrar_sesion.php';
+});
+window.addEventListener('click', (e) => {
+    if (e.target === logoutModal) logoutModal.style.display = 'none';
+});
 
     // ==========================================
     // INICIALIZAR
@@ -840,6 +983,8 @@ function processUrlNotification() {
     window.history.replaceState({}, document.title, newUrl);
   }
 }
+
   </script>
+  
 </body>
 </html>

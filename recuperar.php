@@ -385,10 +385,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <a href="index" class="home-chip">
-        <i class="fas fa-arrow-left"></i> Volver al inicio
-    </a>
-
+    <a href="index" class="home-chip" id="homeChipLink">
+    <i class="fas fa-arrow-left"></i> <span id="homeChipText">Volver al inicio</span>
+</a>
     <div class="reset-card">
         <div class="key-icon">
             <i class="fas fa-envelope"></i>
@@ -405,10 +404,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <form action="recuperar.php" method="POST">
             <div class="input-group">
-                <label>📧 CORREO ELECTRÓNICO</label>
+                <label for="correo">📧 CORREO ELECTRÓNICO</label>
                 <div class="input-wrapper">
                     <i class="fas fa-envelope input-icon"></i>
-                    <input type="email" name="correo" placeholder="tu@correo.com" required>
+                    <input type="email" id="correo" name="correo" placeholder="tu@correo.com" required>
                 </div>
             </div>
             <button type="submit" class="btn-update">
@@ -416,9 +415,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
         </form>
 
-        <a href="index" class="back-link">
-            <i class="fas fa-arrow-left"></i> Volver al inicio
-        </a>
+        <a href="index" class="back-link" id="backLink">
+    <i class="fas fa-arrow-left"></i> <span id="backLinkText">Volver al inicio</span>
+</a>
     </div>
 
     <div class="toast-container" id="toastContainer"></div>
@@ -442,23 +441,110 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         });
-
-        function processUrlMessage() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const msg = urlParams.get('msg');
-            const type = urlParams.get('type');
-            if (msg) {
-                const container = document.getElementById("toastContainer");
-                const toast = document.createElement("div");
-                toast.className = "toast";
-                toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${decodeURIComponent(msg)}`;
-                container.appendChild(toast);
-                setTimeout(() => toast.remove(), 5000);
-                const newUrl = window.location.pathname;
-                window.history.replaceState({}, document.title, newUrl);
+    </script>
+    <script src="global.js"></script>
+<script src="global.js"></script>
+<script>
+    function applySavedTheme() {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme === "light") {
+            document.body.classList.add("light-mode");
+        } else {
+            document.body.classList.remove("light-mode");
+        }
+    }
+    applySavedTheme();
+    window.addEventListener("storage", (e) => {
+        if (e.key === "theme") {
+            if (e.newValue === "light") {
+                document.body.classList.add("light-mode");
+            } else {
+                document.body.classList.remove("light-mode");
             }
         }
-        processUrlMessage();
-    </script>
+    });
+
+    function showToast(message, type = "error") {
+        const container = document.getElementById("toastContainer");
+        if (!container) return;
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.innerHTML = `<i class="fas ${type === "success" ? "fa-check-circle" : "fa-exclamation-triangle"}"></i> ${message}`;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+    }
+
+    function applyTranslationToRecover() {
+        const lang = localStorage.getItem("lang") || "es";
+        const translations = {
+            es: {
+                pageTitle: "Recuperar contraseña · UniMarket",
+                title: "Recuperar contraseña",
+                subtitle: "Te enviaremos un enlace para restablecer tu contraseña.",
+                emailLabel: "📧 CORREO ELECTRÓNICO",
+                emailPlaceholder: "tu@correo.com",
+                sendBtn: "Enviar enlace",
+                backHome: "Volver al inicio",
+                errorEmpty: "❌ Por favor ingresa tu correo electrónico.",
+                errorDb: "❌ Error de conexión a la base de datos.",
+                errorNotExist: "❌ No existe una cuenta con ese correo electrónico.",
+                errorToken: "❌ Error al generar el enlace de recuperación.",
+                errorMail: "❌ Error al enviar el correo. Intenta nuevamente.",
+                successMail: "✅ Se ha enviado un enlace de recuperación a tu correo electrónico. Revisa tu bandeja (y spam)."
+            },
+            en: {
+                pageTitle: "Recover password · UniMarket",
+                title: "Recover password",
+                subtitle: "We will send you a link to reset your password.",
+                emailLabel: "📧 EMAIL",
+                emailPlaceholder: "you@example.com",
+                sendBtn: "Send link",
+                backHome: "Back to home",
+                errorEmpty: "❌ Please enter your email address.",
+                errorDb: "❌ Database connection error.",
+                errorNotExist: "❌ No account found with that email.",
+                errorToken: "❌ Error generating recovery link.",
+                errorMail: "❌ Error sending email. Please try again.",
+                successMail: "✅ A recovery link has been sent to your email. Check your inbox (and spam)."
+            }
+        };
+        const t = (key) => translations[lang][key] || key;
+        
+        document.title = t("pageTitle");
+        document.querySelector("h1").textContent = t("title");
+        document.querySelector(".subtitle").textContent = t("subtitle");
+        document.querySelector("label[for='correo']").innerHTML = t("emailLabel");
+        document.querySelector("#correo").placeholder = t("emailPlaceholder");
+        document.querySelector(".btn-update").innerHTML = `<i class="fas fa-paper-plane"></i> ${t("sendBtn")}`;
+        document.querySelector("#homeChipText").textContent = t("backHome");
+        document.querySelector("#backLinkText").textContent = t("backHome");
+        
+        window.translationsRecover = translations[lang];
+        
+        // Procesar mensaje de URL con traducción
+        const urlParams = new URLSearchParams(window.location.search);
+        let msg = urlParams.get('msg');
+        const type = urlParams.get('type');
+        if (msg) {
+            msg = decodeURIComponent(msg);
+            const tDict = window.translationsRecover || {};
+            let translatedMsg = msg;
+            for (const [key, value] of Object.entries(tDict)) {
+                if (msg.includes(key) || (value && msg.includes(value))) {
+                    translatedMsg = value;
+                    break;
+                }
+            }
+            showToast(translatedMsg, type || "error");
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    }
+    
+    applyTranslationToRecover();
+    window.addEventListener("storage", (e) => {
+        if (e.key === "lang") applyTranslationToRecover();
+    });
+</script>
 </body>
 </html>

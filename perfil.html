@@ -6,6 +6,8 @@
   <title>UniMarket - Perfil</title>
   <link rel="stylesheet" href="perfil.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 </head>
 <body>
   <script src="actividad.js"></script>
@@ -61,7 +63,7 @@
   <main class="main-content">
     <div id="profileLoader" class="profile-loader" style="display: flex; justify-content: center; align-items: center; min-height: 300px;">
     <div class="spinner"></div>
-    <p style="margin-left: 15px; color: var(--muted);">Cargando tu perfil...</p>
+    <p style="margin-left: 15px; color: var(--muted);" data-i18n="cargandoPerfil">Cargando tu perfil...</p>
 </div>
     <!-- Hero Section Rediseñada -->
      <div id="profileContent" style="display: none;">
@@ -115,9 +117,9 @@
     <i class="fas fa-paper-plane"></i>
     <span data-i18n="enviarMensaje">Enviar mensaje</span>
 </button>
-          <button class="btn-share-profile" title="Compartir perfil">
-            <i class="fas fa-share-alt"></i>
-          </button>
+          <button id="shareProfileBtn" class="btn-share-profile" data-i18n-title="compartirPerfil" title="Compartir perfil">
+    <i class="fas fa-share-alt"></i>
+</button>
         </div>
       </div>
     </div>
@@ -139,7 +141,7 @@
               <p>Sin descripción.</p>
             </div>
             <div class="field-group hidden" id="editSobreMiWrap">
-              <textarea id="inputSobreMi" rows="5" placeholder="Cuéntanos sobre ti..."></textarea>
+              <textarea id="inputSobreMi" rows="5" data-i18n-placeholder="ejSobreMi" placeholder="Cuéntanos sobre ti..."></textarea>
               <span class="char-counter">0/500</span>
             </div>
           </div>
@@ -196,19 +198,19 @@
           <div class="edit-grid hidden" id="editDetails">
             <div class="field-group">
               <label><i class="fas fa-book"></i> <span data-i18n="carrera">Carrera</span></label>
-              <input type="text" id="inputCarrera" placeholder="Ej: Ingeniería en Software">
+              <input type="text" id="inputCarrera" data-i18n-placeholder="ejCarrera" placeholder="Ej: Ingeniería en Software">
             </div>
             <div class="field-group">
               <label><i class="fas fa-map-marker-alt"></i> <span data-i18n="campus">Campus</span></label>
-              <input type="text" id="inputCampus" placeholder="Ej: Campus Central">
+              <input type="text" id="inputCampus" data-i18n-placeholder="ejCampus" placeholder="Ej: Campus Central">
             </div>
             <div class="field-group">
               <label><i class="fas fa-rocket"></i> <span data-i18n="emprendimientos">Emprendimientos</span></label>
-              <input type="text" id="inputEmprendimientos" placeholder="Ej: Mi Startup">
+              <input type="text" id="inputEmprendimientos" data-i18n-placeholder="ejEmprendimiento" placeholder="Ej: Mi Startup">
             </div>
             <div class="field-group">
               <label><i class="fas fa-heart"></i> <span data-i18n="estado">Estado</span></label>
-              <input type="text" id="inputEstado" placeholder="Ej: Emprendiendo">
+              <input type="text" id="inputEstado" data-i18n-placeholder="ejEstado" placeholder="Ej: Emprendiendo">
             </div>
           </div>
         </div>
@@ -229,7 +231,7 @@
               <span class="tag-item empty-tag">Sin gustos.</span>
             </div>
             <div class="field-group hidden" id="editGustosWrap">
-              <textarea id="inputGustos" rows="3" placeholder="Gustos separados por coma..."></textarea>
+              <textarea id="inputGustos" rows="3" data-i18n-placeholder="ejGustos" placeholder="Gustos separados por coma..."></textarea>
             </div>
           </div>
         </div>
@@ -278,19 +280,19 @@
             <div class="edit-grid hidden" id="editMoodGrid">
               <div class="field-group">
                 <label><span class="mood-emoji">🌙</span> <span data-i18n="mood">Mood</span></label>
-                <input type="text" id="inputMood" placeholder="Ej: Creativo">
+                <input type="text" id="inputMood" data-i18n-placeholder="ejMood" placeholder="Ej: Creativo">
               </div>
               <div class="field-group">
                 <label><span class="mood-emoji">🎨</span> <span data-i18n="colorFavorito">Color favorito</span></label>
-                <input type="text" id="inputColor" placeholder="Ej: Azul eléctrico">
+                <input type="text" id="inputColor" data-i18n-placeholder="ejColor" placeholder="Ej: Azul eléctrico">
               </div>
               <div class="field-group">
                 <label><span class="mood-emoji">🎯</span> <span data-i18n="metaActual">Meta actual</span></label>
-                <input type="text" id="inputMeta" placeholder="Ej: Lanzar mi app">
+                <input type="text" id="inputMeta" data-i18n-placeholder="ejMeta" placeholder="Ej: Lanzar mi app">
               </div>
               <div class="field-group">
                 <label><span class="mood-emoji">✨</span> <span data-i18n="estilo">Estilo</span></label>
-                <input type="text" id="inputEstilo" placeholder="Ej: Minimalista">
+                <input type="text" id="inputEstilo" data-i18n-placeholder="ejEstilo" placeholder="Ej: Minimalista">
               </div>
             </div>
           </div>
@@ -311,11 +313,11 @@
           <div class="edit-grid">
             <div class="field-group">
               <label><i class="fas fa-pencil-alt"></i> <span data-i18n="bioCorta">Bio corta</span></label>
-              <textarea id="inputBio" rows="3" placeholder="Una breve descripción sobre ti..."></textarea>
+              	<textarea id="inputBio" rows="3" data-i18n-placeholder="ejBio" placeholder="Una breve descripción sobre ti..."></textarea>
             </div>
             <div class="field-group">
               <label><i class="fas fa-tags"></i> <span data-i18n="tags">Tags</span></label>
-              <input type="text" id="inputTags" placeholder="retro web, uni vibes, creative">
+              <input type="text" id="inputTags" data-i18n-placeholder="ejTags" placeholder="retro web, uni vibes, creative">
               <small data-i18n="tagsHelp">Separados por coma</small>
             </div>
           </div>
@@ -332,10 +334,96 @@
     </div>
     </div>
   </main>
-
+  <script src="global.js"></script>
   <!-- Toast de notificación mejorado -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script src="perfil.js"></script>
+  <!-- MODAL RECORTAR FOTO DE PERFIL -->
+<div id="cropModal" class="modal-overlay-crop" style="display: none;">
+  <div class="modal-crop-content">
+    <h3 data-i18n="cropTitle">Recortar foto de perfil</h3>
+    <div class="img-container">
+      <img id="cropImage" src="" alt="Imagen a recortar">
+    </div>
+    <div class="modal-buttons-crop">
+      <button class="crop-cancel" id="cropCancelBtn" data-i18n="cancelar">Cancelar</button>
+      <button class="crop-confirm" id="cropConfirmBtn" data-i18n="confirmar">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.modal-overlay-crop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20001;
+}
+.modal-crop-content {
+  background: var(--panel-strong);
+  border: 1px solid var(--accent);
+  border-radius: 28px;
+  padding: 24px;
+  width: 90%;
+  max-width: 550px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(57, 197, 187, 0.3);
+}
+.modal-crop-content h3 {
+  margin: 0 0 12px;
+  font-size: 24px;
+  color: var(--accent);
+}
+.img-container {
+  max-width: 100%;
+  max-height: 55vh;
+  margin: 15px 0;
+}
+.img-container img {
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+.modal-buttons-crop {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+.crop-cancel, .crop-confirm {
+  padding: 10px 24px;
+  border-radius: 40px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.crop-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.crop-cancel:hover {
+  transform: translateY(-2px);
+}
+.crop-confirm {
+  background: linear-gradient(135deg, #66fff0, #39c5bb);
+  border: none;
+  color: #082016;
+  font-weight: 800;
+}
+.crop-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(57, 197, 187, 0.5);
+}
+</style>
+  
 </body>
 </html>

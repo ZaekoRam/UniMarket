@@ -285,13 +285,6 @@ a {
   border-left: none;
   padding-left: 16px;
 }
-.menu-item.active {
-    border-left: 3px solid var(--accent);
-}
-.menu-item.active::after,
-.menu-item:hover::after {
-    opacity: 1;
-}
 
 body.light-mode .menu-item:hover,
 body.light-mode .menu-item.active {
@@ -835,15 +828,12 @@ body.light-mode .menu-item.active {
   backdrop-filter: blur(24px);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-xl), 0 0 40px rgba(57, 197, 187, 0.04);
   display: flex;
   flex-direction: column;
-  height: 100%; /* aquí usa el alto del contenedor padre */
-  overflow: hidden; /* evita desbordes */
-}
-.chat-panel {
   height: 100%;
-  max-height: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
 .chat-panel::before {
@@ -962,18 +952,14 @@ body.light-mode .menu-item.active {
 /* CUERPO DE MENSAJES */
 .chat-body {
   flex: 1;
-  padding: 24px;
-  overflow-y: auto;  /* ← hace que aparezca el scroll cuando sea necesario */
+  padding: 28px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(57, 197, 187, 0.03) 0%, transparent 60%);
+  gap: 20px;
+  background: 
+    radial-gradient(ellipse at 50% 0%, rgba(57, 197, 187, 0.03) 0%, transparent 60%);
   position: relative;
-}
-
-.chat-body {
-  max-height: 100%;
-  min-height: 0; /* importante para flex */
 }
 
 /* FECHA SEPARADORA */

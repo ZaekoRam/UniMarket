@@ -21,7 +21,7 @@ if (!$conexion) {
     exit();
 }
 
-$sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil,
+$sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil, u.mostrar_estado,
         (SELECT mensaje FROM mensajes 
          WHERE (remitente_id = $mi_id AND destinatario_id = u.id)
             OR (remitente_id = u.id AND destinatario_id = $mi_id)
@@ -31,7 +31,7 @@ $sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil,
             OR (remitente_id = u.id AND destinatario_id = $mi_id)
          ORDER BY fecha DESC LIMIT 1) as ultima_fecha,
         CASE 
-            WHEN u.last_activity > DATE_SUB(NOW(), INTERVAL 5 MINUTE) THEN 1
+            WHEN u.mostrar_estado = 1 AND u.last_activity > DATE_SUB(NOW(), INTERVAL 5 MINUTE) THEN 1
             ELSE 0
         END as is_online
         FROM usuarios u

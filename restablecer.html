@@ -524,9 +524,9 @@
     <div class="particles" id="particles"></div>
 
     <!-- Botón home -->
-    <a href="index" class="home-chip">
-        <i class="fas fa-arrow-left"></i> Volver al inicio
-    </a>
+    <a href="index" class="home-chip" id="homeChipLink">
+    <i class="fas fa-arrow-left"></i> <span id="homeChipText">Volver al inicio</span>
+</a>
 
     <div class="reset-card">
         <div class="key-icon">
@@ -543,7 +543,7 @@
 
         <form id="resetForm" action="actualizar_password.php" method="POST">
             <div class="input-group">
-                <label>🔒 NUEVA CONTRASEÑA</label>
+                <label for="password">🔒 NUEVA CONTRASEÑA</label>
                 <div class="input-wrapper">
                     <i class="fas fa-lock input-icon"></i>
                     <input type="password" name="password" id="password" placeholder="Mínimo 8 caracteres" required minlength="8">
@@ -558,7 +558,7 @@
                 </div>
             </div>
             <div class="input-group">
-                <label>🔁 CONFIRMAR CONTRASEÑA</label>
+                <label for="confirm">🔁 CONFIRMAR CONTRASEÑA</label>
                 <div class="input-wrapper">
                     <i class="fas fa-lock input-icon"></i>
                     <input type="password" name="confirm_password" id="confirm" placeholder="Repite tu contraseña" required>
@@ -571,7 +571,9 @@
         </form>
 
         <a href="index" class="back-link">
-            <i class="fas fa-arrow-left"></i> Volver al inicio
+            <a href="index" class="home-chip" id="homeChipLink">
+    
+</a>
         </a>
     </div>
 
@@ -623,52 +625,50 @@
         const reqSpecial = document.getElementById("reqSpecial");
 
         function updateRequirements() {
-            const password = passwordInput.value;
-            
-            // Largo
-            if (password.length >= 8) {
-                reqLength.classList.add("valid");
-                reqLength.classList.remove("invalid");
-                reqLength.innerHTML = '<i class="fas fa-check-circle"></i> Mínimo 8 caracteres';
-            } else {
-                reqLength.classList.add("invalid");
-                reqLength.classList.remove("valid");
-                reqLength.innerHTML = '<i class="fas fa-circle"></i> Mínimo 8 caracteres';
-            }
-            
-            // Mayúscula
-            if (/[A-Z]/.test(password)) {
-                reqUpper.classList.add("valid");
-                reqUpper.classList.remove("invalid");
-                reqUpper.innerHTML = '<i class="fas fa-check-circle"></i> Mayúscula';
-            } else {
-                reqUpper.classList.add("invalid");
-                reqUpper.classList.remove("valid");
-                reqUpper.innerHTML = '<i class="fas fa-circle"></i> Mayúscula';
-            }
-            
-            // Minúscula
-            if (/[a-z]/.test(password)) {
-                reqLower.classList.add("valid");
-                reqLower.classList.remove("invalid");
-                reqLower.innerHTML = '<i class="fas fa-check-circle"></i> Minúscula';
-            } else {
-                reqLower.classList.add("invalid");
-                reqLower.classList.remove("valid");
-                reqLower.innerHTML = '<i class="fas fa-circle"></i> Minúscula';
-            }
-            
-            // Carácter especial
-            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-                reqSpecial.classList.add("valid");
-                reqSpecial.classList.remove("invalid");
-                reqSpecial.innerHTML = '<i class="fas fa-check-circle"></i> Carácter especial';
-            } else {
-                reqSpecial.classList.add("invalid");
-                reqSpecial.classList.remove("valid");
-                reqSpecial.innerHTML = '<i class="fas fa-circle"></i> Carácter especial';
-            }
-        }
+    const password = passwordInput.value;
+    const t = window.translationsReset;
+    if (!t) return;
+    
+    if (password.length >= 8) {
+        reqLength.classList.add("valid");
+        reqLength.classList.remove("invalid");
+        reqLength.innerHTML = `<i class="fas fa-check-circle"></i> ${t.reqLength}`;
+    } else {
+        reqLength.classList.add("invalid");
+        reqLength.classList.remove("valid");
+        reqLength.innerHTML = `<i class="fas fa-circle"></i> ${t.reqLength}`;
+    }
+    
+    if (/[A-Z]/.test(password)) {
+        reqUpper.classList.add("valid");
+        reqUpper.classList.remove("invalid");
+        reqUpper.innerHTML = `<i class="fas fa-check-circle"></i> ${t.reqUpper}`;
+    } else {
+        reqUpper.classList.add("invalid");
+        reqUpper.classList.remove("valid");
+        reqUpper.innerHTML = `<i class="fas fa-circle"></i> ${t.reqUpper}`;
+    }
+    
+    if (/[a-z]/.test(password)) {
+        reqLower.classList.add("valid");
+        reqLower.classList.remove("invalid");
+        reqLower.innerHTML = `<i class="fas fa-check-circle"></i> ${t.reqLower}`;
+    } else {
+        reqLower.classList.add("invalid");
+        reqLower.classList.remove("valid");
+        reqLower.innerHTML = `<i class="fas fa-circle"></i> ${t.reqLower}`;
+    }
+    
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        reqSpecial.classList.add("valid");
+        reqSpecial.classList.remove("invalid");
+        reqSpecial.innerHTML = `<i class="fas fa-check-circle"></i> ${t.reqSpecial}`;
+    } else {
+        reqSpecial.classList.add("invalid");
+        reqSpecial.classList.remove("valid");
+        reqSpecial.innerHTML = `<i class="fas fa-circle"></i> ${t.reqSpecial}`;
+    }
+}
 
         passwordInput.addEventListener("input", updateRequirements);
 
@@ -713,32 +713,32 @@
             errorDiv.style.display = "none";
             
             if (password !== confirm) {
-                e.preventDefault();
-                errorText.textContent = "❌ Las contraseñas no coinciden";
-                errorDiv.style.display = "flex";
-                showToast("Las contraseñas no coinciden", "error");
-                return;
-            }
-            
-            if (password.length < 8) {
-                e.preventDefault();
-                errorText.textContent = "❌ La contraseña debe tener al menos 8 caracteres";
-                errorDiv.style.display = "flex";
-                showToast("La contraseña debe tener al menos 8 caracteres", "error");
-                return;
-            }
+    e.preventDefault();
+    errorText.textContent = window.translationsReset.errorMatch;
+    errorDiv.style.display = "flex";
+    showToast(window.translationsReset.errorMatch, "error");
+    return;
+}
+
+if (password.length < 8) {
+    e.preventDefault();
+    errorText.textContent = window.translationsReset.errorLength;
+    errorDiv.style.display = "flex";
+    showToast(window.translationsReset.errorLength, "error");
+    return;
+}
             
             const hasUpper = /[A-Z]/.test(password);
             const hasLower = /[a-z]/.test(password);
             const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
             
             if (!hasUpper || !hasLower || !hasSpecial) {
-                e.preventDefault();
-                errorText.textContent = "⚠️ La contraseña debe tener: mayúscula, minúscula y carácter especial";
-                errorDiv.style.display = "flex";
-                showToast("La contraseña debe tener mayúscula, minúscula y carácter especial", "error");
-                return;
-            }
+    e.preventDefault();
+    errorText.textContent = window.translationsReset.errorComplex;
+    errorDiv.style.display = "flex";
+    showToast(window.translationsReset.errorComplex, "error");
+    return;
+}
         });
 
         // ========== PROCESAR MENSAJE DE URL ==========
@@ -755,5 +755,73 @@
         
         processUrlMessage();
     </script>
+    <script src="global.js"></script>
+<script>
+    // Forzar actualización de textos al cambiar idioma
+    function applyTranslationToReset() {
+        const lang = localStorage.getItem("lang") || "es";
+        const translations = {
+            es: {
+                pageTitle: "Nueva contraseña · UniMarket",
+                title: "Nueva contraseña",
+                subtitle: "Establece una nueva contraseña para tu cuenta.",
+                newPasswordLabel: "🔒 NUEVA CONTRASEÑA",
+                newPasswordPlaceholder: "Mínimo 8 caracteres",
+                confirmLabel: "🔁 CONFIRMAR CONTRASEÑA",
+                confirmPlaceholder: "Repite tu contraseña",
+                updateBtn: "Actualizar contraseña",
+                backHome: "Volver al inicio",
+                reqLength: "Mínimo 8 caracteres",
+                reqUpper: "Mayúscula",
+                reqLower: "Minúscula",
+                reqSpecial: "Carácter especial",
+                errorMatch: "❌ Las contraseñas no coinciden",
+                errorLength: "❌ La contraseña debe tener al menos 8 caracteres",
+                errorComplex: "⚠️ La contraseña debe tener: mayúscula, minúscula y carácter especial"
+            },
+            en: {
+                pageTitle: "New password · UniMarket",
+                title: "New password",
+                subtitle: "Set a new password for your account.",
+                newPasswordLabel: "🔒 NEW PASSWORD",
+                newPasswordPlaceholder: "Minimum 8 characters",
+                confirmLabel: "🔁 CONFIRM PASSWORD",
+                confirmPlaceholder: "Repeat your password",
+                updateBtn: "Update password",
+                backHome: "Back to home",
+                reqLength: "Minimum 8 characters",
+                reqUpper: "Uppercase letter",
+                reqLower: "Lowercase letter",
+                reqSpecial: "Special character",
+                errorMatch: "❌ Passwords do not match",
+                errorLength: "❌ Password must be at least 8 characters",
+                errorComplex: "⚠️ Password must contain: uppercase, lowercase and special character"
+            }
+        };
+        const t = (key) => translations[lang][key] || key;
+        document.title = t("pageTitle");
+        document.querySelector("h1").textContent = t("title");
+        document.querySelector(".subtitle").textContent = t("subtitle");
+        document.querySelector("label[for='password']").innerHTML = t("newPasswordLabel");
+        document.querySelector("#password").placeholder = t("newPasswordPlaceholder");
+        document.querySelector("label[for='confirm']").innerHTML = t("confirmLabel");
+        document.querySelector("#confirm").placeholder = t("confirmPlaceholder");
+        document.querySelector(".btn-update").innerHTML = `<i class="fas fa-save"></i> ${t("updateBtn")}`;
+        document.querySelector(".back-link").innerHTML = `<i class="fas fa-arrow-left"></i> ${t("backHome")}`;
+        document.getElementById("reqLength").innerHTML = `<i class="fas fa-circle"></i> ${t("reqLength")}`;
+        document.getElementById("reqUpper").innerHTML = `<i class="fas fa-circle"></i> ${t("reqUpper")}`;
+        document.getElementById("reqLower").innerHTML = `<i class="fas fa-circle"></i> ${t("reqLower")}`;
+        document.getElementById("reqSpecial").innerHTML = `<i class="fas fa-circle"></i> ${t("reqSpecial")}`;
+        document.getElementById("homeChipText").textContent = t("backHome");
+        document.querySelector("#confirm").placeholder = t("confirmPlaceholder");
+        // También actualizar mensajes de error dinámicos
+        window.translationsReset = translations[lang];
+    }
+    applyTranslationToReset();
+    window.addEventListener("storage", (e) => {
+        if (e.key === "lang") applyTranslationToReset();
+    });
+    if (typeof updateRequirements === "function") updateRequirements();
+</script>
 </body>
 </html>

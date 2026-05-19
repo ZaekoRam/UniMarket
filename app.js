@@ -94,7 +94,29 @@ const translations = {
     password: "Contraseña",
     account: "Número de cuenta",
     email: "Correo institucional",
-    aboutApp: "UniMarket es un sistema web creado para un entorno universitario con la finalidad de brindarle las herramientas de difusión adecuadas a futuros o actuales emprendedores y poder hacer llegar a más personas sobre sus productos."
+    aboutApp: "UniMarket es un sistema web creado para un entorno universitario con la finalidad de brindarle las herramientas de difusión adecuadas a futuros o actuales emprendedores y poder hacer llegar a más personas sobre sus productos.",
+    // Modal verificación
+verifyTitle: "Verifica tu cuenta",
+verifySubtitle: "Ingresa el código de 6 dígitos que Unibot te envió.",
+activateBtn: "Activar Cuenta",
+closeModal: "Cerrar",
+codePlaceholder: "000000",
+
+// Tooltips para sidebar
+langTooltip: "Cambiar idioma",
+themeTooltip: "Cambiar tema",
+
+// Validaciones y nombres de campos
+emptyFields: "⚠️ Por favor completa los siguientes campos: {fields}",
+fullnameMinLength: "⚠️ El nombre completo debe tener al menos 3 caracteres.",
+fieldUsername: "Nombre de usuario",
+fieldPassword: "Contraseña",
+fieldFullname: "Nombre completo",
+fieldAccount: "Número de cuenta",
+fieldEmail: "Correo institucional",
+
+// Título de la página
+pageTitle: "UniMarket - Login"
   },
   en: {
     back: "Home",
@@ -114,7 +136,29 @@ const translations = {
     password: "Password",
     account: "Student ID",
     email: "Institutional email",
-    aboutApp: "UniMarket is a web system created for a university environment with the purpose of providing appropriate dissemination tools to future or current entrepreneurs and to reach more people about their products."
+    aboutApp: "UniMarket is a web system created for a university environment with the purpose of providing appropriate dissemination tools to future or current entrepreneurs and to reach more people about their products.",
+    // Modal verification
+verifyTitle: "Verify your account",
+verifySubtitle: "Enter the 6-digit code that Unibot sent you.",
+activateBtn: "Activate Account",
+closeModal: "Close",
+codePlaceholder: "000000",
+
+// Tooltips
+langTooltip: "Change language",
+themeTooltip: "Change theme",
+
+// Validations and field names
+emptyFields: "⚠️ Please fill in the following fields: {fields}",
+fullnameMinLength: "⚠️ Full name must be at least 3 characters.",
+fieldUsername: "Username",
+fieldPassword: "Password",
+fieldFullname: "Full name",
+fieldAccount: "Student ID",
+fieldEmail: "Institutional email",
+
+// Page title
+pageTitle: "UniMarket - Login"
   }
 };
 
@@ -152,6 +196,12 @@ function setLanguage(lang) {
   }
 
   updateThemeTextByLanguage(lang);
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (translations[lang][key]) {
+        el.placeholder = translations[lang][key];
+    }
+});
 }
 
 setLanguage(localStorage.getItem("lang") || "es");
@@ -502,3 +552,12 @@ function cerrarModal() {
     if (modal) modal.style.display = 'none';
     window.history.replaceState({}, document.title, window.location.pathname);
 }
+// ========== FUNCIÓN GLOBAL DE TRADUCCIÓN ==========
+window.t = function(key, params = {}) {
+    const lang = localStorage.getItem("lang") || "es";
+    let text = translations[lang]?.[key] || key;
+    for (const [k, v] of Object.entries(params)) {
+        text = text.replace(`{${k}}`, v);
+    }
+    return text;
+};

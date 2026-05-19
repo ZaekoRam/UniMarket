@@ -1,6 +1,6 @@
 <?php
 session_start();
-require credenciales.php; // Incluimos las credenciales desde un archivo separado
+require 'credenciales.php'; // Incluimos las credenciales desde un archivo separado
 // Si no hay sesión, lo botamos
 if (!isset($_SESSION['usuario_id'])) {
     die("Error: No autenticado");

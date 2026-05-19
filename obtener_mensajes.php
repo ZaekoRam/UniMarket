@@ -28,12 +28,13 @@ if (!$conexion) {
 
 $con_quien = (int)$_GET['con_quien'];
 
-// Obtener rol y last_activity del contacto
-$check = mysqli_query($conexion, "SELECT rol, last_activity FROM usuarios WHERE id = $con_quien");
+// Obtener rol, mostrar_estado y last_activity del contacto
+$check = mysqli_query($conexion, "SELECT rol, mostrar_estado, last_activity FROM usuarios WHERE id = $con_quien");
 $dest_data = mysqli_fetch_assoc($check);
 $dest_rol = $dest_data['rol'] ?? '';
+$dest_mostrar_estado = isset($dest_data['mostrar_estado']) ? (int)$dest_data['mostrar_estado'] : 1;
 $contacto_online = 0;
-if ($dest_data['last_activity']) {
+if ($dest_mostrar_estado == 1 && isset($dest_data['last_activity'])) {
     $last_activity = strtotime($dest_data['last_activity']);
     $contacto_online = ($last_activity > strtotime('-5 minutes')) ? 1 : 0;
 }

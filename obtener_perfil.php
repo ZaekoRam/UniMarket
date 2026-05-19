@@ -18,19 +18,39 @@ if (!$conexion) {
     exit();
 }
 
-// 🔥 Corregido: maneja NULL en last_activity y siempre devuelve 0 o 1
-$query = "SELECT nombre_completo AS nombre, usuario, bio, tags, carrera, campus, emprendimientos, estado, sobre_mi AS sobreMi, gustos, mood, color, meta, estilo, foto_perfil, last_activity,
-          CASE 
-              WHEN last_activity IS NOT NULL AND last_activity > DATE_SUB(NOW(), INTERVAL 5 MINUTE) THEN 1 
-              ELSE 0 
-          END AS is_online
-          FROM usuarios WHERE id = '$id'";
+// Incluimos la columna mostrar_estado y aplicamos la lógica:
+// is_online = 1 solo si last_activity < 5 minutos Y mostrar_estado = 1
+$query = "SELECT 
+            nombre_completo AS nombre, 
+            usuario, 
+            bio, 
+            tags, 
+            carrera, 
+            campus, 
+            emprendimientos, 
+            estado, 
+            sobre_mi AS sobreMi, 
+            gustos, 
+            mood, 
+            color, 
+            meta, 
+            estilo, 
+            foto_perfil, 
+            last_activity,
+            mostrar_estado,
+            CASE 
+                WHEN mostrar_estado = 1 AND last_activity IS NOT NULL AND last_activity > DATE_SUB(NOW(), INTERVAL 5 MINUTE) THEN 1 
+                ELSE 0 
+            END AS is_online
+          FROM usuarios 
+          WHERE id = '$id'";
 
 $resultado = mysqli_query($conexion, $query);
 
 if ($perfil = mysqli_fetch_assoc($resultado)) {
-    // Asegurar que is_online sea entero
+    // Convertir a entero por seguridad
     $perfil['is_online'] = (int)$perfil['is_online'];
+    $perfil['mostrar_estado'] = isset($perfil['mostrar_estado']) ? (int)$perfil['mostrar_estado'] : 1;
     echo json_encode($perfil);
 } else {
     echo json_encode(['error' => 'Usuario no encontrado']);
