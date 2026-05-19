@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
+<<<<<<< HEAD
 -- Tiempo de generación: 16-04-2026 a las 16:15:06
+=======
+-- Tiempo de generación: 23-04-2026 a las 16:04:17
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -36,6 +40,7 @@ CREATE TABLE `comentarios` (
   `padre_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+<<<<<<< HEAD
 --
 -- Volcado de datos para la tabla `comentarios`
 --
@@ -46,6 +51,8 @@ INSERT INTO `comentarios` (`id`, `publicacion_id`, `usuario_id`, `comentario`, `
 (15, 48, 23, 'yont', '2026-03-28 04:27:57', 13),
 (16, 48, 24, 'XD', '2026-04-10 00:13:29', 14);
 
+=======
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 -- --------------------------------------------------------
 
 --
@@ -60,6 +67,7 @@ CREATE TABLE `mensajes` (
   `fecha` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+<<<<<<< HEAD
 --
 -- Volcado de datos para la tabla `mensajes`
 --
@@ -68,6 +76,8 @@ INSERT INTO `mensajes` (`id`, `remitente_id`, `destinatario_id`, `mensaje`, `fec
 (6, 23, 1, 'cual es el precio', '2026-03-28 04:28:24'),
 (7, 24, 23, 'CHAVAL TENEIS QUE VER LAS QUINTILLIZAS', '2026-04-10 00:14:08');
 
+=======
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 -- --------------------------------------------------------
 
 --
@@ -87,7 +97,11 @@ CREATE TABLE `publicaciones` (
 --
 
 INSERT INTO `publicaciones` (`id`, `usuario_id`, `texto`, `imagen`, `fecha`) VALUES
+<<<<<<< HEAD
 (48, 1, 'se venden mochis mañana a las 12:00 A.M.', '1774630921_WhatsApp Image 2026-03-24 at 9.42.29 PM.jpeg', '2026-03-27 17:02:01');
+=======
+(52, 40, 'holis', '1776455428_Untitled564_20260417120819.png,1776455428_HDln23wWgAAjGsX.jpg', '2026-04-17 19:50:28');
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 
 -- --------------------------------------------------------
 
@@ -102,6 +116,7 @@ CREATE TABLE `reacciones` (
   `tipo` enum('like','dislike') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+<<<<<<< HEAD
 --
 -- Volcado de datos para la tabla `reacciones`
 --
@@ -110,6 +125,8 @@ INSERT INTO `reacciones` (`id`, `publicacion_id`, `usuario_id`, `tipo`) VALUES
 (73, 48, 1, 'like'),
 (74, 48, 23, 'dislike');
 
+=======
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 -- --------------------------------------------------------
 
 --
@@ -135,17 +152,28 @@ CREATE TABLE `usuarios` (
   `mood` varchar(100) DEFAULT NULL,
   `color` varchar(50) DEFAULT NULL,
   `meta` varchar(255) DEFAULT NULL,
+<<<<<<< HEAD
   `estilo` varchar(100) DEFAULT NULL
+=======
+  `estilo` varchar(100) DEFAULT NULL,
+  `codigo_verificacion` int(6) DEFAULT 0,
+  `verificado` tinyint(1) DEFAULT 0
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
+<<<<<<< HEAD
 INSERT INTO `usuarios` (`id`, `nombre_completo`, `usuario`, `num`, `cuenta`, `PASSWORD`, `rol`, `bio`, `tags`, `carrera`, `campus`, `emprendimientos`, `estado`, `sobre_mi`, `gustos`, `mood`, `color`, `meta`, `estilo`) VALUES
 (1, 'Jose Carlo Ramirez Bacelis', 'ZaekoRam', '20260689', 'jramirez@ucol.mx', '$2y$10$I2fw24Oad/aI/88jxmRGLu5n.ZDhu6x5uxL/.oa2Lk0y67YHEHLRq', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (23, 'marco antonio', 'marcoantonio', '2022', 'dsad@ucol.mx', '$2y$10$1JktCt8x6IN5NBxqO4n8weSxyyFNB/FxfPs9s.WLx2QEtYpWBwLKG', 'lector', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (25, 'marco antonio yanez', 'marcoo', '20223232', 'myanez4@gmail.con', '$2y$10$.DcUFaUTnIBugKmHPrrzve3Lgd3Xpe6cy6b0O.XukTaOA5KLhvG3G', 'creador', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+=======
+INSERT INTO `usuarios` (`id`, `nombre_completo`, `usuario`, `num`, `cuenta`, `PASSWORD`, `rol`, `bio`, `tags`, `carrera`, `campus`, `emprendimientos`, `estado`, `sobre_mi`, `gustos`, `mood`, `color`, `meta`, `estilo`, `codigo_verificacion`, `verificado`) VALUES
+(40, 'marco', 'marco', '20000000', 'myanez4@ucol.mx', '$2y$10$Z4qZEPEgpVTuSCmeCkEBM.dHiBXgR6ug269IREhHDI9.9dDP9QQ5e', 'creador', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 
 --
 -- Índices para tablas volcadas
@@ -191,31 +219,51 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `comentarios`
 --
 ALTER TABLE `comentarios`
+<<<<<<< HEAD
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+=======
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 
 --
 -- AUTO_INCREMENT de la tabla `mensajes`
 --
 ALTER TABLE `mensajes`
+<<<<<<< HEAD
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+=======
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
+<<<<<<< HEAD
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+=======
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 
 --
 -- AUTO_INCREMENT de la tabla `reacciones`
 --
 ALTER TABLE `reacciones`
+<<<<<<< HEAD
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+=======
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
+<<<<<<< HEAD
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+=======
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+>>>>>>> 8a9c48e58cb99d46d39414e9bcc11a0124b52723
 
 --
 -- Restricciones para tablas volcadas
