@@ -94,6 +94,7 @@ const translations = {
     password: "Contraseña",
     account: "Número de cuenta",
     email: "Correo institucional",
+<<<<<<< HEAD
     aboutApp: "UniMarket es un sistema web creado para un entorno universitario con la finalidad de brindarle las herramientas de difusión adecuadas a futuros o actuales emprendedores y poder hacer llegar a más personas sobre sus productos.",
     // Modal verificación
 verifyTitle: "Verifica tu cuenta",
@@ -117,6 +118,9 @@ fieldEmail: "Correo institucional",
 
 // Título de la página
 pageTitle: "UniMarket - Login"
+=======
+    aboutApp: "UniMarket es un sistema web creado para un entorno universitario con la finalidad de brindarle las herramientas de difusión adecuadas a futuros o actuales emprendedores y poder hacer llegar a más personas sobre sus productos."
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
   },
   en: {
     back: "Home",
@@ -136,6 +140,7 @@ pageTitle: "UniMarket - Login"
     password: "Password",
     account: "Student ID",
     email: "Institutional email",
+<<<<<<< HEAD
     aboutApp: "UniMarket is a web system created for a university environment with the purpose of providing appropriate dissemination tools to future or current entrepreneurs and to reach more people about their products.",
     // Modal verification
 verifyTitle: "Verify your account",
@@ -159,6 +164,9 @@ fieldEmail: "Institutional email",
 
 // Page title
 pageTitle: "UniMarket - Login"
+=======
+    aboutApp: "UniMarket is a web system created for a university environment with the purpose of providing appropriate dissemination tools to future or current entrepreneurs and to reach more people about their products."
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
   }
 };
 
@@ -196,12 +204,15 @@ function setLanguage(lang) {
   }
 
   updateThemeTextByLanguage(lang);
+<<<<<<< HEAD
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
     const key = el.dataset.i18nPlaceholder;
     if (translations[lang][key]) {
         el.placeholder = translations[lang][key];
     }
 });
+=======
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 }
 
 setLanguage(localStorage.getItem("lang") || "es");
@@ -551,6 +562,7 @@ function cerrarModal() {
     const modal = document.getElementById('modalVerificacion');
     if (modal) modal.style.display = 'none';
     window.history.replaceState({}, document.title, window.location.pathname);
+<<<<<<< HEAD
 }
 // ========== FUNCIÓN GLOBAL DE TRADUCCIÓN ==========
 window.t = function(key, params = {}) {
@@ -561,3 +573,6 @@ window.t = function(key, params = {}) {
     }
     return text;
 };
+=======
+}
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f

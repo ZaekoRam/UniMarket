@@ -4,7 +4,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
   <title>UniMarket - Login</title>
+=======
+  <title>Acceso al Sistema</title>
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
   <link rel="stylesheet" href="style_login.css">
   <style>
     .modal-overlay {
@@ -219,7 +223,10 @@
     <div class="panel">
       <div class="form-container sign-in-container">
         <form class="full-login" action="validar.php" method="post" novalidate>
+<<<<<<< HEAD
           <input type="hidden" name="lang" id="loginLang" value="">
+=======
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
           <h1 data-i18n="loginTitle">Inicio de sesión</h1>
           <p data-i18n="loginSubtitle">Entra con tus datos</p>
           <div class="input-container">
@@ -250,7 +257,10 @@
           <button type="button" class="ghost" id="signUpMini" data-i18n="miniRegister">Quiero registrarme</button>
         </div>
         <form class="full-register" action="registrar.php" method="post" novalidate>
+<<<<<<< HEAD
           <input type="hidden" name="lang" id="registerLang" value="">
+=======
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
           <h1 data-i18n="registerTitle">Registro</h1>
           <p data-i18n="registerSubtitle">Crea tu cuenta</p>
           <div class="input-container">
@@ -296,22 +306,39 @@
   <div id="modalVerificacion" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <img src="img/unibot_verificacion.png" alt="Unibot" style="width: 120px; margin-bottom: 10px;">
+<<<<<<< HEAD
       <h2 data-i18n="verifyTitle" style="color: #39c5bb; margin: 0 0 10px 0;">Verifica tu cuenta</h2>
 <p data-i18n="verifySubtitle" style="color: #eafffb; font-size: 14px; margin: 0 0 20px 0; opacity: 0.8;">
   Ingresa el código de 6 dígitos que Unibot te envió.
 </p>
+=======
+      <h2 style="color: #39c5bb; margin: 0 0 10px 0;">Verifica tu cuenta</h2>
+      <p style="color: #eafffb; font-size: 14px; margin: 0 0 20px 0; opacity: 0.8;">
+        Ingresa el código de 6 dígitos que Unibot te envió.
+      </p>
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
       <form action="verificar_codigo.php" method="POST">
         <input type="hidden" name="correo" id="correoModal">
         <input type="text" name="codigo" class="code-input" placeholder="000000" maxlength="6" required
                style="padding: 10px; border-radius: 5px; border: 1px solid #39c5bb; text-align: center; letter-spacing: 5px; font-size: 20px; width: 80%; margin-bottom: 15px;">
+<<<<<<< HEAD
         <button type="submit" data-i18n="activateBtn" style="background: #39c5bb; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 85%;">Activar Cuenta</button>
       </form>
       <button onclick="cerrarModal()" data-i18n="closeModal" style="background: none; border: none; color: #777; margin-top: 15px; cursor: pointer; text-decoration: underline;">Cerrar</button>
+=======
+        <button type="submit" style="background: #39c5bb; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 85%;">Activar Cuenta</button>
+      </form>
+      <button onclick="cerrarModal()" style="background: none; border: none; color: #777; margin-top: 15px; cursor: pointer; text-decoration: underline;">Cerrar</button>
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     </div>
   </div>
 
   <script src="app.js"></script>
+<<<<<<< HEAD
 <script src="global.js"></script>
+=======
+
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
 </body>
 
@@ -461,6 +488,7 @@ function showNotification(message, type = 'info') {
   toast.querySelector('.notification-close').onclick = () => { toast.style.animation = 'fadeOut 0.2s ease forwards'; setTimeout(() => toast.remove(), 200); };
   setTimeout(() => { if (toast.parentElement) { toast.style.animation = 'fadeOut 0.2s ease forwards'; setTimeout(() => toast.remove(), 200); } }, 3500);
 }
+<<<<<<< HEAD
 // ========== TRADUCCIÓN DE NOTIFICACIONES ==========
 const notificationTranslations = {
   es: {
@@ -631,6 +659,18 @@ function validarFormulario(event) {
 document.querySelectorAll('.full-login, .full-register').forEach(form => {
     form.addEventListener('submit', validarFormulario);
 });
+=======
+function processUrlNotification() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const msg = urlParams.get('msg');
+  const type = urlParams.get('type');
+  if (msg) {
+    showNotification(decodeURIComponent(msg), type || 'info');
+    const newUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, newUrl);
+  }
+}
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', processUrlNotification);
 else processUrlNotification();
 </script>

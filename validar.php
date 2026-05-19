@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'credenciales.php';
+<<<<<<< HEAD
 
 // ========== DETECTAR IDIOMA ==========
 $lang = 'es';
@@ -68,6 +69,12 @@ if (!$conexion) {
 
 $usuario  = mysqli_real_escape_string($conexion, $_POST['usuario'] ?? '');
 $password_ingresada = $_POST['password'] ?? '';
+=======
+$conexion = mysqli_connect($host_db, $user_db, $pass_db, $name_db);
+
+$usuario  = mysqli_real_escape_string($conexion, $_POST['usuario']);
+$password_ingresada = $_POST['password'];
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 
 $consulta = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
 $resultado = mysqli_query($conexion, $consulta);
@@ -77,13 +84,18 @@ if (mysqli_num_rows($resultado) > 0) {
     if (password_verify($password_ingresada, $datos['PASSWORD'])) {
         if ($datos['verificado'] == 0) {
             $correo = $datos['cuenta'];
+<<<<<<< HEAD
             header("Location: index?msg_code=cuenta_no_verificada&type=warning&verificar=$correo");
+=======
+            header("Location: index?verificar=$correo&msg=" . urlencode("⚠️ ¡Tu cuenta aún no está activa! Revisa tu correo.") . "&type=warning");
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
             exit();
         }
         $_SESSION['usuario_id'] = $datos['id'];
         $_SESSION['usuario'] = $datos['usuario'];
         $_SESSION['rol'] = $datos['rol'];
         $_SESSION['nombre_completo'] = $datos['nombre_completo'];
+<<<<<<< HEAD
         
         // Redirigir con código y nombre para personalizar
         $nombre = $datos['usuario'];
@@ -98,6 +110,18 @@ if (mysqli_num_rows($resultado) > 0) {
     exit();
 }
 
+=======
+        header("Location: menu?msg=" . urlencode("✅ ¡Bienvenido, " . $datos['usuario'] . "!") . "&type=success");
+        exit();
+    } else {
+        header("Location: index?msg=" . urlencode("❌ Contraseña incorrecta.") . "&type=error");
+        exit();
+    }
+} else {
+    header("Location: index?msg=" . urlencode("❌ Ese usuario no existe. ¡Regístrate primero!") . "&type=error");
+    exit();
+}
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
 mysqli_free_result($resultado);
 mysqli_close($conexion);
 ?>

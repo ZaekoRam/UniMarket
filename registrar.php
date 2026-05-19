@@ -10,6 +10,7 @@ $password_plana  = $_POST['password'];
 $rol             = 'creador'; 
 
 // Validaciones
+<<<<<<< HEAD
 if (strlen($password_plana) < 8) {
     header("Location: index?msg=" . urlencode("❌ La contraseña debe tener al menos 8 caracteres.") . "&type=error");
     exit();
@@ -24,6 +25,22 @@ if (!preg_match('/[a-z]/', $password_plana)) {
 }
 if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password_plana)) {
     header("Location: index?msg=" . urlencode("❌ La contraseña debe contener al menos un carácter especial (!@#$%^&* etc.).") . "&type=error");
+=======
+if (strlen(trim($nombre_completo)) < 3) {
+    header("Location: index?msg=" . urlencode("❌ El nombre completo debe tener al menos 3 letras.") . "&type=error");
+    exit();
+}
+if (!filter_var($cuenta, FILTER_VALIDATE_EMAIL)) {
+    header("Location: index?msg=" . urlencode("❌ El correo electrónico no es válido.") . "&type=error");
+    exit();
+}
+if (!preg_match('/(?=.*[a-z])(?=.*[A-Z])(?=.*[\W])/', $password_plana)) {
+    header("Location: index?msg=" . urlencode("⚠️ Contraseña débil. Debe incluir: mayúscula, minúscula y carácter especial.") . "&type=warning");
+    exit();
+}
+if (preg_match('/\s/', $usuario)) {
+    header("Location: index?msg=" . urlencode("❌ El nombre de usuario no puede tener espacios.") . "&type=error");
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
     exit();
 }
 

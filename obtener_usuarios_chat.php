@@ -21,7 +21,11 @@ if (!$conexion) {
     exit();
 }
 
+<<<<<<< HEAD
 $sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil, u.mostrar_estado,
+=======
+$sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil,
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
         (SELECT mensaje FROM mensajes 
          WHERE (remitente_id = $mi_id AND destinatario_id = u.id)
             OR (remitente_id = u.id AND destinatario_id = $mi_id)
@@ -31,7 +35,11 @@ $sql = "SELECT u.id, u.nombre_completo, u.usuario, u.foto_perfil, u.mostrar_esta
             OR (remitente_id = u.id AND destinatario_id = $mi_id)
          ORDER BY fecha DESC LIMIT 1) as ultima_fecha,
         CASE 
+<<<<<<< HEAD
             WHEN u.mostrar_estado = 1 AND u.last_activity > DATE_SUB(NOW(), INTERVAL 5 MINUTE) THEN 1
+=======
+            WHEN u.last_activity > DATE_SUB(NOW(), INTERVAL 5 MINUTE) THEN 1
+>>>>>>> bcc9edcc113f84b9ae2a0f9fb0f254c375b5c30f
             ELSE 0
         END as is_online
         FROM usuarios u
