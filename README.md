@@ -368,3 +368,6 @@ Este proyecto está distribuido bajo la licencia MIT.
 
 Esto significa que eres libre de utilizar, estudiar, modificar y compartir el código del proyecto, siempre que se incluya el crédito correspondiente a los autores originales.
 
+---
+![Animación UniMarket2](https://github.com/user-attachments/assets/c26d47e7-cc37-46ee-af4c-5e5e97d4b9d4)
+
