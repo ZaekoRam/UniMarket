@@ -482,14 +482,50 @@
             box-shadow: 0 0 0 3px rgba(57, 197, 187, 0.15);
         }
 
-        .chat-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            overflow-y: visible;
-            max-height: 500px;
-        }
+.chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow-y: auto;
+    max-height: 550px;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) rgba(57, 197, 187, 0.1);
+}
 
+/* WebKit (Chrome, Edge, Safari) - Scroll completamente custom */
+.chat-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-list::-webkit-scrollbar-track {
+    background: rgba(57, 197, 187, 0.08);
+    border-radius: 10px;
+    margin-block: 4px;
+    backdrop-filter: blur(2px);
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-radius: 10px;
+    box-shadow: 0 0 6px var(--accent), inset 0 0 2px rgba(255,255,255,0.4);
+    transition: all 0.2s ease;
+}
+
+.chat-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--accent-2), var(--glitch-pink));
+    box-shadow: 0 0 12px var(--accent-2), inset 0 0 3px white;
+    transform: scaleX(1.1);
+    width: 8px;
+}
+
+/* Efecto de "glitch" sutil al desplazar */
+.chat-list {
+    scroll-behavior: smooth;
+    transition: scrollbar-color 0.3s;
+}
+
+/* Scroll invisible pero funcional en Firefox ya está cubierto */
         .chat-item {
             display: flex;
             align-items: center;
@@ -1082,7 +1118,6 @@
             <aside class="chat-list-panel">
                 <div class="chat-list-header">
                     <h2 data-i18n="chats"><i class="fas fa-comments"></i> Chats</h2>
-                    <button class="new-chat-btn" id="newChatBtn" data-i18n="nuevoChat">+ Nuevo</button>
                 </div>
                 <div class="search-box">
                     <input type="text" id="searchContact" data-i18n-placeholder="buscarContacto" placeholder="🔍 Buscar contacto...">
